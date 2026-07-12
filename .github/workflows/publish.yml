@@ -1,0 +1,74 @@
+# .github/workflows/publish.yml
+name: Build and Publish Compiled Wheels to PyPI
+
+on:
+  push:
+    tags:
+      - 'v*' # Triggers the build when you push a tag (e.g. v1.5.0)
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }} (${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          # Job 1: Build for standard Linux Servers/Desktops (x86_64)
+          - os: ubuntu-latest
+            arch: x86_64
+            cibw_archs: x86_64
+          
+          # Job 2: Build for Termux/Android/Mobile ARM (aarch64)
+          - os: ubuntu-latest
+            arch: aarch64
+            cibw_archs: aarch64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up QEMU emulation (Required so standard servers can compile ARM64 code)
+      - name: Set up QEMU
+        if: matrix.arch == 'aarch64'
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cython wheel
+
+      # Use cibuildwheel (Standard PyPA tool) to compile secure binary wheels
+      - name: Build wheels via cibuildwheel
+        uses: pypa/cibuildwheel@v2.22.0
+        env:
+          CIBW_ARCHS: ${{ matrix.cibw_archs }}
+          CIBW_BUILD: cp313-manylinux_* # Compiles specifically for Python 3.13
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.os }}-${{ matrix.arch }}
+          path: ./wheelhouse/*.whl
+
+  publish_to_pypi:
+    name: Publish Compiled Wheels to PyPI
+    needs: build_wheels
+    runs-on: ubuntu-latest
+    # Modern security: Uses OpenID Connect (OIDC) to authenticate with PyPI
+    permissions:
+      id-token: write  # Mandatory for PyPI trusted publishing
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: cibw-wheels-*
+          path: dist
+          merge-multiple: true
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

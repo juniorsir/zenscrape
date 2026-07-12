@@ -1,0 +1,8 @@
+httpx[http2]
+pyyaml
+fake-useragent
+loguru
+tqdm
+curl_cffi>=0.5.9
+pydantic>=2.0.0
+selectolax

@@ -1,0 +1,2 @@
+[console_scripts]
+zenscrape = zenscrape.cli:main

@@ -1,0 +1,5 @@
+curl_cffi
+selectolax
+pydantic
+loguru
+fake-useragent
