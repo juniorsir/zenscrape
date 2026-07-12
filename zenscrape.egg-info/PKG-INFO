@@ -1,9 +1,40 @@
 Metadata-Version: 2.4
 Name: zenscrape
-Version: 1.5.0
+Version: 1.5.2
+Summary: An anonymous, async-first web scraping framework with Tor and WAF bypass features
+Home-page: https://github.com/juniorsir/zenscrape
+Author: Junior Sir
+Author-email: juniorsir011@gmail.com
+License: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.13
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Description-Content-Type: text/markdown
 Requires-Dist: curl_cffi
 Requires-Dist: selectolax
 Requires-Dist: pydantic
 Requires-Dist: loguru
 Requires-Dist: fake-useragent
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
 Dynamic: requires-dist
+Dynamic: summary
+
+# ZenScrape Elite
+
+A powerful, async-first web scraping framework designed for Termux, desktops, and production servers.
+
+## Features
+- Chrome TLS Impersonation (Bypasses Cloudflare)
+- Automated SOCKS5h Tor Integration
+- Smart Mobile-Performance Concurrency Guards
+- SQLite Database & Standalone CSV/JSON Exporters
+- Deep Structural Inspector
