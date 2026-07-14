@@ -3,7 +3,7 @@
 
 # 🛡️ ZenScrape Elite
 
-`ZenScrape` is a high-performance, asynchronous, and fully anonymized web scraping framework and command-line intelligence tool. Designed to operate seamlessly on resource-constrained environments like **Termux (Android)** as well as high-performance **production servers (WSL/Linux/macOS)**, ZenScrape focuses on stealth, data integrity, and automated discovery.
+`ZenScrape` is a high-performance, asynchronous, and fully anonymized web scraping framework and command-line intelligence tool. Designed to operate seamlessly on resource-constrained environments high-performance **production servers (WSL/Linux/macOS)**, ZenScrape focuses on stealth, data integrity, and automated discovery.
 
 ---
 
