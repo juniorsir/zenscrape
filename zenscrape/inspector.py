@@ -7,6 +7,8 @@ class ZenInspector:
         self.parser = LexborHTMLParser(html)
         self.url = url
         self.domain = urlparse(url).netloc
+        
+        # Strip script and style tags to sanitize DOM
         for tag in self.parser.css("script, style"):
             tag.decompose()
 
@@ -24,8 +26,8 @@ class ZenInspector:
                 "tables": len(self.parser.css("table")),
                 "json_ld": len(self.parser.css('script[type="application/ld+json"]')),
                 "lists": len(self.parser.css("ul, ol")),
-                "headings": self._get_heading_hierarchy(), # NEW
-                "detailed_tables": self._get_tables_detailed() # NEW
+                "headings": self._get_heading_hierarchy(),
+                "detailed_tables": self._get_tables_detailed()
             }
         }
 
@@ -39,12 +41,16 @@ class ZenInspector:
         return meta
 
     def _get_forms(self):
+        """Parses standard forms, with fallback heuristics for modern JS SPAs like YouTube"""
         forms = []
+        
+        # 1. Standard HTML Form Parsing
         for form in self.parser.css("form"):
             f_data = {
                 "action": urljoin(self.url, form.attributes.get("action", "")),
                 "method": form.attributes.get("method", "GET").upper(),
-                "inputs": []
+                "inputs": [],
+                "virtual": False
             }
             for inp in form.css("input, select, textarea"):
                 name = inp.attributes.get("name")
@@ -55,7 +61,46 @@ class ZenInspector:
                         "placeholder": inp.attributes.get("placeholder", ""),
                         "required": "required" in inp.attributes
                     })
-            forms.append(f_data)
+            if f_data["inputs"]:
+                forms.append(f_data)
+
+        # 2. HEURISTIC FALLBACK: If 0 standard forms are found (SPA Site Mode)
+        if not forms:
+            # Scan for loose input fields that resemble search elements
+            for inp in self.parser.css("input"):
+                name_attr = inp.attributes.get("name") or inp.attributes.get("id") or inp.attributes.get("class") or ""
+                name_lower = name_attr.lower()
+                
+                # Check if it looks like an active search field
+                if any(keyword in name_lower for keyword in ["search", "query", "find", "q"]):
+                    # Build a platform-specific Virtual Form
+                    action_url = self.url
+                    field_name = name_attr if name_attr else "q"
+                    
+                    if "youtube.com" in self.url:
+                        action_url = "https://www.youtube.com/results"
+                        field_name = "search_query" # YouTube's native query parameter
+                    elif "wikipedia.org" in self.url:
+                        action_url = "https://en.wikipedia.org/w/index.php"
+                        field_name = "search"
+                    else:
+                        # Generic Fallback: target root domain /search
+                        parsed = urlparse(self.url)
+                        action_url = f"{parsed.scheme}://{parsed.netloc}/search"
+                    
+                    forms.append({
+                        "action": action_url,
+                        "method": "GET",
+                        "inputs": [{
+                            "name": field_name,
+                            "type": "text",
+                            "placeholder": inp.attributes.get("placeholder", "Search..."),
+                            "required": False
+                        }],
+                        "virtual": True # Flagged as a Virtual fallback
+                    })
+                    break # Build only one optimized virtual form
+
         return forms
 
     def _get_links(self):
@@ -71,20 +116,16 @@ class ZenInspector:
                 external.add(full_url)
         return {"internal": list(internal), "external": list(external)}
 
-    # --- NEW DETAILED INSPECTION METHODS ---
-
     def _get_heading_hierarchy(self):
-        """Maps out the heading tree on the page"""
         headings = []
         for h in self.parser.css("h1, h2, h3"):
             headings.append({
                 "tag": h.tag.upper(),
                 "text": h.text(strip=True)
             })
-        return headings[:15] # Limit to top 15 to keep console clean
+        return headings[:15]
 
     def _get_tables_detailed(self):
-        """Finds table headers so user knows the data columns"""
         tables = []
         for i, table in enumerate(self.parser.css("table")):
             headers = [th.text(strip=True) for th in table.css("th") if th.text(strip=True)]

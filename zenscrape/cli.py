@@ -135,6 +135,10 @@ def calculate_optimal_concurrency(user_concurrency: int) -> int:
     return user_concurrency
 
 async def run_inspector(args):
+    if args.tor:
+        from .setup_env import ensure_tor_env
+        ensure_tor_env()
+
     logger.info(f"🔍 Scouting {args.url}...")
     from curl_cffi.requests import AsyncSession
     proxy = "socks5h://127.0.0.1:9050" if args.tor else None
@@ -159,7 +163,9 @@ async def run_inspector(args):
         print("\n📝 INPUTS DETECTED:")
         for i, f in enumerate(summary['forms']):
             fields = [f"{inp['name']} ({inp['type']})" for inp in f['inputs']]
-            print(f"  [Form {i+1}] {f['method']} -> {f['action']}")
+            # Check if form is virtual
+            is_virtual = " (Virtual Fallback)" if f.get("virtual") else ""
+            print(f"  [Form {i+1}] {f['method']} -> {f['action']}{is_virtual}")
             print(f"    Fields: {', '.join(fields)}")
 
     print("\n" + "═"*60)
@@ -171,6 +177,7 @@ async def run_inspector(args):
     print("5. [DEEP]     Start Recursive Crawl (Depth 1)")
     print("6. [SUBMIT]   Fill and Submit Detected Form")
     print("7. [AUDIT]    Deep Structural Audit")
+    print("8. [SEC_AUD]  Exposed Configuration & Header Scan")
     print("q. [EXIT]")
     
     choice = input("\nAction (1-7): ").lower()
@@ -224,6 +231,87 @@ async def run_inspector(args):
                 print(f"  • Table #{t['id']} Columns: {', '.join(t['columns'][:5])}")
         print("\n" + "═"*60)
         input("\nPress Enter to Exit Audit...")
+        sys.exit()
+    elif choice == '8':
+        from .auditor import ZenSecurityAuditor
+        from urllib.parse import urlparse
+        
+        parsed_url = urlparse(args.url)
+        domain = parsed_url.netloc
+        
+        # 1. Audit HTTP Headers
+        logger.info("🛡️ Auditing HTTP Security Headers...")
+        headers_report = ZenSecurityAuditor.audit_security_headers(res.headers)
+        
+        print("\n" + "═"*60)
+        print("🔒 HTTP SECURITY HEADER REPORT")
+        print("═"*60)
+        for h_name, detail in headers_report.items():
+            print(f"• {h_name}: {detail['status']}")
+            print(f"  Purpose: {detail['purpose']}")
+            if detail['value'] != "N/A":
+                print(f"  Setting: {detail['value'][:80]}...")
+            print()
+
+        # 2. NEW: TLS/SSL Certificate Audit
+        logger.info(f"🛡️ Inspecting SSL/TLS Certificate for {domain}...")
+        tls_report = ZenSecurityAuditor.audit_tls_connection(domain)
+        
+        print("═"*60)
+        print("🔑 SSL/TLS CERTIFICATE AUDIT")
+        print("═"*60)
+        print(f"• Status:       {tls_report['status']}")
+        if tls_report['status'] == "✅ VALID":
+            print(f"  Issuer:       {tls_report['issuer']}")
+            print(f"  Protocol:     {tls_report['version']}")
+            print(f"  Cipher:       {tls_report['cipher']} ({tls_report['bits']} bits)")
+            print(f"  Expires:      {tls_report['expires']}")
+            print(f"  Validity Left: {tls_report['days_left']} days")
+        elif tls_report['error']:
+            print(f"  Error Details: {tls_report['error']}")
+        print()
+
+        # 3. NEW: DNS Security Records Audit
+        logger.info(f"🛡️ Querying DNS Records for {domain}...")
+        dns_report = ZenSecurityAuditor.audit_dns_records(domain)
+        
+        print("═"*60)
+        print("📡 DNS SECURITY RECORDS")
+        print("═"*60)
+        for record_type, details in dns_report.items():
+            print(f"• {record_type}: {details['status']}")
+            if details['record'] != "N/A":
+                print(f"  Record: {details['record']}")
+            print()
+
+        # 4. Audit Exposed Configuration Leaks
+        logger.info("🛡️ Scanning for Exposed Administrative/Config Files...")
+        audit_targets = ZenSecurityAuditor.get_audit_endpoints(args.url)
+        
+        print("═"*60)
+        print("📂 CONFIGURATION EXPOSURE SCAN (LEAK DETECTION)")
+        print("═"*60)
+        
+        from curl_cffi.requests import AsyncSession
+        proxy = "socks5h://127.0.0.1:9050" if args.tor else None
+        
+        async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as audit_session:
+            for target in audit_targets:
+                try:
+                    audit_res = await audit_session.get(target["url"], timeout=10)
+                    signature_match = target["signature"] in audit_res.text if audit_res.text else False
+                    
+                    if audit_res.status_code == 200 and signature_match:
+                        print(f"🔴 VULNERABLE: {target['url']}")
+                        print(f"   Exposure: {target['desc']}")
+                        print(f"   Preview:  {audit_res.text[:100].strip()}...\n")
+                    else:
+                        print(f"🟢 SECURE: {target['url']} -> Not Exposed (HTTP {audit_res.status_code})")
+                except Exception:
+                    print(f"⚪ ERROR: Could not connect to {target['url']}")
+                
+        print("═"*60 + "\n")
+        input("Press Enter to Exit Security Audit...")
         sys.exit()
     elif choice == 'q': sys.exit()
 

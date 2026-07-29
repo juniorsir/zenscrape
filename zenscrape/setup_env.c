@@ -1837,9 +1837,6 @@ static CYTHON_INLINE PyObject* __Pyx__PyObject_LookupSpecial(PyObject* obj, PyOb
 #define __Pyx_PyObject_LookupSpecial(o,n) __Pyx_PyObject_GetAttrStr(o,n)
 #endif
 
-/* PyLongCompare.proto */
-static CYTHON_INLINE int __Pyx_PyLong_BoolEqObjC(PyObject *op1, PyObject *op2, long intval, long inplace);
-
 /* PyObjectFormatSimple.proto */
 #if CYTHON_COMPILING_IN_PYPY
     #define __Pyx_PyObject_FormatSimple(s, f) (\
@@ -1855,6 +1852,32 @@ static CYTHON_INLINE int __Pyx_PyLong_BoolEqObjC(PyObject *op1, PyObject *op2, l
     #define __Pyx_PyObject_FormatSimple(s, f) (\
         likely(PyUnicode_CheckExact(s)) ? (Py_INCREF(s), s) :\
         PyObject_Format(s, f))
+#endif
+
+/* JoinPyUnicode.export */
+static PyObject* __Pyx_PyUnicode_Join(PyObject** values, Py_ssize_t value_count, Py_ssize_t result_ulength,
+                                      Py_UCS4 max_char);
+
+/* PyLongBinop.proto */
+#if !CYTHON_COMPILING_IN_PYPY
+static CYTHON_INLINE PyObject* __Pyx_PyLong_AddObjC(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check);
+#else
+#define __Pyx_PyLong_AddObjC(op1, op2, intval, inplace, zerodivision_check)\
+    (inplace ? PyNumber_InPlaceAdd(op1, op2) : PyNumber_Add(op1, op2))
+#endif
+
+/* PySequenceContains.proto */
+static CYTHON_INLINE int __Pyx_PySequence_ContainsTF(PyObject* item, PyObject* seq, int eq) {
+    int result = PySequence_Contains(seq, item);
+    return unlikely(result < 0) ? result : (result == (eq == Py_EQ));
+}
+
+/* PyKeyboardInterrupt_Check.proto */
+#define __Pyx_PyExc_KeyboardInterrupt_Check(obj)  __Pyx_TypeCheck(obj, PyExc_KeyboardInterrupt)
+
+/* PyRange_Check.proto */
+#if CYTHON_COMPILING_IN_PYPY && !defined(PyRange_Check)
+  #define PyRange_Check(obj)  __Pyx_TypeCheck((obj), &PyRange_Type)
 #endif
 
 /* HasAttr.proto (used by ImportImpl) */
@@ -2120,14 +2143,6 @@ static void __pyx_insert_code_object(int code_line, __Pyx_CachedCodeObjectType* 
 static void __Pyx_AddTraceback(const char *funcname, int c_line,
                                int py_line, const char *filename);
 
-/* GCCDiagnostics.proto */
-#if !defined(__INTEL_COMPILER) && defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
-#define __Pyx_HAS_GCC_DIAGNOSTIC
-#endif
-
-/* CIntFromPy.proto */
-static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *);
-
 /* FormatTypeName.proto */
 #if CYTHON_COMPILING_IN_LIMITED_API
 typedef PyObject *__Pyx_TypeName;
@@ -2145,8 +2160,16 @@ typedef const char *__Pyx_TypeName;
 #define __Pyx_DECREF_TypeName(obj)
 #endif
 
+/* GCCDiagnostics.proto (used by CIntToPy) */
+#if !defined(__INTEL_COMPILER) && defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
+#define __Pyx_HAS_GCC_DIAGNOSTIC
+#endif
+
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value);
+
+/* CIntFromPy.proto */
+static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyLong_As_int(PyObject *);
@@ -2273,9 +2296,9 @@ typedef struct {
   PyObject *__pyx_empty_unicode;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_items;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_values;
-  PyObject *__pyx_tuple[1];
+  PyObject *__pyx_tuple[2];
   PyObject *__pyx_codeobj_tab[1];
-  PyObject *__pyx_string_tab[76];
+  PyObject *__pyx_string_tab[90];
   PyObject *__pyx_number_tab[4];
 /* #### Code section: module_state_contents ### */
 /* CommonTypesMetaclass.module_state_decls */
@@ -2318,85 +2341,99 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #endif
 /* #### Code section: constant_name_defines ### */
 #define __pyx_kp_u_ __pyx_string_tab[0]
-#define __pyx_kp_u_127_0_0_1_9050 __pyx_string_tab[1]
-#define __pyx_kp_u_SocksPort_9050_ControlPort_9051 __pyx_string_tab[2]
-#define __pyx_kp_u_Starting_Tor_background_process __pyx_string_tab[3]
-#define __pyx_kp_u_Tor_SOCKS5_proxy_offline_or_not __pyx_string_tab[4]
-#define __pyx_kp_u_Tor_circuits_fully_bootstrapped __pyx_string_tab[5]
-#define __pyx_kp_u_Tor_is_taking_longer_than_usual __pyx_string_tab[6]
-#define __pyx_kp_u_Tor_not_found_Installing __pyx_string_tab[7]
-#define __pyx_kp_u_Waiting_for_Tor_circuits_to_fin __pyx_string_tab[8]
-#define __pyx_kp_u__2 __pyx_string_tab[9]
-#define __pyx_kp_u_data_data_com_termux __pyx_string_tab[10]
-#define __pyx_kp_u_f __pyx_string_tab[11]
-#define __pyx_kp_u_https_api_ipify_org __pyx_string_tab[12]
-#define __pyx_kp_u_pkg_install_tor_y __pyx_string_tab[13]
-#define __pyx_kp_u_pkill_tor __pyx_string_tab[14]
-#define __pyx_kp_u_s __pyx_string_tab[15]
-#define __pyx_kp_u_socks5_hostname __pyx_string_tab[16]
-#define __pyx_kp_u_sudo_apt_install_tor_y __pyx_string_tab[17]
-#define __pyx_kp_u_version __pyx_string_tab[18]
-#define __pyx_kp_u_zenscrape_setup_env_py __pyx_string_tab[19]
-#define __pyx_kp_u_zenscrape_torrc __pyx_string_tab[20]
-#define __pyx_n_u_DEVNULL __pyx_string_tab[21]
-#define __pyx_n_u_Popen __pyx_string_tab[22]
-#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[23]
-#define __pyx_n_u_annotate __pyx_string_tab[24]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[25]
-#define __pyx_n_u_attempt __pyx_string_tab[26]
-#define __pyx_n_u_capture_output __pyx_string_tab[27]
-#define __pyx_n_u_check __pyx_string_tab[28]
-#define __pyx_n_u_check_cmd __pyx_string_tab[29]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[30]
-#define __pyx_n_u_curl __pyx_string_tab[31]
-#define __pyx_n_u_decode __pyx_string_tab[32]
-#define __pyx_n_u_ensure_tor_env __pyx_string_tab[33]
-#define __pyx_n_u_enter __pyx_string_tab[34]
-#define __pyx_n_u_exists __pyx_string_tab[35]
-#define __pyx_n_u_exit __pyx_string_tab[36]
-#define __pyx_n_u_expanduser __pyx_string_tab[37]
-#define __pyx_n_u_f_2 __pyx_string_tab[38]
-#define __pyx_n_u_func __pyx_string_tab[39]
-#define __pyx_n_u_info __pyx_string_tab[40]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[41]
-#define __pyx_n_u_items __pyx_string_tab[42]
-#define __pyx_n_u_logger __pyx_string_tab[43]
-#define __pyx_n_u_loguru __pyx_string_tab[44]
-#define __pyx_n_u_main __pyx_string_tab[45]
-#define __pyx_n_u_module __pyx_string_tab[46]
-#define __pyx_n_u_name __pyx_string_tab[47]
-#define __pyx_n_u_open __pyx_string_tab[48]
-#define __pyx_n_u_os __pyx_string_tab[49]
-#define __pyx_n_u_path __pyx_string_tab[50]
-#define __pyx_n_u_ping __pyx_string_tab[51]
-#define __pyx_n_u_qualname __pyx_string_tab[52]
-#define __pyx_n_u_res __pyx_string_tab[53]
-#define __pyx_n_u_returncode __pyx_string_tab[54]
-#define __pyx_n_u_run __pyx_string_tab[55]
-#define __pyx_n_u_set_name __pyx_string_tab[56]
-#define __pyx_n_u_setdefault __pyx_string_tab[57]
-#define __pyx_n_u_sleep __pyx_string_tab[58]
-#define __pyx_n_u_stderr __pyx_string_tab[59]
-#define __pyx_n_u_stdout __pyx_string_tab[60]
-#define __pyx_n_u_strip __pyx_string_tab[61]
-#define __pyx_n_u_subprocess __pyx_string_tab[62]
-#define __pyx_n_u_success __pyx_string_tab[63]
-#define __pyx_n_u_system __pyx_string_tab[64]
-#define __pyx_n_u_test __pyx_string_tab[65]
-#define __pyx_n_u_time __pyx_string_tab[66]
-#define __pyx_n_u_timeout __pyx_string_tab[67]
-#define __pyx_n_u_tor __pyx_string_tab[68]
-#define __pyx_n_u_torrc_path __pyx_string_tab[69]
-#define __pyx_n_u_values __pyx_string_tab[70]
-#define __pyx_n_u_w __pyx_string_tab[71]
-#define __pyx_n_u_warning __pyx_string_tab[72]
-#define __pyx_n_u_write __pyx_string_tab[73]
-#define __pyx_n_u_zenscrape_setup_env __pyx_string_tab[74]
-#define __pyx_kp_b_iso88591_aq__F_haq_E_9WWX_5_1A_t2U_ha_V1 __pyx_string_tab[75]
-#define __pyx_float_1_5 __pyx_number_tab[0]
+#define __pyx_kp_u_0m __pyx_string_tab[1]
+#define __pyx_kp_u_127_0_0_1 __pyx_string_tab[2]
+#define __pyx_kp_u_90m __pyx_string_tab[3]
+#define __pyx_kp_u_A_K __pyx_string_tab[4]
+#define __pyx_kp_u_Address_already_in_use __pyx_string_tab[5]
+#define __pyx_kp_u_Bootstrapped_100 __pyx_string_tab[6]
+#define __pyx_kp_u_Bootstrapping_Tor_circuits __pyx_string_tab[7]
+#define __pyx_kp_u_Could_not_bind __pyx_string_tab[8]
+#define __pyx_kp_u_SocksPort_9050_ControlPort_9051 __pyx_string_tab[9]
+#define __pyx_kp_u_Tor_circuits_fully_bootstrapped __pyx_string_tab[10]
+#define __pyx_kp_u_Tor_failed_to_bootstrap_cleanly __pyx_string_tab[11]
+#define __pyx_kp_u_Tor_not_found_Installing __pyx_string_tab[12]
+#define __pyx_kp_u__2 __pyx_string_tab[13]
+#define __pyx_kp_u__3 __pyx_string_tab[14]
+#define __pyx_kp_u__4 __pyx_string_tab[15]
+#define __pyx_kp_u_data_data_com_termux __pyx_string_tab[16]
+#define __pyx_kp_u_f __pyx_string_tab[17]
+#define __pyx_kp_u_pkg_install_tor_y __pyx_string_tab[18]
+#define __pyx_kp_u_pkill_tor __pyx_string_tab[19]
+#define __pyx_kp_u_sudo_apt_install_tor_y __pyx_string_tab[20]
+#define __pyx_kp_u_version __pyx_string_tab[21]
+#define __pyx_kp_u_zenscrape_setup_env_py __pyx_string_tab[22]
+#define __pyx_kp_u_zenscrape_torrc __pyx_string_tab[23]
+#define __pyx_n_u_GRAY __pyx_string_tab[24]
+#define __pyx_n_u_PIPE __pyx_string_tab[25]
+#define __pyx_n_u_Popen __pyx_string_tab[26]
+#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[27]
+#define __pyx_n_u_RESET __pyx_string_tab[28]
+#define __pyx_n_u_STDOUT __pyx_string_tab[29]
+#define __pyx_n_u_UP_AND_CLEAR __pyx_string_tab[30]
+#define __pyx_n_u__5 __pyx_string_tab[31]
+#define __pyx_n_u_annotate __pyx_string_tab[32]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[33]
+#define __pyx_n_u_capture_output __pyx_string_tab[34]
+#define __pyx_n_u_check __pyx_string_tab[35]
+#define __pyx_n_u_clean_line __pyx_string_tab[36]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[37]
+#define __pyx_n_u_create_connection __pyx_string_tab[38]
+#define __pyx_n_u_ensure_tor_env __pyx_string_tab[39]
+#define __pyx_n_u_enter __pyx_string_tab[40]
+#define __pyx_n_u_exists __pyx_string_tab[41]
+#define __pyx_n_u_exit __pyx_string_tab[42]
+#define __pyx_n_u_exit_2 __pyx_string_tab[43]
+#define __pyx_n_u_expanduser __pyx_string_tab[44]
+#define __pyx_n_u_f_2 __pyx_string_tab[45]
+#define __pyx_n_u_flush __pyx_string_tab[46]
+#define __pyx_n_u_func __pyx_string_tab[47]
+#define __pyx_n_u_info __pyx_string_tab[48]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[49]
+#define __pyx_n_u_items __pyx_string_tab[50]
+#define __pyx_n_u_line __pyx_string_tab[51]
+#define __pyx_n_u_lines_printed __pyx_string_tab[52]
+#define __pyx_n_u_logger __pyx_string_tab[53]
+#define __pyx_n_u_loguru __pyx_string_tab[54]
+#define __pyx_n_u_main __pyx_string_tab[55]
+#define __pyx_n_u_module __pyx_string_tab[56]
+#define __pyx_n_u_name __pyx_string_tab[57]
+#define __pyx_n_u_open __pyx_string_tab[58]
+#define __pyx_n_u_os __pyx_string_tab[59]
+#define __pyx_n_u_path __pyx_string_tab[60]
+#define __pyx_n_u_process __pyx_string_tab[61]
+#define __pyx_n_u_qualname __pyx_string_tab[62]
+#define __pyx_n_u_readline __pyx_string_tab[63]
+#define __pyx_n_u_run __pyx_string_tab[64]
+#define __pyx_n_u_s __pyx_string_tab[65]
+#define __pyx_n_u_set_name __pyx_string_tab[66]
+#define __pyx_n_u_setdefault __pyx_string_tab[67]
+#define __pyx_n_u_sleep __pyx_string_tab[68]
+#define __pyx_n_u_socket __pyx_string_tab[69]
+#define __pyx_n_u_stderr __pyx_string_tab[70]
+#define __pyx_n_u_stdout __pyx_string_tab[71]
+#define __pyx_n_u_strip __pyx_string_tab[72]
+#define __pyx_n_u_subprocess __pyx_string_tab[73]
+#define __pyx_n_u_success __pyx_string_tab[74]
+#define __pyx_n_u_sys __pyx_string_tab[75]
+#define __pyx_n_u_system __pyx_string_tab[76]
+#define __pyx_n_u_terminate __pyx_string_tab[77]
+#define __pyx_n_u_test __pyx_string_tab[78]
+#define __pyx_n_u_text __pyx_string_tab[79]
+#define __pyx_n_u_time __pyx_string_tab[80]
+#define __pyx_n_u_timeout __pyx_string_tab[81]
+#define __pyx_n_u_tor __pyx_string_tab[82]
+#define __pyx_n_u_torrc_path __pyx_string_tab[83]
+#define __pyx_n_u_values __pyx_string_tab[84]
+#define __pyx_n_u_w __pyx_string_tab[85]
+#define __pyx_n_u_warning __pyx_string_tab[86]
+#define __pyx_n_u_write __pyx_string_tab[87]
+#define __pyx_n_u_zenscrape_setup_env __pyx_string_tab[88]
+#define __pyx_kp_b_iso88591_aq__F_haq_E_9WWX_5_1A_t2U_ha_V1 __pyx_string_tab[89]
+#define __pyx_float_0_5 __pyx_number_tab[0]
 #define __pyx_int_0 __pyx_number_tab[1]
 #define __pyx_int_1 __pyx_number_tab[2]
-#define __pyx_int_2 __pyx_number_tab[3]
+#define __pyx_int_9050 __pyx_number_tab[3]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -2411,9 +2448,9 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   __Pyx_State_RemoveModule(NULL);
   #endif
-  for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
+  for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
   for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<76; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<90; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   for (int i=0; i<4; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_clear_contents ### */
 /* CommonTypesMetaclass.module_state_clear */
@@ -2437,9 +2474,9 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_empty_tuple);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_empty_bytes);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_empty_unicode);
-  for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
+  for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
   for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<76; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<90; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   for (int i=0; i<4; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_traverse_contents ### */
 /* CommonTypesMetaclass.module_state_traverse */
@@ -2454,17 +2491,17 @@ return 0;
 #endif
 /* #### Code section: module_code ### */
 
-/* "zenscrape/setup_env.py":6
+/* "zenscrape/setup_env.py":8
  * from loguru import logger
  * 
  * def ensure_tor_env():             # <<<<<<<<<<<<<<
- *     """Automates Tor installation, configuration, and verifies complete bootstrap"""
- *     # 1. Check if Tor is installed
+ *     """Automates Tor environment setups, prints logs in gray, and erases them on success"""
+ *     # 1. Install check
 */
 
 /* Python wrapper */
 static PyObject *__pyx_pw_9zenscrape_9setup_env_1ensure_tor_env(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-PyDoc_STRVAR(__pyx_doc_9zenscrape_9setup_env_ensure_tor_env, "Automates Tor installation, configuration, and verifies complete bootstrap");
+PyDoc_STRVAR(__pyx_doc_9zenscrape_9setup_env_ensure_tor_env, "Automates Tor environment setups, prints logs in gray, and erases them on success");
 static PyMethodDef __pyx_mdef_9zenscrape_9setup_env_1ensure_tor_env = {"ensure_tor_env", (PyCFunction)__pyx_pw_9zenscrape_9setup_env_1ensure_tor_env, METH_NOARGS, __pyx_doc_9zenscrape_9setup_env_ensure_tor_env};
 static PyObject *__pyx_pw_9zenscrape_9setup_env_1ensure_tor_env(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
@@ -2482,10 +2519,16 @@ static PyObject *__pyx_pw_9zenscrape_9setup_env_1ensure_tor_env(PyObject *__pyx_
 static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyObject *__pyx_self) {
   PyObject *__pyx_v_torrc_path = NULL;
   PyObject *__pyx_v_f = NULL;
-  PyObject *__pyx_v_check_cmd = NULL;
-  PyObject *__pyx_v_res = NULL;
-  CYTHON_UNUSED long __pyx_v_attempt;
-  PyObject *__pyx_v_ping = NULL;
+  CYTHON_UNUSED PyObject *__pyx_v_s = NULL;
+  PyObject *__pyx_v_process = NULL;
+  PyObject *__pyx_v_GRAY = NULL;
+  PyObject *__pyx_v_RESET = NULL;
+  PyObject *__pyx_v_UP_AND_CLEAR = NULL;
+  PyObject *__pyx_v_lines_printed = NULL;
+  int __pyx_v_success;
+  PyObject *__pyx_v_line = NULL;
+  PyObject *__pyx_v_clean_line = NULL;
+  CYTHON_UNUSED PyObject *__pyx_v__ = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2508,15 +2551,18 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
   int __pyx_t_18;
   PyObject *__pyx_t_19 = NULL;
   PyObject *__pyx_t_20 = NULL;
-  long __pyx_t_21;
+  PyObject *__pyx_t_21 = NULL;
+  PyObject *__pyx_t_22 = NULL;
+  PyObject *__pyx_t_23[5];
+  PyObject *(*__pyx_t_24)(PyObject *);
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("ensure_tor_env", 0);
 
-  /* "zenscrape/setup_env.py":9
- *     """Automates Tor installation, configuration, and verifies complete bootstrap"""
- *     # 1. Check if Tor is installed
+  /* "zenscrape/setup_env.py":11
+ *     """Automates Tor environment setups, prints logs in gray, and erases them on success"""
+ *     # 1. Install check
  *     try:             # <<<<<<<<<<<<<<
  *         subprocess.run(["tor", "--version"], capture_output=True, check=True)
  *     except Exception:
@@ -2530,27 +2576,27 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "zenscrape/setup_env.py":10
- *     # 1. Check if Tor is installed
+      /* "zenscrape/setup_env.py":12
+ *     # 1. Install check
  *     try:
  *         subprocess.run(["tor", "--version"], capture_output=True, check=True)             # <<<<<<<<<<<<<<
  *     except Exception:
  *         logger.warning("Tor not found. Installing...")
 */
       __pyx_t_5 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_subprocess); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 10, __pyx_L3_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_subprocess); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 12, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_run); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 10, __pyx_L3_error)
+      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_run); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 12, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 10, __pyx_L3_error)
+      __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 12, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_tor);
       __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_tor);
-      if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 0, __pyx_mstate_global->__pyx_n_u_tor) != (0)) __PYX_ERR(0, 10, __pyx_L3_error);
+      if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 0, __pyx_mstate_global->__pyx_n_u_tor) != (0)) __PYX_ERR(0, 12, __pyx_L3_error);
       __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_version);
       __Pyx_GIVEREF(__pyx_mstate_global->__pyx_kp_u_version);
-      if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 1, __pyx_mstate_global->__pyx_kp_u_version) != (0)) __PYX_ERR(0, 10, __pyx_L3_error);
+      if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 1, __pyx_mstate_global->__pyx_kp_u_version) != (0)) __PYX_ERR(0, 12, __pyx_L3_error);
       __pyx_t_8 = 1;
       #if CYTHON_UNPACK_METHODS
       if (unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -2565,23 +2611,23 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
       #endif
       {
         PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_5, __pyx_t_6};
-        __pyx_t_9 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 10, __pyx_L3_error)
+        __pyx_t_9 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 12, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_9);
-        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_capture_output, Py_True, __pyx_t_9, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 10, __pyx_L3_error)
-        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_check, Py_True, __pyx_t_9, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 10, __pyx_L3_error)
+        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_capture_output, Py_True, __pyx_t_9, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 12, __pyx_L3_error)
+        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_check, Py_True, __pyx_t_9, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 12, __pyx_L3_error)
         __pyx_t_4 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_7, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_9);
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 10, __pyx_L3_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 12, __pyx_L3_error)
         __Pyx_GOTREF(__pyx_t_4);
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "zenscrape/setup_env.py":9
- *     """Automates Tor installation, configuration, and verifies complete bootstrap"""
- *     # 1. Check if Tor is installed
+      /* "zenscrape/setup_env.py":11
+ *     """Automates Tor environment setups, prints logs in gray, and erases them on success"""
+ *     # 1. Install check
  *     try:             # <<<<<<<<<<<<<<
  *         subprocess.run(["tor", "--version"], capture_output=True, check=True)
  *     except Exception:
@@ -2598,7 +2644,7 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/setup_env.py":11
+    /* "zenscrape/setup_env.py":13
  *     try:
  *         subprocess.run(["tor", "--version"], capture_output=True, check=True)
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -2608,12 +2654,12 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
     __pyx_t_10 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_Exception))));
     if (__pyx_t_10) {
       __Pyx_AddTraceback("zenscrape.setup_env.ensure_tor_env", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_7, &__pyx_t_9) < 0) __PYX_ERR(0, 11, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_7, &__pyx_t_9) < 0) __PYX_ERR(0, 13, __pyx_L5_except_error)
       __Pyx_XGOTREF(__pyx_t_4);
       __Pyx_XGOTREF(__pyx_t_7);
       __Pyx_XGOTREF(__pyx_t_9);
 
-      /* "zenscrape/setup_env.py":12
+      /* "zenscrape/setup_env.py":14
  *         subprocess.run(["tor", "--version"], capture_output=True, check=True)
  *     except Exception:
  *         logger.warning("Tor not found. Installing...")             # <<<<<<<<<<<<<<
@@ -2621,9 +2667,9 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
  * 
 */
       __pyx_t_5 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 12, __pyx_L5_except_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 14, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_11);
-      __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_warning); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 12, __pyx_L5_except_error)
+      __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_warning); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 14, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
       __pyx_t_8 = 1;
@@ -2643,27 +2689,27 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
         __pyx_t_6 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_12, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-        if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 12, __pyx_L5_except_error)
+        if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 14, __pyx_L5_except_error)
         __Pyx_GOTREF(__pyx_t_6);
       }
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "zenscrape/setup_env.py":13
+      /* "zenscrape/setup_env.py":15
  *     except Exception:
  *         logger.warning("Tor not found. Installing...")
  *         os.system("pkg install tor -y" if os.path.exists("/data/data/com.termux") else "sudo apt install tor -y")             # <<<<<<<<<<<<<<
  * 
- *     # 2. Setup the custom torrc config
+ *     # 2. Config check
 */
       __pyx_t_12 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_os); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 13, __pyx_L5_except_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_os); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 15, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_system); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 13, __pyx_L5_except_error)
+      __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_system); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 15, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_11);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __Pyx_GetModuleGlobalName(__pyx_t_15, __pyx_mstate_global->__pyx_n_u_os); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 13, __pyx_L5_except_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_15, __pyx_mstate_global->__pyx_n_u_os); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 15, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_15);
-      __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_t_15, __pyx_mstate_global->__pyx_n_u_path); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 13, __pyx_L5_except_error)
+      __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_t_15, __pyx_mstate_global->__pyx_n_u_path); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 15, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_16);
       __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
       __pyx_t_14 = __pyx_t_16;
@@ -2674,10 +2720,10 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
         __pyx_t_13 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_exists, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
-        if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 13, __pyx_L5_except_error)
+        if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 15, __pyx_L5_except_error)
         __Pyx_GOTREF(__pyx_t_13);
       }
-      __pyx_t_17 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely((__pyx_t_17 < 0))) __PYX_ERR(0, 13, __pyx_L5_except_error)
+      __pyx_t_17 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely((__pyx_t_17 < 0))) __PYX_ERR(0, 15, __pyx_L5_except_error)
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
       if (__pyx_t_17) {
         __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_pkg_install_tor_y);
@@ -2704,7 +2750,7 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
         __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-        if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 13, __pyx_L5_except_error)
+        if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 15, __pyx_L5_except_error)
         __Pyx_GOTREF(__pyx_t_6);
       }
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -2715,9 +2761,9 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
     }
     goto __pyx_L5_except_error;
 
-    /* "zenscrape/setup_env.py":9
- *     """Automates Tor installation, configuration, and verifies complete bootstrap"""
- *     # 1. Check if Tor is installed
+    /* "zenscrape/setup_env.py":11
+ *     """Automates Tor environment setups, prints logs in gray, and erases them on success"""
+ *     # 1. Install check
  *     try:             # <<<<<<<<<<<<<<
  *         subprocess.run(["tor", "--version"], capture_output=True, check=True)
  *     except Exception:
@@ -2736,16 +2782,16 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
     __pyx_L8_try_end:;
   }
 
-  /* "zenscrape/setup_env.py":16
+  /* "zenscrape/setup_env.py":18
  * 
- *     # 2. Setup the custom torrc config
+ *     # 2. Config check
  *     torrc_path = os.path.expanduser("~/.zenscrape_torrc")             # <<<<<<<<<<<<<<
  *     if not os.path.exists(torrc_path):
  *         with open(torrc_path, "w") as f:
 */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_os); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 16, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_os); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_path); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 16, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_path); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_7 = __pyx_t_6;
@@ -2756,22 +2802,22 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
     __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_expanduser, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 16, __pyx_L1_error)
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 18, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
   }
   __pyx_v_torrc_path = __pyx_t_9;
   __pyx_t_9 = 0;
 
-  /* "zenscrape/setup_env.py":17
- *     # 2. Setup the custom torrc config
+  /* "zenscrape/setup_env.py":19
+ *     # 2. Config check
  *     torrc_path = os.path.expanduser("~/.zenscrape_torrc")
  *     if not os.path.exists(torrc_path):             # <<<<<<<<<<<<<<
  *         with open(torrc_path, "w") as f:
  *             f.write("SocksPort 9050\nControlPort 9051\nCookieAuthentication 0\n")
 */
-  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_os); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 17, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_os); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_path); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_path); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __pyx_t_6 = __pyx_t_4;
@@ -2782,15 +2828,15 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
     __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_exists, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 17, __pyx_L1_error)
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 19, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
   }
-  __pyx_t_17 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely((__pyx_t_17 < 0))) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_t_17 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely((__pyx_t_17 < 0))) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_t_18 = (!__pyx_t_17);
   if (__pyx_t_18) {
 
-    /* "zenscrape/setup_env.py":18
+    /* "zenscrape/setup_env.py":20
  *     torrc_path = os.path.expanduser("~/.zenscrape_torrc")
  *     if not os.path.exists(torrc_path):
  *         with open(torrc_path, "w") as f:             # <<<<<<<<<<<<<<
@@ -2804,13 +2850,13 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
         PyObject *__pyx_callargs[3] = {__pyx_t_4, __pyx_v_torrc_path, __pyx_mstate_global->__pyx_n_u_w};
         __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_open, __pyx_callargs+__pyx_t_8, (3-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 18, __pyx_L1_error)
+        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 20, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
       }
-      __pyx_t_3 = __Pyx_PyObject_LookupSpecial(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_exit); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 18, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_LookupSpecial(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_exit); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 20, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_t_6 = NULL;
-      __pyx_t_7 = __Pyx_PyObject_LookupSpecial(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_enter); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 18, __pyx_L12_error)
+      __pyx_t_7 = __Pyx_PyObject_LookupSpecial(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_enter); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 20, __pyx_L12_error)
       __Pyx_GOTREF(__pyx_t_7);
       __pyx_t_8 = 1;
       #if CYTHON_UNPACK_METHODS
@@ -2829,7 +2875,7 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
         __pyx_t_4 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_7, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 18, __pyx_L12_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 20, __pyx_L12_error)
         __Pyx_GOTREF(__pyx_t_4);
       }
       __pyx_t_7 = __pyx_t_4;
@@ -2847,12 +2893,12 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
             __pyx_v_f = __pyx_t_7;
             __pyx_t_7 = 0;
 
-            /* "zenscrape/setup_env.py":19
+            /* "zenscrape/setup_env.py":21
  *     if not os.path.exists(torrc_path):
  *         with open(torrc_path, "w") as f:
  *             f.write("SocksPort 9050\nControlPort 9051\nCookieAuthentication 0\n")             # <<<<<<<<<<<<<<
  * 
- *     # 3. Check if Tor is already running and fully bootstrapped
+ *     # 3. Check if Tor is already running and active
 */
             __pyx_t_9 = __pyx_v_f;
             __Pyx_INCREF(__pyx_t_9);
@@ -2861,12 +2907,12 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
               PyObject *__pyx_callargs[2] = {__pyx_t_9, __pyx_mstate_global->__pyx_kp_u_SocksPort_9050_ControlPort_9051};
               __pyx_t_7 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_write, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
               __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-              if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 19, __pyx_L16_error)
+              if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 21, __pyx_L16_error)
               __Pyx_GOTREF(__pyx_t_7);
             }
             __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-            /* "zenscrape/setup_env.py":18
+            /* "zenscrape/setup_env.py":20
  *     torrc_path = os.path.expanduser("~/.zenscrape_torrc")
  *     if not os.path.exists(torrc_path):
  *         with open(torrc_path, "w") as f:             # <<<<<<<<<<<<<<
@@ -2892,20 +2938,20 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
           __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
           /*except:*/ {
             __Pyx_AddTraceback("zenscrape.setup_env.ensure_tor_env", __pyx_clineno, __pyx_lineno, __pyx_filename);
-            if (__Pyx_GetException(&__pyx_t_7, &__pyx_t_9, &__pyx_t_4) < 0) __PYX_ERR(0, 18, __pyx_L18_except_error)
+            if (__Pyx_GetException(&__pyx_t_7, &__pyx_t_9, &__pyx_t_4) < 0) __PYX_ERR(0, 20, __pyx_L18_except_error)
             __Pyx_XGOTREF(__pyx_t_7);
             __Pyx_XGOTREF(__pyx_t_9);
             __Pyx_XGOTREF(__pyx_t_4);
-            __pyx_t_6 = PyTuple_Pack(3, __pyx_t_7, __pyx_t_9, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 18, __pyx_L18_except_error)
+            __pyx_t_6 = PyTuple_Pack(3, __pyx_t_7, __pyx_t_9, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 20, __pyx_L18_except_error)
             __Pyx_GOTREF(__pyx_t_6);
             __pyx_t_20 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-            if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 18, __pyx_L18_except_error)
+            if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 20, __pyx_L18_except_error)
             __Pyx_GOTREF(__pyx_t_20);
             __pyx_t_18 = __Pyx_PyObject_IsTrue(__pyx_t_20);
             __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
-            if (__pyx_t_18 < (0)) __PYX_ERR(0, 18, __pyx_L18_except_error)
+            if (__pyx_t_18 < (0)) __PYX_ERR(0, 20, __pyx_L18_except_error)
             __pyx_t_17 = (!__pyx_t_18);
             if (unlikely(__pyx_t_17)) {
               __Pyx_GIVEREF(__pyx_t_7);
@@ -2913,7 +2959,7 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
               __Pyx_XGIVEREF(__pyx_t_4);
               __Pyx_ErrRestoreWithState(__pyx_t_7, __pyx_t_9, __pyx_t_4);
               __pyx_t_7 = 0;  __pyx_t_9 = 0;  __pyx_t_4 = 0; 
-              __PYX_ERR(0, 18, __pyx_L18_except_error)
+              __PYX_ERR(0, 20, __pyx_L18_except_error)
             }
             __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
             __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -2939,7 +2985,7 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
           if (__pyx_t_3) {
             __pyx_t_19 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_mstate_global->__pyx_tuple[0], NULL);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-            if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 18, __pyx_L1_error)
+            if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 20, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_19);
             __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
           }
@@ -2954,8 +3000,8 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
       __pyx_L25:;
     }
 
-    /* "zenscrape/setup_env.py":17
- *     # 2. Setup the custom torrc config
+    /* "zenscrape/setup_env.py":19
+ *     # 2. Config check
  *     torrc_path = os.path.expanduser("~/.zenscrape_torrc")
  *     if not os.path.exists(torrc_path):             # <<<<<<<<<<<<<<
  *         with open(torrc_path, "w") as f:
@@ -2963,39 +3009,12 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
 */
   }
 
-  /* "zenscrape/setup_env.py":23
- *     # 3. Check if Tor is already running and fully bootstrapped
- *     # We do a fast curl test through the proxy to see if it's already active
- *     check_cmd = ["curl", "-s", "--socks5-hostname", "127.0.0.1:9050", "https://api.ipify.org"]             # <<<<<<<<<<<<<<
- *     try:
- *         res = subprocess.run(check_cmd, capture_output=True, timeout=2)
-*/
-  __pyx_t_4 = PyList_New(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 23, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_curl);
-  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_curl);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_4, 0, __pyx_mstate_global->__pyx_n_u_curl) != (0)) __PYX_ERR(0, 23, __pyx_L1_error);
-  __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_s);
-  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_kp_u_s);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_4, 1, __pyx_mstate_global->__pyx_kp_u_s) != (0)) __PYX_ERR(0, 23, __pyx_L1_error);
-  __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_socks5_hostname);
-  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_kp_u_socks5_hostname);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_4, 2, __pyx_mstate_global->__pyx_kp_u_socks5_hostname) != (0)) __PYX_ERR(0, 23, __pyx_L1_error);
-  __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_127_0_0_1_9050);
-  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_kp_u_127_0_0_1_9050);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_4, 3, __pyx_mstate_global->__pyx_kp_u_127_0_0_1_9050) != (0)) __PYX_ERR(0, 23, __pyx_L1_error);
-  __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_https_api_ipify_org);
-  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_kp_u_https_api_ipify_org);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_4, 4, __pyx_mstate_global->__pyx_kp_u_https_api_ipify_org) != (0)) __PYX_ERR(0, 23, __pyx_L1_error);
-  __pyx_v_check_cmd = ((PyObject*)__pyx_t_4);
-  __pyx_t_4 = 0;
-
   /* "zenscrape/setup_env.py":24
- *     # We do a fast curl test through the proxy to see if it's already active
- *     check_cmd = ["curl", "-s", "--socks5-hostname", "127.0.0.1:9050", "https://api.ipify.org"]
+ * 
+ *     # 3. Check if Tor is already running and active
  *     try:             # <<<<<<<<<<<<<<
- *         res = subprocess.run(check_cmd, capture_output=True, timeout=2)
- *         if res.returncode == 0:
+ *         with socket.create_connection(("127.0.0.1", 9050), timeout=1) as s:
+ *             # If the SOCKS port is already listening, we don't need to do anything
 */
   {
     __Pyx_PyThreadState_declare
@@ -3007,85 +3026,141 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
     /*try:*/ {
 
       /* "zenscrape/setup_env.py":25
- *     check_cmd = ["curl", "-s", "--socks5-hostname", "127.0.0.1:9050", "https://api.ipify.org"]
+ *     # 3. Check if Tor is already running and active
  *     try:
- *         res = subprocess.run(check_cmd, capture_output=True, timeout=2)             # <<<<<<<<<<<<<<
- *         if res.returncode == 0:
- *             # Tor is already up and connected! No need to wait or restart.
-*/
-      __pyx_t_9 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_subprocess); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 25, __pyx_L26_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_run); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 25, __pyx_L26_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_8 = 1;
-      #if CYTHON_UNPACK_METHODS
-      if (unlikely(PyMethod_Check(__pyx_t_6))) {
-        __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_6);
-        assert(__pyx_t_9);
-        PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_6);
-        __Pyx_INCREF(__pyx_t_9);
-        __Pyx_INCREF(__pyx__function);
-        __Pyx_DECREF_SET(__pyx_t_6, __pyx__function);
-        __pyx_t_8 = 0;
-      }
-      #endif
-      {
-        PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_9, __pyx_v_check_cmd};
-        __pyx_t_7 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 25, __pyx_L26_error)
-        __Pyx_GOTREF(__pyx_t_7);
-        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_capture_output, Py_True, __pyx_t_7, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 25, __pyx_L26_error)
-        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_timeout, __pyx_mstate_global->__pyx_int_2, __pyx_t_7, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 25, __pyx_L26_error)
-        __pyx_t_4 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_6, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_7);
-        __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-        __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L26_error)
-        __Pyx_GOTREF(__pyx_t_4);
-      }
-      __pyx_v_res = __pyx_t_4;
-      __pyx_t_4 = 0;
-
-      /* "zenscrape/setup_env.py":26
- *     try:
- *         res = subprocess.run(check_cmd, capture_output=True, timeout=2)
- *         if res.returncode == 0:             # <<<<<<<<<<<<<<
- *             # Tor is already up and connected! No need to wait or restart.
+ *         with socket.create_connection(("127.0.0.1", 9050), timeout=1) as s:             # <<<<<<<<<<<<<<
+ *             # If the SOCKS port is already listening, we don't need to do anything
  *             return
 */
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_res, __pyx_mstate_global->__pyx_n_u_returncode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 26, __pyx_L26_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_17 = (__Pyx_PyLong_BoolEqObjC(__pyx_t_4, __pyx_mstate_global->__pyx_int_0, 0, 0)); if (unlikely((__pyx_t_17 < 0))) __PYX_ERR(0, 26, __pyx_L26_error)
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (__pyx_t_17) {
+      /*with:*/ {
+        __pyx_t_9 = NULL;
+        __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_socket); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 25, __pyx_L26_error)
+        __Pyx_GOTREF(__pyx_t_7);
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_create_connection); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 25, __pyx_L26_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __pyx_t_8 = 1;
+        #if CYTHON_UNPACK_METHODS
+        if (unlikely(PyMethod_Check(__pyx_t_6))) {
+          __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_6);
+          assert(__pyx_t_9);
+          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_6);
+          __Pyx_INCREF(__pyx_t_9);
+          __Pyx_INCREF(__pyx__function);
+          __Pyx_DECREF_SET(__pyx_t_6, __pyx__function);
+          __pyx_t_8 = 0;
+        }
+        #endif
+        {
+          PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_9, __pyx_mstate_global->__pyx_tuple[1]};
+          __pyx_t_7 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 25, __pyx_L26_error)
+          __Pyx_GOTREF(__pyx_t_7);
+          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_timeout, __pyx_mstate_global->__pyx_int_1, __pyx_t_7, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 25, __pyx_L26_error)
+          __pyx_t_4 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_6, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_7);
+          __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+          __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+          __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L26_error)
+          __Pyx_GOTREF(__pyx_t_4);
+        }
+        __pyx_t_2 = __Pyx_PyObject_LookupSpecial(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_exit); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L26_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __pyx_t_7 = NULL;
+        __pyx_t_9 = __Pyx_PyObject_LookupSpecial(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_enter); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 25, __pyx_L32_error)
+        __Pyx_GOTREF(__pyx_t_9);
+        __pyx_t_8 = 1;
+        #if CYTHON_UNPACK_METHODS
+        if (likely(PyMethod_Check(__pyx_t_9))) {
+          __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_9);
+          assert(__pyx_t_7);
+          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_9);
+          __Pyx_INCREF(__pyx_t_7);
+          __Pyx_INCREF(__pyx__function);
+          __Pyx_DECREF_SET(__pyx_t_9, __pyx__function);
+          __pyx_t_8 = 0;
+        }
+        #endif
+        {
+          PyObject *__pyx_callargs[2] = {__pyx_t_7, NULL};
+          __pyx_t_6 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_9, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 25, __pyx_L32_error)
+          __Pyx_GOTREF(__pyx_t_6);
+        }
+        __pyx_t_9 = __pyx_t_6;
+        __pyx_t_6 = 0;
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        /*try:*/ {
+          {
+            (void)__pyx_t_20; (void)__pyx_t_21; (void)__pyx_t_22; /* mark used */
+            /*try:*/ {
+              __pyx_v_s = __pyx_t_9;
+              __pyx_t_9 = 0;
 
-        /* "zenscrape/setup_env.py":28
- *         if res.returncode == 0:
- *             # Tor is already up and connected! No need to wait or restart.
+              /* "zenscrape/setup_env.py":27
+ *         with socket.create_connection(("127.0.0.1", 9050), timeout=1) as s:
+ *             # If the SOCKS port is already listening, we don't need to do anything
  *             return             # <<<<<<<<<<<<<<
  *     except Exception:
  *         pass
 */
-        __Pyx_XDECREF(__pyx_r);
-        __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-        goto __pyx_L30_try_return;
+              __Pyx_XDECREF(__pyx_r);
+              __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+              goto __pyx_L40_try_return;
 
-        /* "zenscrape/setup_env.py":26
+              /* "zenscrape/setup_env.py":25
+ *     # 3. Check if Tor is already running and active
  *     try:
- *         res = subprocess.run(check_cmd, capture_output=True, timeout=2)
- *         if res.returncode == 0:             # <<<<<<<<<<<<<<
- *             # Tor is already up and connected! No need to wait or restart.
+ *         with socket.create_connection(("127.0.0.1", 9050), timeout=1) as s:             # <<<<<<<<<<<<<<
+ *             # If the SOCKS port is already listening, we don't need to do anything
  *             return
 */
+            }
+            __pyx_L40_try_return:;
+            goto __pyx_L33_return;
+          }
+        }
+        /*finally:*/ {
+          /*normal exit:*/{
+            if (__pyx_t_2) {
+              __pyx_t_22 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_mstate_global->__pyx_tuple[0], NULL);
+              __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+              if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 25, __pyx_L26_error)
+              __Pyx_GOTREF(__pyx_t_22);
+              __Pyx_DECREF(__pyx_t_22); __pyx_t_22 = 0;
+            }
+            goto __pyx_L35;
+          }
+          __pyx_L33_return: {
+            __pyx_t_22 = __pyx_r;
+            __pyx_r = 0;
+            if (__pyx_t_2) {
+              __pyx_t_21 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_mstate_global->__pyx_tuple[0], NULL);
+              __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+              if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 25, __pyx_L26_error)
+              __Pyx_GOTREF(__pyx_t_21);
+              __Pyx_DECREF(__pyx_t_21); __pyx_t_21 = 0;
+            }
+            __pyx_r = __pyx_t_22;
+            __pyx_t_22 = 0;
+            goto __pyx_L30_try_return;
+          }
+          __pyx_L35:;
+        }
+        goto __pyx_L42;
+        __pyx_L32_error:;
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        goto __pyx_L26_error;
+        __pyx_L42:;
       }
 
       /* "zenscrape/setup_env.py":24
- *     # We do a fast curl test through the proxy to see if it's already active
- *     check_cmd = ["curl", "-s", "--socks5-hostname", "127.0.0.1:9050", "https://api.ipify.org"]
+ * 
+ *     # 3. Check if Tor is already running and active
  *     try:             # <<<<<<<<<<<<<<
- *         res = subprocess.run(check_cmd, capture_output=True, timeout=2)
- *         if res.returncode == 0:
+ *         with socket.create_connection(("127.0.0.1", 9050), timeout=1) as s:
+ *             # If the SOCKS port is already listening, we don't need to do anything
 */
     }
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -3105,8 +3180,8 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/setup_env.py":29
- *             # Tor is already up and connected! No need to wait or restart.
+    /* "zenscrape/setup_env.py":28
+ *             # If the SOCKS port is already listening, we don't need to do anything
  *             return
  *     except Exception:             # <<<<<<<<<<<<<<
  *         pass
@@ -3120,11 +3195,11 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
     goto __pyx_L28_except_error;
 
     /* "zenscrape/setup_env.py":24
- *     # We do a fast curl test through the proxy to see if it's already active
- *     check_cmd = ["curl", "-s", "--socks5-hostname", "127.0.0.1:9050", "https://api.ipify.org"]
+ * 
+ *     # 3. Check if Tor is already running and active
  *     try:             # <<<<<<<<<<<<<<
- *         res = subprocess.run(check_cmd, capture_output=True, timeout=2)
- *         if res.returncode == 0:
+ *         with socket.create_connection(("127.0.0.1", 9050), timeout=1) as s:
+ *             # If the SOCKS port is already listening, we don't need to do anything
 */
     __pyx_L28_except_error:;
     __Pyx_XGIVEREF(__pyx_t_3);
@@ -3146,89 +3221,54 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
     __pyx_L31_try_end:;
   }
 
-  /* "zenscrape/setup_env.py":33
+  /* "zenscrape/setup_env.py":32
  * 
- *     # 4. If Tor is not running, close any hung instances and start it
- *     logger.warning("Tor SOCKS5 proxy offline or not ready. Restarting...")             # <<<<<<<<<<<<<<
- *     os.system("pkill tor")
- *     time.sleep(1) # Give system time to release ports
-*/
-  __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 33, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_warning); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 33, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_8 = 1;
-  #if CYTHON_UNPACK_METHODS
-  if (unlikely(PyMethod_Check(__pyx_t_9))) {
-    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_9);
-    assert(__pyx_t_6);
-    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_9);
-    __Pyx_INCREF(__pyx_t_6);
-    __Pyx_INCREF(__pyx__function);
-    __Pyx_DECREF_SET(__pyx_t_9, __pyx__function);
-    __pyx_t_8 = 0;
-  }
-  #endif
-  {
-    PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_mstate_global->__pyx_kp_u_Tor_SOCKS5_proxy_offline_or_not};
-    __pyx_t_4 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_9, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 33, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-  }
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-  /* "zenscrape/setup_env.py":34
- *     # 4. If Tor is not running, close any hung instances and start it
- *     logger.warning("Tor SOCKS5 proxy offline or not ready. Restarting...")
+ *     # 4. If offline, close any stale processes and start fresh
  *     os.system("pkill tor")             # <<<<<<<<<<<<<<
- *     time.sleep(1) # Give system time to release ports
+ *     time.sleep(0.5)
  * 
 */
-  __pyx_t_9 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_os); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 34, __pyx_L1_error)
+  __pyx_t_4 = NULL;
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_os); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 32, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_system); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 34, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_system); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 32, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_8 = 1;
   #if CYTHON_UNPACK_METHODS
   if (unlikely(PyMethod_Check(__pyx_t_7))) {
-    __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_7);
-    assert(__pyx_t_9);
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_7);
+    assert(__pyx_t_4);
     PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_7);
-    __Pyx_INCREF(__pyx_t_9);
+    __Pyx_INCREF(__pyx_t_4);
     __Pyx_INCREF(__pyx__function);
     __Pyx_DECREF_SET(__pyx_t_7, __pyx__function);
     __pyx_t_8 = 0;
   }
   #endif
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_9, __pyx_mstate_global->__pyx_kp_u_pkill_tor};
-    __pyx_t_4 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_7, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+    PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_mstate_global->__pyx_kp_u_pkill_tor};
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_7, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 34, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 32, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/setup_env.py":35
- *     logger.warning("Tor SOCKS5 proxy offline or not ready. Restarting...")
+  /* "zenscrape/setup_env.py":33
+ *     # 4. If offline, close any stale processes and start fresh
  *     os.system("pkill tor")
- *     time.sleep(1) # Give system time to release ports             # <<<<<<<<<<<<<<
+ *     time.sleep(0.5)             # <<<<<<<<<<<<<<
  * 
- *     logger.info(" Starting Tor background process...")
+ *     # Start Tor and capture its live output stream
 */
   __pyx_t_7 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_time); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 35, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_sleep); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_time); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_sleep); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_8 = 1;
   #if CYTHON_UNPACK_METHODS
   if (unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -3242,456 +3282,789 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
   }
   #endif
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_7, __pyx_mstate_global->__pyx_int_1};
-    __pyx_t_4 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_6, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    PyObject *__pyx_callargs[2] = {__pyx_t_7, __pyx_mstate_global->__pyx_float_0_5};
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_6, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 33, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/setup_env.py":37
- *     time.sleep(1) # Give system time to release ports
+  /* "zenscrape/setup_env.py":36
  * 
- *     logger.info(" Starting Tor background process...")             # <<<<<<<<<<<<<<
- *     subprocess.Popen(["tor", "-f", torrc_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
- * 
+ *     # Start Tor and capture its live output stream
+ *     process = subprocess.Popen(             # <<<<<<<<<<<<<<
+ *         ["tor", "-f", torrc_path],
+ *         stdout=subprocess.PIPE,
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 37, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_subprocess); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_info); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 37, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_Popen); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_8 = 1;
-  #if CYTHON_UNPACK_METHODS
-  if (unlikely(PyMethod_Check(__pyx_t_9))) {
-    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_9);
-    assert(__pyx_t_6);
-    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_9);
-    __Pyx_INCREF(__pyx_t_6);
-    __Pyx_INCREF(__pyx__function);
-    __Pyx_DECREF_SET(__pyx_t_9, __pyx__function);
-    __pyx_t_8 = 0;
-  }
-  #endif
-  {
-    PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_mstate_global->__pyx_kp_u_Starting_Tor_background_process};
-    __pyx_t_4 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_9, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 37, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-  }
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "zenscrape/setup_env.py":38
- * 
- *     logger.info(" Starting Tor background process...")
- *     subprocess.Popen(["tor", "-f", torrc_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)             # <<<<<<<<<<<<<<
- * 
- *     # 5. SMART BOOTSTRAP CHECK (Pings Tor every 1.5 seconds until circuit is active)
+  /* "zenscrape/setup_env.py":37
+ *     # Start Tor and capture its live output stream
+ *     process = subprocess.Popen(
+ *         ["tor", "-f", torrc_path],             # <<<<<<<<<<<<<<
+ *         stdout=subprocess.PIPE,
+ *         stderr=subprocess.STDOUT,
 */
-  __pyx_t_9 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_subprocess); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 38, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_Popen); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_7 = PyList_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyList_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 38, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
   __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_tor);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_tor);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 0, __pyx_mstate_global->__pyx_n_u_tor) != (0)) __PYX_ERR(0, 38, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_7, 0, __pyx_mstate_global->__pyx_n_u_tor) != (0)) __PYX_ERR(0, 37, __pyx_L1_error);
   __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_f);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_kp_u_f);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 1, __pyx_mstate_global->__pyx_kp_u_f) != (0)) __PYX_ERR(0, 38, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_7, 1, __pyx_mstate_global->__pyx_kp_u_f) != (0)) __PYX_ERR(0, 37, __pyx_L1_error);
   __Pyx_INCREF(__pyx_v_torrc_path);
   __Pyx_GIVEREF(__pyx_v_torrc_path);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 2, __pyx_v_torrc_path) != (0)) __PYX_ERR(0, 38, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_7, 2, __pyx_v_torrc_path) != (0)) __PYX_ERR(0, 37, __pyx_L1_error);
+
+  /* "zenscrape/setup_env.py":38
+ *     process = subprocess.Popen(
+ *         ["tor", "-f", torrc_path],
+ *         stdout=subprocess.PIPE,             # <<<<<<<<<<<<<<
+ *         stderr=subprocess.STDOUT,
+ *         text=True
+*/
   __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_subprocess); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_DEVNULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_PIPE); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_subprocess); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 38, __pyx_L1_error)
+
+  /* "zenscrape/setup_env.py":39
+ *         ["tor", "-f", torrc_path],
+ *         stdout=subprocess.PIPE,
+ *         stderr=subprocess.STDOUT,             # <<<<<<<<<<<<<<
+ *         text=True
+ *     )
+*/
+  __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_subprocess); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_DEVNULL); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_STDOUT); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+
+  /* "zenscrape/setup_env.py":40
+ *         stdout=subprocess.PIPE,
+ *         stderr=subprocess.STDOUT,
+ *         text=True             # <<<<<<<<<<<<<<
+ *     )
+ * 
+*/
   __pyx_t_8 = 1;
   #if CYTHON_UNPACK_METHODS
-  if (unlikely(PyMethod_Check(__pyx_t_7))) {
-    __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_7);
-    assert(__pyx_t_9);
-    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_7);
-    __Pyx_INCREF(__pyx_t_9);
+  if (unlikely(PyMethod_Check(__pyx_t_4))) {
+    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_4);
+    assert(__pyx_t_6);
+    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
+    __Pyx_INCREF(__pyx_t_6);
     __Pyx_INCREF(__pyx__function);
-    __Pyx_DECREF_SET(__pyx_t_7, __pyx__function);
+    __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
     __pyx_t_8 = 0;
   }
   #endif
   {
-    PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_9, __pyx_t_6};
-    __pyx_t_11 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 38, __pyx_L1_error)
+    PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 3 : 0)] = {__pyx_t_6, __pyx_t_7};
+    __pyx_t_11 = __Pyx_MakeVectorcallBuilderKwds(3); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 36, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_stdout, __pyx_t_5, __pyx_t_11, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 38, __pyx_L1_error)
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_stderr, __pyx_t_12, __pyx_t_11, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 38, __pyx_L1_error)
-    __pyx_t_4 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_7, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_11);
-    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_stdout, __pyx_t_5, __pyx_t_11, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 36, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_stderr, __pyx_t_12, __pyx_t_11, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 36, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_text, Py_True, __pyx_t_11, __pyx_callargs+2, 2) < (0)) __PYX_ERR(0, 36, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_11);
+    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 38, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 36, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_v_process = __pyx_t_9;
+  __pyx_t_9 = 0;
 
-  /* "zenscrape/setup_env.py":41
+  /* "zenscrape/setup_env.py":44
  * 
- *     # 5. SMART BOOTSTRAP CHECK (Pings Tor every 1.5 seconds until circuit is active)
- *     logger.info(" Waiting for Tor circuits to finalize (Bootstrapping)...")             # <<<<<<<<<<<<<<
- * 
- *     for attempt in range(20): # Max 30 seconds
+ *     # ANSI Escape Codes for Terminal UI
+ *     GRAY = "\033[90m"             # <<<<<<<<<<<<<<
+ *     RESET = "\033[0m"
+ *     UP_AND_CLEAR = "\033[A\033[K" # Move cursor up one line and delete everything on it
 */
-  __pyx_t_7 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_90m);
+  __pyx_v_GRAY = __pyx_mstate_global->__pyx_kp_u_90m;
+
+  /* "zenscrape/setup_env.py":45
+ *     # ANSI Escape Codes for Terminal UI
+ *     GRAY = "\033[90m"
+ *     RESET = "\033[0m"             # <<<<<<<<<<<<<<
+ *     UP_AND_CLEAR = "\033[A\033[K" # Move cursor up one line and delete everything on it
+ * 
+*/
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_0m);
+  __pyx_v_RESET = __pyx_mstate_global->__pyx_kp_u_0m;
+
+  /* "zenscrape/setup_env.py":46
+ *     GRAY = "\033[90m"
+ *     RESET = "\033[0m"
+ *     UP_AND_CLEAR = "\033[A\033[K" # Move cursor up one line and delete everything on it             # <<<<<<<<<<<<<<
+ * 
+ *     logger.info(" Bootstrapping Tor circuits...")
+*/
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_A_K);
+  __pyx_v_UP_AND_CLEAR = __pyx_mstate_global->__pyx_kp_u_A_K;
+
+  /* "zenscrape/setup_env.py":48
+ *     UP_AND_CLEAR = "\033[A\033[K" # Move cursor up one line and delete everything on it
+ * 
+ *     logger.info(" Bootstrapping Tor circuits...")             # <<<<<<<<<<<<<<
+ * 
+ *     lines_printed = 0
+*/
+  __pyx_t_4 = NULL;
+  __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_info); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_info); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   __pyx_t_8 = 1;
   #if CYTHON_UNPACK_METHODS
   if (unlikely(PyMethod_Check(__pyx_t_12))) {
-    __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_12);
-    assert(__pyx_t_7);
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_12);
+    assert(__pyx_t_4);
     PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_12);
-    __Pyx_INCREF(__pyx_t_7);
+    __Pyx_INCREF(__pyx_t_4);
     __Pyx_INCREF(__pyx__function);
     __Pyx_DECREF_SET(__pyx_t_12, __pyx__function);
     __pyx_t_8 = 0;
   }
   #endif
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_7, __pyx_mstate_global->__pyx_kp_u_Waiting_for_Tor_circuits_to_fin};
-    __pyx_t_4 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_12, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+    PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_mstate_global->__pyx_kp_u_Bootstrapping_Tor_circuits};
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_12, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 48, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/setup_env.py":43
- *     logger.info(" Waiting for Tor circuits to finalize (Bootstrapping)...")
+  /* "zenscrape/setup_env.py":50
+ *     logger.info(" Bootstrapping Tor circuits...")
  * 
- *     for attempt in range(20): # Max 30 seconds             # <<<<<<<<<<<<<<
- *         time.sleep(1.5)
- *         try:
+ *     lines_printed = 0             # <<<<<<<<<<<<<<
+ *     success = False
+ * 
 */
-  for (__pyx_t_21 = 0; __pyx_t_21 < 20; __pyx_t_21+=1) {
-    __pyx_v_attempt = __pyx_t_21;
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_int_0);
+  __pyx_v_lines_printed = __pyx_mstate_global->__pyx_int_0;
 
-    /* "zenscrape/setup_env.py":44
+  /* "zenscrape/setup_env.py":51
  * 
- *     for attempt in range(20): # Max 30 seconds
- *         time.sleep(1.5)             # <<<<<<<<<<<<<<
- *         try:
- *             # We ping a tiny endpoint to verify Tor is 100% active
+ *     lines_printed = 0
+ *     success = False             # <<<<<<<<<<<<<<
+ * 
+ *     # 5. Read Tor's live logs as they happen
 */
-    __pyx_t_12 = NULL;
-    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_time); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 44, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_sleep); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_v_success = 0;
+
+  /* "zenscrape/setup_env.py":54
+ * 
+ *     # 5. Read Tor's live logs as they happen
+ *     try:             # <<<<<<<<<<<<<<
+ *         while True:
+ *             line = process.stdout.readline()
+*/
+  {
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    __Pyx_ExceptionSave(&__pyx_t_1, &__pyx_t_19, &__pyx_t_3);
+    __Pyx_XGOTREF(__pyx_t_1);
+    __Pyx_XGOTREF(__pyx_t_19);
+    __Pyx_XGOTREF(__pyx_t_3);
+    /*try:*/ {
+
+      /* "zenscrape/setup_env.py":55
+ *     # 5. Read Tor's live logs as they happen
+ *     try:
+ *         while True:             # <<<<<<<<<<<<<<
+ *             line = process.stdout.readline()
+ *             if not line:
+*/
+      while (1) {
+
+        /* "zenscrape/setup_env.py":56
+ *     try:
+ *         while True:
+ *             line = process.stdout.readline()             # <<<<<<<<<<<<<<
+ *             if not line:
+ *                 break
+*/
+        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_process, __pyx_mstate_global->__pyx_n_u_stdout); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 56, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __pyx_t_12 = __pyx_t_4;
+        __Pyx_INCREF(__pyx_t_12);
+        __pyx_t_8 = 0;
+        {
+          PyObject *__pyx_callargs[2] = {__pyx_t_12, NULL};
+          __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_readline, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 56, __pyx_L45_error)
+          __Pyx_GOTREF(__pyx_t_9);
+        }
+        __Pyx_XDECREF_SET(__pyx_v_line, __pyx_t_9);
+        __pyx_t_9 = 0;
+
+        /* "zenscrape/setup_env.py":57
+ *         while True:
+ *             line = process.stdout.readline()
+ *             if not line:             # <<<<<<<<<<<<<<
+ *                 break
+ * 
+*/
+        __pyx_t_17 = __Pyx_PyObject_IsTrue(__pyx_v_line); if (unlikely((__pyx_t_17 < 0))) __PYX_ERR(0, 57, __pyx_L45_error)
+        __pyx_t_18 = (!__pyx_t_17);
+        if (__pyx_t_18) {
+
+          /* "zenscrape/setup_env.py":58
+ *             line = process.stdout.readline()
+ *             if not line:
+ *                 break             # <<<<<<<<<<<<<<
+ * 
+ *             clean_line = line.strip()
+*/
+          goto __pyx_L52_break;
+
+          /* "zenscrape/setup_env.py":57
+ *         while True:
+ *             line = process.stdout.readline()
+ *             if not line:             # <<<<<<<<<<<<<<
+ *                 break
+ * 
+*/
+        }
+
+        /* "zenscrape/setup_env.py":60
+ *                 break
+ * 
+ *             clean_line = line.strip()             # <<<<<<<<<<<<<<
+ *             if not clean_line:
+ *                 continue
+*/
+        __pyx_t_4 = __pyx_v_line;
+        __Pyx_INCREF(__pyx_t_4);
+        __pyx_t_8 = 0;
+        {
+          PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
+          __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_strip, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 60, __pyx_L45_error)
+          __Pyx_GOTREF(__pyx_t_9);
+        }
+        __Pyx_XDECREF_SET(__pyx_v_clean_line, __pyx_t_9);
+        __pyx_t_9 = 0;
+
+        /* "zenscrape/setup_env.py":61
+ * 
+ *             clean_line = line.strip()
+ *             if not clean_line:             # <<<<<<<<<<<<<<
+ *                 continue
+ * 
+*/
+        __pyx_t_18 = __Pyx_PyObject_IsTrue(__pyx_v_clean_line); if (unlikely((__pyx_t_18 < 0))) __PYX_ERR(0, 61, __pyx_L45_error)
+        __pyx_t_17 = (!__pyx_t_18);
+        if (__pyx_t_17) {
+
+          /* "zenscrape/setup_env.py":62
+ *             clean_line = line.strip()
+ *             if not clean_line:
+ *                 continue             # <<<<<<<<<<<<<<
+ * 
+ *             # Print the Tor logs in gray with the "" pointer
+*/
+          goto __pyx_L51_continue;
+
+          /* "zenscrape/setup_env.py":61
+ * 
+ *             clean_line = line.strip()
+ *             if not clean_line:             # <<<<<<<<<<<<<<
+ *                 continue
+ * 
+*/
+        }
+
+        /* "zenscrape/setup_env.py":65
+ * 
+ *             # Print the Tor logs in gray with the "" pointer
+ *             sys.stdout.write(f"{GRAY}  {clean_line}{RESET}\n")             # <<<<<<<<<<<<<<
+ *             sys.stdout.flush()
+ *             lines_printed += 1
+*/
+        __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_mstate_global->__pyx_n_u_sys); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 65, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_12);
+        __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_mstate_global->__pyx_n_u_stdout); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 65, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_11);
+        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __pyx_t_4 = __pyx_t_11;
+        __Pyx_INCREF(__pyx_t_4);
+        __pyx_t_12 = __Pyx_PyObject_FormatSimple(__pyx_v_clean_line, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 65, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_12);
+        __pyx_t_23[0] = __pyx_v_GRAY;
+        __pyx_t_23[1] = __pyx_mstate_global->__pyx_kp_u_;
+        __pyx_t_23[2] = __pyx_t_12;
+        __pyx_t_23[3] = __pyx_v_RESET;
+        __pyx_t_23[4] = __pyx_mstate_global->__pyx_kp_u__2;
+        __pyx_t_5 = __Pyx_PyUnicode_Join(__pyx_t_23, 5, __Pyx_PyUnicode_GET_LENGTH(__pyx_v_GRAY) + 3 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_12) + __Pyx_PyUnicode_GET_LENGTH(__pyx_v_RESET) + 1, 255 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_v_GRAY) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_12) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_v_RESET));
+        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 65, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __pyx_t_8 = 0;
+        {
+          PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_t_5};
+          __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_write, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+          __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 65, __pyx_L45_error)
+          __Pyx_GOTREF(__pyx_t_9);
+        }
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+        /* "zenscrape/setup_env.py":66
+ *             # Print the Tor logs in gray with the "" pointer
+ *             sys.stdout.write(f"{GRAY}  {clean_line}{RESET}\n")
+ *             sys.stdout.flush()             # <<<<<<<<<<<<<<
+ *             lines_printed += 1
+ * 
+*/
+        __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_sys); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 66, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_stdout); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 66, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __pyx_t_11 = __pyx_t_4;
+        __Pyx_INCREF(__pyx_t_11);
+        __pyx_t_8 = 0;
+        {
+          PyObject *__pyx_callargs[2] = {__pyx_t_11, NULL};
+          __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_flush, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 66, __pyx_L45_error)
+          __Pyx_GOTREF(__pyx_t_9);
+        }
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+        /* "zenscrape/setup_env.py":67
+ *             sys.stdout.write(f"{GRAY}  {clean_line}{RESET}\n")
+ *             sys.stdout.flush()
+ *             lines_printed += 1             # <<<<<<<<<<<<<<
+ * 
+ *             # Detect successful connection
+*/
+        __pyx_t_9 = __Pyx_PyLong_AddObjC(__pyx_v_lines_printed, __pyx_mstate_global->__pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 67, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_9);
+        __Pyx_DECREF_SET(__pyx_v_lines_printed, __pyx_t_9);
+        __pyx_t_9 = 0;
+
+        /* "zenscrape/setup_env.py":70
+ * 
+ *             # Detect successful connection
+ *             if "Bootstrapped 100%" in clean_line:             # <<<<<<<<<<<<<<
+ *                 success = True
+ *                 break
+*/
+        __pyx_t_17 = (__Pyx_PySequence_ContainsTF(__pyx_mstate_global->__pyx_kp_u_Bootstrapped_100, __pyx_v_clean_line, Py_EQ)); if (unlikely((__pyx_t_17 < 0))) __PYX_ERR(0, 70, __pyx_L45_error)
+        if (__pyx_t_17) {
+
+          /* "zenscrape/setup_env.py":71
+ *             # Detect successful connection
+ *             if "Bootstrapped 100%" in clean_line:
+ *                 success = True             # <<<<<<<<<<<<<<
+ *                 break
+ * 
+*/
+          __pyx_v_success = 1;
+
+          /* "zenscrape/setup_env.py":72
+ *             if "Bootstrapped 100%" in clean_line:
+ *                 success = True
+ *                 break             # <<<<<<<<<<<<<<
+ * 
+ *             # Detect errors (like address already in use)
+*/
+          goto __pyx_L52_break;
+
+          /* "zenscrape/setup_env.py":70
+ * 
+ *             # Detect successful connection
+ *             if "Bootstrapped 100%" in clean_line:             # <<<<<<<<<<<<<<
+ *                 success = True
+ *                 break
+*/
+        }
+
+        /* "zenscrape/setup_env.py":75
+ * 
+ *             # Detect errors (like address already in use)
+ *             if "Could not bind" in clean_line or "Address already in use" in clean_line:             # <<<<<<<<<<<<<<
+ *                 break
+ *     except KeyboardInterrupt:
+*/
+        __pyx_t_18 = (__Pyx_PySequence_ContainsTF(__pyx_mstate_global->__pyx_kp_u_Could_not_bind, __pyx_v_clean_line, Py_EQ)); if (unlikely((__pyx_t_18 < 0))) __PYX_ERR(0, 75, __pyx_L45_error)
+        if (!__pyx_t_18) {
+        } else {
+          __pyx_t_17 = __pyx_t_18;
+          goto __pyx_L57_bool_binop_done;
+        }
+        __pyx_t_18 = (__Pyx_PySequence_ContainsTF(__pyx_mstate_global->__pyx_kp_u_Address_already_in_use, __pyx_v_clean_line, Py_EQ)); if (unlikely((__pyx_t_18 < 0))) __PYX_ERR(0, 75, __pyx_L45_error)
+        __pyx_t_17 = __pyx_t_18;
+        __pyx_L57_bool_binop_done:;
+        if (__pyx_t_17) {
+
+          /* "zenscrape/setup_env.py":76
+ *             # Detect errors (like address already in use)
+ *             if "Could not bind" in clean_line or "Address already in use" in clean_line:
+ *                 break             # <<<<<<<<<<<<<<
+ *     except KeyboardInterrupt:
+ *         process.terminate()
+*/
+          goto __pyx_L52_break;
+
+          /* "zenscrape/setup_env.py":75
+ * 
+ *             # Detect errors (like address already in use)
+ *             if "Could not bind" in clean_line or "Address already in use" in clean_line:             # <<<<<<<<<<<<<<
+ *                 break
+ *     except KeyboardInterrupt:
+*/
+        }
+        __pyx_L51_continue:;
+      }
+      __pyx_L52_break:;
+
+      /* "zenscrape/setup_env.py":54
+ * 
+ *     # 5. Read Tor's live logs as they happen
+ *     try:             # <<<<<<<<<<<<<<
+ *         while True:
+ *             line = process.stdout.readline()
+*/
+    }
+    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_XDECREF(__pyx_t_19); __pyx_t_19 = 0;
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    goto __pyx_L50_try_end;
+    __pyx_L45_error:;
+    __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
+    __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
+    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/setup_env.py":77
+ *             if "Could not bind" in clean_line or "Address already in use" in clean_line:
+ *                 break
+ *     except KeyboardInterrupt:             # <<<<<<<<<<<<<<
+ *         process.terminate()
+ *         sys.exit()
+*/
+    __pyx_t_10 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_KeyboardInterrupt))));
+    if (__pyx_t_10) {
+      __Pyx_AddTraceback("zenscrape.setup_env.ensure_tor_env", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      if (__Pyx_GetException(&__pyx_t_9, &__pyx_t_4, &__pyx_t_11) < 0) __PYX_ERR(0, 77, __pyx_L47_except_error)
+      __Pyx_XGOTREF(__pyx_t_9);
+      __Pyx_XGOTREF(__pyx_t_4);
+      __Pyx_XGOTREF(__pyx_t_11);
+
+      /* "zenscrape/setup_env.py":78
+ *                 break
+ *     except KeyboardInterrupt:
+ *         process.terminate()             # <<<<<<<<<<<<<<
+ *         sys.exit()
+ * 
+*/
+      __pyx_t_12 = __pyx_v_process;
+      __Pyx_INCREF(__pyx_t_12);
+      __pyx_t_8 = 0;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_12, NULL};
+        __pyx_t_5 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_terminate, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L47_except_error)
+        __Pyx_GOTREF(__pyx_t_5);
+      }
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+      /* "zenscrape/setup_env.py":79
+ *     except KeyboardInterrupt:
+ *         process.terminate()
+ *         sys.exit()             # <<<<<<<<<<<<<<
+ * 
+ *     # 6. CLEAR LOGS ON SUCCESS
+*/
+      __pyx_t_12 = NULL;
+      __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_sys); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 79, __pyx_L47_except_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_exit_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 79, __pyx_L47_except_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __pyx_t_8 = 1;
+      #if CYTHON_UNPACK_METHODS
+      if (unlikely(PyMethod_Check(__pyx_t_6))) {
+        __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_6);
+        assert(__pyx_t_12);
+        PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_6);
+        __Pyx_INCREF(__pyx_t_12);
+        __Pyx_INCREF(__pyx__function);
+        __Pyx_DECREF_SET(__pyx_t_6, __pyx__function);
+        __pyx_t_8 = 0;
+      }
+      #endif
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_12, NULL};
+        __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_6, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 79, __pyx_L47_except_error)
+        __Pyx_GOTREF(__pyx_t_5);
+      }
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+      goto __pyx_L46_exception_handled;
+    }
+    goto __pyx_L47_except_error;
+
+    /* "zenscrape/setup_env.py":54
+ * 
+ *     # 5. Read Tor's live logs as they happen
+ *     try:             # <<<<<<<<<<<<<<
+ *         while True:
+ *             line = process.stdout.readline()
+*/
+    __pyx_L47_except_error:;
+    __Pyx_XGIVEREF(__pyx_t_1);
+    __Pyx_XGIVEREF(__pyx_t_19);
+    __Pyx_XGIVEREF(__pyx_t_3);
+    __Pyx_ExceptionReset(__pyx_t_1, __pyx_t_19, __pyx_t_3);
+    goto __pyx_L1_error;
+    __pyx_L46_exception_handled:;
+    __Pyx_XGIVEREF(__pyx_t_1);
+    __Pyx_XGIVEREF(__pyx_t_19);
+    __Pyx_XGIVEREF(__pyx_t_3);
+    __Pyx_ExceptionReset(__pyx_t_1, __pyx_t_19, __pyx_t_3);
+    __pyx_L50_try_end:;
+  }
+
+  /* "zenscrape/setup_env.py":82
+ * 
+ *     # 6. CLEAR LOGS ON SUCCESS
+ *     if success:             # <<<<<<<<<<<<<<
+ *         # Move the terminal cursor up and erase every gray line we printed
+ *         # +1 to also erase the "Bootstrapping Tor circuits..." info log
+*/
+  if (__pyx_v_success) {
+
+    /* "zenscrape/setup_env.py":85
+ *         # Move the terminal cursor up and erase every gray line we printed
+ *         # +1 to also erase the "Bootstrapping Tor circuits..." info log
+ *         for _ in range(lines_printed + 1):             # <<<<<<<<<<<<<<
+ *             sys.stdout.write(UP_AND_CLEAR)
+ *         sys.stdout.flush()
+*/
+    __pyx_t_4 = NULL;
+    __pyx_t_9 = __Pyx_PyLong_AddObjC(__pyx_v_lines_printed, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 85, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_8 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_t_9};
+      __pyx_t_11 = __Pyx_PyObject_FastCall((PyObject*)(&PyRange_Type), __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 85, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_11);
+    }
+    __pyx_t_9 = PyObject_GetIter(__pyx_t_11); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 85, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_24 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_9); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 85, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    for (;;) {
+      {
+        __pyx_t_11 = __pyx_t_24(__pyx_t_9);
+        if (unlikely(!__pyx_t_11)) {
+          PyObject* exc_type = PyErr_Occurred();
+          if (exc_type) {
+            if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 85, __pyx_L1_error)
+            PyErr_Clear();
+          }
+          break;
+        }
+      }
+      __Pyx_GOTREF(__pyx_t_11);
+      __Pyx_XDECREF_SET(__pyx_v__, __pyx_t_11);
+      __pyx_t_11 = 0;
+
+      /* "zenscrape/setup_env.py":86
+ *         # +1 to also erase the "Bootstrapping Tor circuits..." info log
+ *         for _ in range(lines_printed + 1):
+ *             sys.stdout.write(UP_AND_CLEAR)             # <<<<<<<<<<<<<<
+ *         sys.stdout.flush()
+ * 
+*/
+      __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_sys); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 86, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_stdout); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 86, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_4 = __pyx_t_6;
+      __Pyx_INCREF(__pyx_t_4);
+      __pyx_t_8 = 0;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_v_UP_AND_CLEAR};
+        __pyx_t_11 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_write, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 86, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_11);
+      }
+      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+
+      /* "zenscrape/setup_env.py":85
+ *         # Move the terminal cursor up and erase every gray line we printed
+ *         # +1 to also erase the "Bootstrapping Tor circuits..." info log
+ *         for _ in range(lines_printed + 1):             # <<<<<<<<<<<<<<
+ *             sys.stdout.write(UP_AND_CLEAR)
+ *         sys.stdout.flush()
+*/
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/setup_env.py":87
+ *         for _ in range(lines_printed + 1):
+ *             sys.stdout.write(UP_AND_CLEAR)
+ *         sys.stdout.flush()             # <<<<<<<<<<<<<<
+ * 
+ *         logger.success(" Tor circuits fully bootstrapped and active!")
+*/
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_sys); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 87, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_stdout); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 87, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_11 = __pyx_t_4;
+    __Pyx_INCREF(__pyx_t_11);
+    __pyx_t_8 = 0;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_11, NULL};
+      __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_flush, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 87, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/setup_env.py":89
+ *         sys.stdout.flush()
+ * 
+ *         logger.success(" Tor circuits fully bootstrapped and active!")             # <<<<<<<<<<<<<<
+ *     else:
+ *         logger.warning(" Tor failed to bootstrap cleanly. Trying to proceed...")
+*/
+    __pyx_t_4 = NULL;
+    __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 89, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_success); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 89, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __pyx_t_8 = 1;
+    #if CYTHON_UNPACK_METHODS
+    if (unlikely(PyMethod_Check(__pyx_t_6))) {
+      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_6);
+      assert(__pyx_t_4);
+      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_6);
+      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(__pyx__function);
+      __Pyx_DECREF_SET(__pyx_t_6, __pyx__function);
+      __pyx_t_8 = 0;
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_mstate_global->__pyx_kp_u_Tor_circuits_fully_bootstrapped};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_6, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 89, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/setup_env.py":82
+ * 
+ *     # 6. CLEAR LOGS ON SUCCESS
+ *     if success:             # <<<<<<<<<<<<<<
+ *         # Move the terminal cursor up and erase every gray line we printed
+ *         # +1 to also erase the "Bootstrapping Tor circuits..." info log
+*/
+    goto __pyx_L61;
+  }
+
+  /* "zenscrape/setup_env.py":91
+ *         logger.success(" Tor circuits fully bootstrapped and active!")
+ *     else:
+ *         logger.warning(" Tor failed to bootstrap cleanly. Trying to proceed...")             # <<<<<<<<<<<<<<
+*/
+  /*else*/ {
+    __pyx_t_6 = NULL;
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 91, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_warning); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 91, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_8 = 1;
     #if CYTHON_UNPACK_METHODS
     if (unlikely(PyMethod_Check(__pyx_t_11))) {
-      __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_11);
-      assert(__pyx_t_12);
+      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_11);
+      assert(__pyx_t_6);
       PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_11);
-      __Pyx_INCREF(__pyx_t_12);
+      __Pyx_INCREF(__pyx_t_6);
       __Pyx_INCREF(__pyx__function);
       __Pyx_DECREF_SET(__pyx_t_11, __pyx__function);
       __pyx_t_8 = 0;
     }
     #endif
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_12, __pyx_mstate_global->__pyx_float_1_5};
-      __pyx_t_4 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_11, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 44, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-    }
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-    /* "zenscrape/setup_env.py":45
- *     for attempt in range(20): # Max 30 seconds
- *         time.sleep(1.5)
- *         try:             # <<<<<<<<<<<<<<
- *             # We ping a tiny endpoint to verify Tor is 100% active
- *             ping = subprocess.run(check_cmd, capture_output=True, timeout=2)
-*/
-    {
-      __Pyx_PyThreadState_declare
-      __Pyx_PyThreadState_assign
-      __Pyx_ExceptionSave(&__pyx_t_1, &__pyx_t_19, &__pyx_t_3);
-      __Pyx_XGOTREF(__pyx_t_1);
-      __Pyx_XGOTREF(__pyx_t_19);
-      __Pyx_XGOTREF(__pyx_t_3);
-      /*try:*/ {
-
-        /* "zenscrape/setup_env.py":47
- *         try:
- *             # We ping a tiny endpoint to verify Tor is 100% active
- *             ping = subprocess.run(check_cmd, capture_output=True, timeout=2)             # <<<<<<<<<<<<<<
- *             if ping.returncode == 0:
- *                 logger.success(f" Tor circuits fully bootstrapped! Exit IP: {ping.stdout.decode().strip()}")
-*/
-        __pyx_t_11 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_mstate_global->__pyx_n_u_subprocess); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 47, __pyx_L37_error)
-        __Pyx_GOTREF(__pyx_t_12);
-        __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_mstate_global->__pyx_n_u_run); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 47, __pyx_L37_error)
-        __Pyx_GOTREF(__pyx_t_7);
-        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-        __pyx_t_8 = 1;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_7))) {
-          __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_7);
-          assert(__pyx_t_11);
-          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_7);
-          __Pyx_INCREF(__pyx_t_11);
-          __Pyx_INCREF(__pyx__function);
-          __Pyx_DECREF_SET(__pyx_t_7, __pyx__function);
-          __pyx_t_8 = 0;
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_11, __pyx_v_check_cmd};
-          __pyx_t_12 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 47, __pyx_L37_error)
-          __Pyx_GOTREF(__pyx_t_12);
-          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_capture_output, Py_True, __pyx_t_12, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 47, __pyx_L37_error)
-          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_timeout, __pyx_mstate_global->__pyx_int_2, __pyx_t_12, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 47, __pyx_L37_error)
-          __pyx_t_4 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_7, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_12);
-          __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
-          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-          __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L37_error)
-          __Pyx_GOTREF(__pyx_t_4);
-        }
-        __Pyx_XDECREF_SET(__pyx_v_ping, __pyx_t_4);
-        __pyx_t_4 = 0;
-
-        /* "zenscrape/setup_env.py":48
- *             # We ping a tiny endpoint to verify Tor is 100% active
- *             ping = subprocess.run(check_cmd, capture_output=True, timeout=2)
- *             if ping.returncode == 0:             # <<<<<<<<<<<<<<
- *                 logger.success(f" Tor circuits fully bootstrapped! Exit IP: {ping.stdout.decode().strip()}")
- *                 return
-*/
-        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_ping, __pyx_mstate_global->__pyx_n_u_returncode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 48, __pyx_L37_error)
-        __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_17 = (__Pyx_PyLong_BoolEqObjC(__pyx_t_4, __pyx_mstate_global->__pyx_int_0, 0, 0)); if (unlikely((__pyx_t_17 < 0))) __PYX_ERR(0, 48, __pyx_L37_error)
-        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (__pyx_t_17) {
-
-          /* "zenscrape/setup_env.py":49
- *             ping = subprocess.run(check_cmd, capture_output=True, timeout=2)
- *             if ping.returncode == 0:
- *                 logger.success(f" Tor circuits fully bootstrapped! Exit IP: {ping.stdout.decode().strip()}")             # <<<<<<<<<<<<<<
- *                 return
- *         except Exception:
-*/
-          __pyx_t_7 = NULL;
-          __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 49, __pyx_L37_error)
-          __Pyx_GOTREF(__pyx_t_12);
-          __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_mstate_global->__pyx_n_u_success); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 49, __pyx_L37_error)
-          __Pyx_GOTREF(__pyx_t_11);
-          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-          __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_ping, __pyx_mstate_global->__pyx_n_u_stdout); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 49, __pyx_L37_error)
-          __Pyx_GOTREF(__pyx_t_13);
-          __pyx_t_9 = __pyx_t_13;
-          __Pyx_INCREF(__pyx_t_9);
-          __pyx_t_8 = 0;
-          {
-            PyObject *__pyx_callargs[2] = {__pyx_t_9, NULL};
-            __pyx_t_6 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_decode, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-            __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-            if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 49, __pyx_L37_error)
-            __Pyx_GOTREF(__pyx_t_6);
-          }
-          __pyx_t_5 = __pyx_t_6;
-          __Pyx_INCREF(__pyx_t_5);
-          __pyx_t_8 = 0;
-          {
-            PyObject *__pyx_callargs[2] = {__pyx_t_5, NULL};
-            __pyx_t_12 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_strip, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-            __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-            if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 49, __pyx_L37_error)
-            __Pyx_GOTREF(__pyx_t_12);
-          }
-          __pyx_t_6 = __Pyx_PyObject_FormatSimple(__pyx_t_12, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 49, __pyx_L37_error)
-          __Pyx_GOTREF(__pyx_t_6);
-          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-          __pyx_t_12 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Tor_circuits_fully_bootstrapped, __pyx_t_6); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 49, __pyx_L37_error)
-          __Pyx_GOTREF(__pyx_t_12);
-          __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-          __pyx_t_8 = 1;
-          #if CYTHON_UNPACK_METHODS
-          if (unlikely(PyMethod_Check(__pyx_t_11))) {
-            __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_11);
-            assert(__pyx_t_7);
-            PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_11);
-            __Pyx_INCREF(__pyx_t_7);
-            __Pyx_INCREF(__pyx__function);
-            __Pyx_DECREF_SET(__pyx_t_11, __pyx__function);
-            __pyx_t_8 = 0;
-          }
-          #endif
-          {
-            PyObject *__pyx_callargs[2] = {__pyx_t_7, __pyx_t_12};
-            __pyx_t_4 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_11, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-            __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-            __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-            __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-            if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 49, __pyx_L37_error)
-            __Pyx_GOTREF(__pyx_t_4);
-          }
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-          /* "zenscrape/setup_env.py":50
- *             if ping.returncode == 0:
- *                 logger.success(f" Tor circuits fully bootstrapped! Exit IP: {ping.stdout.decode().strip()}")
- *                 return             # <<<<<<<<<<<<<<
- *         except Exception:
- *             pass
-*/
-          __Pyx_XDECREF(__pyx_r);
-          __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-          goto __pyx_L41_try_return;
-
-          /* "zenscrape/setup_env.py":48
- *             # We ping a tiny endpoint to verify Tor is 100% active
- *             ping = subprocess.run(check_cmd, capture_output=True, timeout=2)
- *             if ping.returncode == 0:             # <<<<<<<<<<<<<<
- *                 logger.success(f" Tor circuits fully bootstrapped! Exit IP: {ping.stdout.decode().strip()}")
- *                 return
-*/
-        }
-
-        /* "zenscrape/setup_env.py":45
- *     for attempt in range(20): # Max 30 seconds
- *         time.sleep(1.5)
- *         try:             # <<<<<<<<<<<<<<
- *             # We ping a tiny endpoint to verify Tor is 100% active
- *             ping = subprocess.run(check_cmd, capture_output=True, timeout=2)
-*/
-      }
-      __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __Pyx_XDECREF(__pyx_t_19); __pyx_t_19 = 0;
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      goto __pyx_L44_try_end;
-      __pyx_L37_error:;
-      __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
-      __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
-      __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
-      __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
-      __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+      PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_mstate_global->__pyx_kp_u_Tor_failed_to_bootstrap_cleanly};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_11, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-
-      /* "zenscrape/setup_env.py":51
- *                 logger.success(f" Tor circuits fully bootstrapped! Exit IP: {ping.stdout.decode().strip()}")
- *                 return
- *         except Exception:             # <<<<<<<<<<<<<<
- *             pass
- * 
-*/
-      __pyx_t_10 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_Exception))));
-      if (__pyx_t_10) {
-        __Pyx_ErrRestore(0,0,0);
-        goto __pyx_L38_exception_handled;
-      }
-      goto __pyx_L39_except_error;
-
-      /* "zenscrape/setup_env.py":45
- *     for attempt in range(20): # Max 30 seconds
- *         time.sleep(1.5)
- *         try:             # <<<<<<<<<<<<<<
- *             # We ping a tiny endpoint to verify Tor is 100% active
- *             ping = subprocess.run(check_cmd, capture_output=True, timeout=2)
-*/
-      __pyx_L39_except_error:;
-      __Pyx_XGIVEREF(__pyx_t_1);
-      __Pyx_XGIVEREF(__pyx_t_19);
-      __Pyx_XGIVEREF(__pyx_t_3);
-      __Pyx_ExceptionReset(__pyx_t_1, __pyx_t_19, __pyx_t_3);
-      goto __pyx_L1_error;
-      __pyx_L41_try_return:;
-      __Pyx_XGIVEREF(__pyx_t_1);
-      __Pyx_XGIVEREF(__pyx_t_19);
-      __Pyx_XGIVEREF(__pyx_t_3);
-      __Pyx_ExceptionReset(__pyx_t_1, __pyx_t_19, __pyx_t_3);
-      goto __pyx_L0;
-      __pyx_L38_exception_handled:;
-      __Pyx_XGIVEREF(__pyx_t_1);
-      __Pyx_XGIVEREF(__pyx_t_19);
-      __Pyx_XGIVEREF(__pyx_t_3);
-      __Pyx_ExceptionReset(__pyx_t_1, __pyx_t_19, __pyx_t_3);
-      __pyx_L44_try_end:;
+      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 91, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
     }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   }
+  __pyx_L61:;
 
-  /* "zenscrape/setup_env.py":54
- *             pass
- * 
- *     logger.warning(" Tor is taking longer than usual to connect. Proceeding anyway...")             # <<<<<<<<<<<<<<
-*/
-  __pyx_t_11 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 54, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_mstate_global->__pyx_n_u_warning); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 54, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_8 = 1;
-  #if CYTHON_UNPACK_METHODS
-  if (unlikely(PyMethod_Check(__pyx_t_7))) {
-    __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_7);
-    assert(__pyx_t_11);
-    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_7);
-    __Pyx_INCREF(__pyx_t_11);
-    __Pyx_INCREF(__pyx__function);
-    __Pyx_DECREF_SET(__pyx_t_7, __pyx__function);
-    __pyx_t_8 = 0;
-  }
-  #endif
-  {
-    PyObject *__pyx_callargs[2] = {__pyx_t_11, __pyx_mstate_global->__pyx_kp_u_Tor_is_taking_longer_than_usual};
-    __pyx_t_4 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_7, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 54, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-  }
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-  /* "zenscrape/setup_env.py":6
+  /* "zenscrape/setup_env.py":8
  * from loguru import logger
  * 
  * def ensure_tor_env():             # <<<<<<<<<<<<<<
- *     """Automates Tor installation, configuration, and verifies complete bootstrap"""
- *     # 1. Check if Tor is installed
+ *     """Automates Tor environment setups, prints logs in gray, and erases them on success"""
+ *     # 1. Install check
 */
 
   /* function exit code */
@@ -3714,9 +4087,15 @@ static PyObject *__pyx_pf_9zenscrape_9setup_env_ensure_tor_env(CYTHON_UNUSED PyO
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_torrc_path);
   __Pyx_XDECREF(__pyx_v_f);
-  __Pyx_XDECREF(__pyx_v_check_cmd);
-  __Pyx_XDECREF(__pyx_v_res);
-  __Pyx_XDECREF(__pyx_v_ping);
+  __Pyx_XDECREF(__pyx_v_s);
+  __Pyx_XDECREF(__pyx_v_process);
+  __Pyx_XDECREF(__pyx_v_GRAY);
+  __Pyx_XDECREF(__pyx_v_RESET);
+  __Pyx_XDECREF(__pyx_v_UP_AND_CLEAR);
+  __Pyx_XDECREF(__pyx_v_lines_printed);
+  __Pyx_XDECREF(__pyx_v_line);
+  __Pyx_XDECREF(__pyx_v_clean_line);
+  __Pyx_XDECREF(__pyx_v__);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -4087,7 +4466,7 @@ __Pyx_RefNannySetupContext("PyInit_setup_env", 0);
  * import os
  * import subprocess             # <<<<<<<<<<<<<<
  * import time
- * from loguru import logger
+ * import sys
 */
   __pyx_t_1 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_subprocess, 0, 0, NULL, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)
   __pyx_t_2 = __pyx_t_1;
@@ -4099,8 +4478,8 @@ __Pyx_RefNannySetupContext("PyInit_setup_env", 0);
  * import os
  * import subprocess
  * import time             # <<<<<<<<<<<<<<
- * from loguru import logger
- * 
+ * import sys
+ * import socket
 */
   __pyx_t_1 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_time, 0, 0, NULL, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 3, __pyx_L1_error)
   __pyx_t_2 = __pyx_t_1;
@@ -4111,40 +4490,66 @@ __Pyx_RefNannySetupContext("PyInit_setup_env", 0);
   /* "zenscrape/setup_env.py":4
  * import subprocess
  * import time
+ * import sys             # <<<<<<<<<<<<<<
+ * import socket
+ * from loguru import logger
+*/
+  __pyx_t_1 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_sys, 0, 0, NULL, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __pyx_t_2 = __pyx_t_1;
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_sys, __pyx_t_2) < (0)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "zenscrape/setup_env.py":5
+ * import time
+ * import sys
+ * import socket             # <<<<<<<<<<<<<<
+ * from loguru import logger
+ * 
+*/
+  __pyx_t_1 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_socket, 0, 0, NULL, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 5, __pyx_L1_error)
+  __pyx_t_2 = __pyx_t_1;
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_socket, __pyx_t_2) < (0)) __PYX_ERR(0, 5, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "zenscrape/setup_env.py":6
+ * import sys
+ * import socket
  * from loguru import logger             # <<<<<<<<<<<<<<
  * 
  * def ensure_tor_env():
 */
   {
     PyObject* const __pyx_imported_names[] = {__pyx_mstate_global->__pyx_n_u_logger};
-    __pyx_t_1 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_loguru, __pyx_imported_names, 1, NULL, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 4, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_loguru, __pyx_imported_names, 1, NULL, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
   }
   __pyx_t_2 = __pyx_t_1;
   __Pyx_GOTREF(__pyx_t_2);
   {
     PyObject* const __pyx_imported_names[] = {__pyx_mstate_global->__pyx_n_u_logger};
     __pyx_t_3 = 0; {
-      __pyx_t_4 = __Pyx_ImportFrom(__pyx_t_2, __pyx_imported_names[__pyx_t_3]); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 4, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_ImportFrom(__pyx_t_2, __pyx_imported_names[__pyx_t_3]); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 6, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_imported_names[__pyx_t_3], __pyx_t_4) < (0)) __PYX_ERR(0, 4, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_imported_names[__pyx_t_3], __pyx_t_4) < (0)) __PYX_ERR(0, 6, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "zenscrape/setup_env.py":6
+  /* "zenscrape/setup_env.py":8
  * from loguru import logger
  * 
  * def ensure_tor_env():             # <<<<<<<<<<<<<<
- *     """Automates Tor installation, configuration, and verifies complete bootstrap"""
- *     # 1. Check if Tor is installed
+ *     """Automates Tor environment setups, prints logs in gray, and erases them on success"""
+ *     # 1. Install check
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_9zenscrape_9setup_env_1ensure_tor_env, 0, __pyx_mstate_global->__pyx_n_u_ensure_tor_env, NULL, __pyx_mstate_global->__pyx_n_u_zenscrape_setup_env, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_9zenscrape_9setup_env_1ensure_tor_env, 0, __pyx_mstate_global->__pyx_n_u_ensure_tor_env, NULL, __pyx_mstate_global->__pyx_n_u_zenscrape_setup_env, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_ensure_tor_env, __pyx_t_2) < (0)) __PYX_ERR(0, 6, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_ensure_tor_env, __pyx_t_2) < (0)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "zenscrape/setup_env.py":1
@@ -4194,7 +4599,7 @@ __Pyx_RefNannySetupContext("PyInit_setup_env", 0);
 
 static int __Pyx_InitCachedBuiltins(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
-  __pyx_builtin_open = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_open); if (!__pyx_builtin_open) __PYX_ERR(0, 18, __pyx_L1_error)
+  __pyx_builtin_open = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_open); if (!__pyx_builtin_open) __PYX_ERR(0, 20, __pyx_L1_error)
 
   /* Cached unbound methods */
   __pyx_mstate->__pyx_umethod_PyDict_Type_items.type = (PyObject*)&PyDict_Type;
@@ -4212,20 +4617,31 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "zenscrape/setup_env.py":18
+  /* "zenscrape/setup_env.py":20
  *     torrc_path = os.path.expanduser("~/.zenscrape_torrc")
  *     if not os.path.exists(torrc_path):
  *         with open(torrc_path, "w") as f:             # <<<<<<<<<<<<<<
  *             f.write("SocksPort 9050\nControlPort 9051\nCookieAuthentication 0\n")
  * 
 */
-  __pyx_mstate_global->__pyx_tuple[0] = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_tuple[0])) __PYX_ERR(0, 18, __pyx_L1_error)
+  __pyx_mstate_global->__pyx_tuple[0] = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_tuple[0])) __PYX_ERR(0, 20, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[0]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[0]);
+
+  /* "zenscrape/setup_env.py":25
+ *     # 3. Check if Tor is already running and active
+ *     try:
+ *         with socket.create_connection(("127.0.0.1", 9050), timeout=1) as s:             # <<<<<<<<<<<<<<
+ *             # If the SOCKS port is already listening, we don't need to do anything
+ *             return
+*/
+  __pyx_mstate_global->__pyx_tuple[1] = PyTuple_Pack(2, __pyx_mstate_global->__pyx_kp_u_127_0_0_1, __pyx_mstate_global->__pyx_int_9050); if (unlikely(!__pyx_mstate_global->__pyx_tuple[1])) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[1]);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[1]);
   #if CYTHON_IMMORTAL_CONSTANTS
   {
     PyObject **table = __pyx_mstate->__pyx_tuple;
-    for (Py_ssize_t i=0; i<1; ++i) {
+    for (Py_ssize_t i=0; i<2; ++i) {
       #if PY_VERSION_HEX >= 0x030F0000
       PyUnstable_SetImmortal(table[i]);
       #elif CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
@@ -4256,34 +4672,42 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   {
-    const struct { const unsigned int length: 9; } index[] = {{1},{14},{55},{39},{52},{50},{71},{28},{59},{1},{21},{2},{21},{18},{9},{2},{17},{23},{9},{22},{18},{7},{5},{20},{12},{18},{7},{14},{5},{9},{18},{4},{6},{14},{9},{6},{8},{10},{1},{8},{4},{13},{5},{6},{6},{8},{10},{8},{4},{2},{4},{4},{12},{3},{10},{3},{12},{10},{5},{6},{6},{5},{10},{7},{6},{8},{4},{7},{3},{10},{6},{1},{7},{5},{19},{349}};
-    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (1074 bytes) */
-const char* const cstring = "BZh91AY&SY\273FY\207\000\000d\177\377\347\377\371\320\377\377\376\266\277-\377\336\277\377\377\361@@\300X\340@H@@@@@P\000\300\000P\003;\236t\367\233os\035\340ES\362M56\240\310z\236S\324zi=@\r\033H= \001\243\020\r\007\250\033Hm\010\036\246jz\217I\264\237\252z\204I\246M\252M\250\366\251\263CT<P\000\000\006\200\000\000\000\000\000\000\000\0004A\241\242i)\236\251\243M26\241\240\320\006CC@\000\000\000\000\006\231\001\241\352\000D\311\251\352M=Q\221\372\221\352\r\000\0004\00044\000\000\000\000\000\003A\240\036\24052&M\r&\251\372z\247\212yM\252\r=\t\220\003\023\020\000\032d`@\006\200\031\001\210\000\342@}!\243\245\367f\003\322\375\001\373\006\212\n\237\340\017\347k\037\371x\201\023\205\273\335\363Z\327\010\251o<l\0217\301t\000\361\202\327\364A\036\035\033Y\362EK\0021\3068\221\216\010A\307\340\035\262\302@\340(\351:>\0260/\304\375\304\010\027\013\320H\304A\311\256\314\264u%\220\252.{\261\225^\374zr:\261Q\0370\302g\344\302\271n\356\335\237\254$\023=\2356\233\205\210\031\370\371\004\224Y\361f\345\357\256{\007\342\324\355\rVS\201\010\323BEi\005a\t\355\030\335_N\r(`\322\277-\322n\3042B\035.\3617\324}\315\211a^+\020\343\241\266\035\220\001\2176}&&\233%\242\261\246\005\325\376\226\004UL\246\"\261F\230\200\005\006\241\264\304S\027\213W\271OY\373v\247\023f\0323\210\026'\314\271Y\325\303\005\375\326f\023K)\221\215\270\217rB0\030Y\244\302L\206\020b.\020\200C\366\017[\251\\\3154\034\351\003n\343\254r3H\034\337x\302\372 Q\003\275\002$\251\t\261\371\325\236\346\024\203\363\024\304\376\t\260##\26242\202)` !\004&B\304\333\\RKo\n\321^j26\365\274\r0\232\330G\0031\305\222\202\223\354\010wd\013\236\372\275\322\312b)@P\243r\231Q\273\030\\\306.I\316\333I\365\\5\0140\224,\270X\343\273\225\213\260\251\241\264^R+ \207\2665\032\273\030r\274\024\245)G\007\002\265e\310\235\361\250[<V\205\004\225\204\320\235\222\245@\223CF\243\001\345\326\021gr\210'ET\005#\214,\250d\030h\206\021\236u\r \222\215\r!W9&\264\254\320\246g\334x\234\036\327\251\204Yj\037\234\254\022\210\3032!3y\033\"\002\022\220.\311H*B}""\200\215\206\246\332\264*\"4\030\353\217\031_\254dyb?\024=g\t\001\311\030Q\203\014\005F1\"a4D#}\t\250^\245u\"\364@\350K\257\341@\037IOq\260VJ\241\326\2140W\002\003H\211u \203\304a\341\321]ka\3431@\245\301\300\013|!\246 ,`\2008\272\026\036\312\227\324\334\364\306(\3322\3655\216%\225P*\016du\216\255$U\252J2;\315\312\230\212\304\3611\215\320\224\206\251\245|\343+ \341\003\254\253\205si(\204\2228[\003E\211\004\016Q\006\274\245\020\313\366\004S\307\240\251\354\365\273\253g\200\312\227\014\233\365A\\\007H(,b\244\371\t\002'\301\350\213\241K#n-\225\315`\215\277#s ~\231\263\260\226^\211\270\021\257\242(\253\314x.\033\364\004 \303\027Z\\}\260\235\245l\347\300%F`\177U\220\002n\205U\302\301]P|\227\020 _\2529\235\3136\262>\350\005\033G\214\363\353\034\267\267\315,{\310\216\330\216E\004\330skC\214\242W2I\373g\361\247\255MT\347,\364\206\303\340\316\210\020D\224J\212\245$ng;)\246\253\031\337<x\322\006iZz\260\347=4\311\320\245\201\233C,\323I=\207\353\230\3711/N\3477\374]\311\024\341BB\355\031f\034";
-    PyObject *data = __Pyx_DecompressString(cstring, 1074, 2);
+    const struct { const unsigned int length: 9; } index[] = {{4},{4},{9},{5},{6},{22},{17},{33},{14},{55},{51},{60},{28},{1},{1},{1},{21},{2},{18},{9},{23},{9},{22},{18},{4},{4},{5},{20},{5},{6},{12},{1},{12},{18},{14},{5},{10},{18},{17},{14},{9},{6},{8},{4},{10},{1},{5},{8},{4},{13},{5},{4},{13},{6},{6},{8},{10},{8},{4},{2},{4},{7},{12},{8},{3},{1},{12},{10},{5},{6},{6},{6},{5},{10},{7},{3},{6},{9},{8},{4},{4},{7},{3},{10},{6},{1},{7},{5},{19},{444}};
+    #if (CYTHON_COMPRESS_STRINGS) == 3 && __PYX_LIMITED_VERSION_HEX >= 0x030e0000 /* compression: zstd (974 bytes) */
+const char* const cstring = "(\265/\375`Z\004%\036\000\2065\2709\000\231\016\251*\201Q\250\0304\362\240g!\177\002X5\274\304\320\367\271r$M\267\22161fD\026B\332\224:\003\246\22129c\032y\006\225W\303\204\243\253\314H \031\001\244\000\236\000\243\000)\341\3018\326\316\363\013\030\212\331\353\233x\257\325\233\354\355\0330\354\215\271\336\321\202\272\217\270\336|HU\0267\010w\233\253\017\330\033G\177\003\217\234\254\226\222\224\256\016b`\326\270W\213{\276\271\356g\027\353\264l\324\273g\275r\020\033\211\235\200}\353\032\327Ym#f\354\003v\235Aq\364z%\014C\336\261\267\033[p\353\033\020\2271\330tT\245\021\213\311@\361\222d\335\235w\255U.\367`\306`O\254w\217\025\344\374nQ\234\305\364L\314z&v\261\223\236\tY,,\t\221\355b=\023 \370\024\025\224\346\270\037o\267}\271\027s%y\267\363\3161o\337N\267\317\332\336]}\256\255\273\323\214\251\035\251\316\336\234\355\236\244w\373NV\313o\306\335\353\255m\250\261\315=~{\355:\347J)\255\231\321dV(\313\314\214\326pnphXnlnh6\264\232\333\255\351\274;C\273\305,\274^\215\322|I]\243\325^j<\263\032\027\273i\010R\324#\303\240|)\351\373\345 \327\362|\207\370\276A\037\037\235\254\240\026=\307:\262\367\321A\014\342t\344\355\203\347w\373\366p\247m\355U\004\t!\277\033\025\010\2343\237\314\207`\216\224\014%\303\216\316\224\316\311\024\313\t\202\211\366\273\370u0L\301J\216\177\320:s?\241u\272\020N\226\324\006T\213\023\375\025\231\005&PY\313\214\222\241u\022\014\000\020\\\261\214\302\333\361\026\302e\234w\025\022\342\327\2175\210n\335\357\016\367\316\353\374\366\214{\326s\037\317I\274\275\336\233\367\253\263\232\223\367\216\274\217\276\336\256\330/\317~\217\325\003\361\\\257$\327\273\232\357\350EMi\306uG\251\337~_\034N\217\342\355\031o\222r\276\243\034S}\313\230R\233\375-TT,s\243,\261\231@E\017%\355\277\014\214Z\345\310G\260IaH\301\310\246\354\017\305\027\340\003-L\211\005\021\037\206\302\224\315\254p\2356&\212\037\353\327\362\331\2303\363V\n\375\205\227\314\227c:\230\021\013\247\254\354_\301uZ\374\"|\034fI\331\340:\r\352O(\035\004\250X%\320\327\370\007\002T\262\262\341\273\004N\331w\331""\376\013f\016}\205\222\240\204\370\006\255\263\232\004\346\317W\000\372\365\023\374\226\300Y\277\355\343\214\n\006\000ZW/\027\025L\212\004\312\304\311\205\211\310W\343\323h\230jx\315JY\231\363_\256\263\372r\246G\t+a\257\323\302\204\231\034%\316\017k( \3040ut\036\260\022\2214\205\306\314\027\216\27245\232\224a\254\242\rJ\331\204\377(\252Y C`\017\275\003\332\220s\325\306\227\372@x\314\245\3543\013`\366\026\203\325R\264\361\206\241\251Q+\232_\340\353\231k\202\212\271TH\201\264\310\276\302\246\023\305\353\0103\270K\370d\214\204\010\"`*\350_\245\216\213\224\007\007\343\327\242\263\305j\254\233\213\t\3202\000\211\n\355\255\336\352\203\000\334Q\325\013/x\355\027\337\355d\013K\354\243\335\225\026\034\214\353\241`R\210\252Q\272 \234\3010\374\337\321,\014md\305\244bwh\373\255.\221\333\322T\233?\3138\374\254.6\356\246\013\311\357\201\202Zc\300\001n\r\363\200\034\357\303\300`L*|\366\341\312o\3167t\224{\344\017\017\r\024._";
+    PyObject *data = __Pyx_DecompressString(cstring, 974, 3);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (945 bytes) */
-const char* const cstring = "x\332]\222\317O\033G\024\307c\311\200\213M\300TJ\253^2\364W\350\017/8\r\212\202ZU4\001)jD\371\221@\224\246\032\r\263\263\366\304\353\231e~\200\227C\304qo\331\343*=\304\275qD\352\205#G\037\367\270G\224\177\240\374\t}c\023\244vW\373f\366\315\373\276\371\314{\3435\357\336\367\026\341m.?X\\Z\334\226\264\2437\2442\310\375M>\224\302(\031~p4\301!;\234\255X\323f\302pJ\014\227\002-N^\276{{\214\266\rQ\206\213\026z*\025\332#\264\323R\322\n\037EJR\246\265\347yna\373\267\207\277n/9g/F2\010B.\030\002\277\220\006)F\374\330C[L_\245\002\315\345\273?\377\372\347\354\3150)\345\212Zn4\nl\030\306hOJ\243\215\"Q\304\3749\264\332\343\006=\336XF\357\337\366?\010\270F\206t\034S(E\213)d\332D \253-\t\221\221\210J!\0305\036\332p\210\314w\201D\304\207$\276\202uP\201;\204\207\036\013\200\n\303\021\324\3737\177\243]\302\207\247\r \356?p\2208\340\202\204\374\210\241\371_\256\031!\366\033\220\376\274\340\023CF\206\312\256g\230\352\332^#h\033\023\351\345\205\005\022q\217G<\210=\251ZQ\247\205\370hcH\253P#\216:|4o\350FC\273n-5\332R\033A\272L[_\"\022\231\377I\032\215\003\24644\352\210\tM\001\205-hfl\204\2318\360\242\370\365\202w\275\200A\241\350\243\325\235\365gO\236l\310\210\t\2147\342\036|\21785x\235\365\314\026\0130&\002*C\014\203\231\216\005\345\322\243\022\232\r\365`\232\030\303\272\221\241\000b\025\303\340\215\254\241mF;C\203i\327\247\256\351\230\013\014\205\241\314]\025jU\3503*}\006(N\006 \216\017\203\201\n\301\320\343\332\350\341h\234\215\210\360\255f\n`\002+(\206l\201\304\\\343k\020\016\030:\224-h;X\253,\306]\002{\302\323\225\276\r\231\233\271\262a\354\016*uDL\333u\t\343}\270\037\243\025\305\264\202Z)\341\320\224\0055\224\356J\0053\237\005\304\206F\207\214E\032\376\224\002\013\333C\307y\244\355\336\325\325\327\226\016\207X\003\023\306\006\3567X\336e\356\203p8\354\260\360\330!\034\220\3202}xH\224\000\230C\005\347\270\356\217w\335\270\343\322\345\370\215\261\361\2422\233~\231\222t?\233\310^\237\340\263\265\363\257\007\245\242Z+*7\223\266\363\027\225\311\344NZ\317g\277=\371\374d\365\364\223\263R""\376`7\337}\356\324\263\351l\272\224U\373\315\376JQ\23686\311\335\344Yz'\253gs\305T=\255\247\337g\355>)jS\311N\332LW.+7\306\352i)\3754\273\225\337\276\227\337[;'Ey\314m\364*+g+\331\357'\323\247\007g\317\3177\213J5\371!\t\263/\262\315\213\332\024\3008e5\231O\347\322fQ\036?n%\233\tH+\311xB\222\375\213\362d\362U\262\237\226\212\362\315$HW\322\315\264\225\355\364\177:\2358=:\377lp?\337z\231\277\374\303\341VGq\027\240\254\002w)\253\027\225Z\2626L[\371\350\242\366q\272\234=\355\327\373\337\r\3530?\230+j\323\211I\177\314t\177\256\230\271\225\2663\222\337^\037\220\201\311\267_\344/HNhNy\316_\0253\365bzf\264\305\220\362_l\374\367$";
-    PyObject *data = __Pyx_DecompressString(cstring, 945, 1);
+    #elif (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (1066 bytes) */
+const char* const cstring = "BZh91AY&SY]^O\301\000\002\214\177\377\357\377\376\276\177\227\373\350\277\275\377\350\277\377\377\363@@\300X\340@HHP@@@P\000\300\000P\003^;\030\000\023\333\021\004\215\007\251\222m4\321=\032\214\200\036\220\032h\310\000\003!\246\2314\320\r=M4z\233H\032\032\000A\200\002`\000&\000\000\000\000\000\000\000\000\000\000\000\000\031Oh\223\324\300\000\000&\t\246\000\000F&F\000LL\000\000\231\030\320F\230!\214\2010&\023\000\r4\000#\000\010\300\0010\000#\000\000\000\214\214=I\240\320\201\240\201'\220\001)\260\241\246\322\017SF \036\240\000\000\000\000\003F\230\324\3654\3654\365\034P30^\250\354q\366\377\177\343\254\235\236Q\376\231\035\000\034\300\207a\353\210\014H\340\240\224\314\300s\243\033G\205\341\364\236\326) \232H\310\031\311\371\212D\321\225s\207\241w\002\264\006\023\310i\002\352\031\226\314\014\243\025{%(\244]\177m\367\317\241\177\337\305\242\016\345\375G\345\365u\207.\276O\300\321\303\207\240`\376\211\0048b\365\212\002#\020\030\002\017\324Q\251\224A|\000N\324\211\034\256\023\230\240\"\350\006\276\344#\t\001\262\004IC\212\033\250\004\222\202\226`E\231j\270Qm\277lga}@U\333\234\334\330\220W\2062\t\321J\354\010tI\345,\267@\361\323\223\0273\216\257JW@\340\317\nC\214\345P5f#1U\032\310.\235\211G\242\252\225%%\325U\246bG\222x>\210\366A\013[\301\tq\200\313c\271T\347\252\n\344g\262\2008\275]\244i\200&\013*\226Y\302\361\314\037{\274\304\351y\033\027\257\277\307\007\031\230r\204byjh\003O\253D\201\266*\300L\016\357\236#\374\350x\347x\217*\335l\212\014\261)2&\327\3757pN+\021\n\265p\220=i\274\031\n\212\333&w\366[\343d*\355X\211=\343\215\255\362o\033\365\023\352|k\031\331C\34043\230\347X\025\3273-\312\374\371\205v\325\035\004am\0200\340xjppu\220{5\331\000\341\001\310L\311#*N\025y\210%lJ\313\t\333J%\221\005\t\3353\025g9l\243x\215v\023fb\354\301=\372\356\254\266\027t\233\322\324l\025\262\273\367u\007\231\033t\365[lF;\024Z\306\010\357\214\246\334\342\033P*\2604\250\230\360\301\267D\242j\251v\204\rM\325#\017C\356\362\252:<\244#\356P$\032\303q\2720d\357z1\014L\304L\001&\260\345x|\030P""\036*!\210\031\035\227\206\3332\273\207-\302.\275A\364\320\363u\314\3701\3268@5\006M\007x\023\0026\320F\354X\360\032p{K@\2309fi;6\376\024\306\361\213\240\272\367K\200\323v\320R5\031\210\313\030\240\300OK\362G\010\364XW4\233@\032(\200M\232r\274n\032i\265\341\n\002\321\301\215\224\216\335u\310\n\r\tB\202\265\010T\260s\341kCDC\365_\027\252\204(T\326\006\224\236\304\252\273\\f\260\017Z\332\0331\244\005\026#\336\332\020\214\202c\235`B\303`\267&Q_$\212V\211\346\327\264l\\D\275\345\353*\3721!\223\001\267\217\236\315t\252\362\311\243(+-\222n_\026\214\n\370\367\220\314(\246\213\202\277$\361\216\216\230N[\204\tB\020\366\007N\3170\004\366o\310*C\000\230\037\261\3471Q\252S\007Jkoh!M\270\372\350\265 ]\220\244\tA\005\213I\246\377p]\3113\003@Y\365\306\375\357\222\353}\367\304\235\345\350&\375\211r/\023\357\340.\240u\274><Jrd\017\315\315\263W\356\027p\001\223@v\r\370M\036YA\245\233\265(\023\300\256<G\350\003s\242\3179\275\311F>\234\335&\2742\t%9\016{\371\275\225|\315y\216\"h\216o\370\273\222)\302\204\202\352\362~\010";
+    PyObject *data = __Pyx_DecompressString(cstring, 1066, 2);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #else /* compression: none (1301 bytes) */
-const char* const bytes = ".127.0.0.1:9050SocksPort 9050\nControlPort 9051\nCookieAuthentication 0\n\360\237\232\200 Starting Tor background process...Tor SOCKS5 proxy offline or not ready. Restarting...\360\237\233\241\357\270\217 Tor circuits fully bootstrapped! Exit IP: \342\232\240\357\270\217 Tor is taking longer than usual to connect. Proceeding anyway...Tor not found. Installing...\342\217\263 Waiting for Tor circuits to finalize (Bootstrapping)...?/data/data/com.termux-fhttps://api.ipify.orgpkg install tor -ypkill tor-s--socks5-hostnamesudo apt install tor -y--versionzenscrape/setup_env.py~/.zenscrape_torrcDEVNULLPopen__Pyx_PyDict_NextRef__annotate__asyncio.coroutinesattemptcapture_outputcheckcheck_cmdcline_in_tracebackcurldecodeensure_tor_env__enter__exists__exit__expanduserf__func__info_is_coroutineitemsloggerloguru__main____module____name__openospathping__qualname__resreturncoderun__set_name__setdefaultsleepstderrstdoutstripsubprocesssuccesssystem__test__timetimeouttortorrc_pathvalueswwarningwritezenscrape.setup_env\200\001\360\006\000\005\006\330\010\022\220$\220a\220q\230\007\230~\250_\270F\300&\310\001\330\013\014\330\010\016\210h\220a\220q\330\010\n\210'\220\021\320\022*\250\"\250E\260\027\270\001\3209W\320WX\360\006\000\005\022\220\022\2205\230\013\2401\240A\330\004\007\200t\2102\210U\220'\230\021\230!\330\r\021\220\021\220,\230h\240a\330\014\r\210V\2201\220A\360\010\000\005\021\220\001\220\030\230\026\320\0374\3204F\300a\330\004\005\330\010\016\210j\230\004\230A\230[\250\017\260v\270X\300Q\330\010\013\2103\210l\230#\230Q\340\014\r\330\013\014\360\010\000\005\013\210(\220!\2201\330\004\006\200g\210Q\210a\330\004\010\210\006\210a\210q\340\004\n\210%\210q\220\001\330\004\016\210f\220A\220Q\220g\230V\240=\260\007\260z\300\032\3107\320R\\\320\\]\360\006\000\005\013\210%\210q\220\001\340\004\010\210\013\2205\230\001\230\021\330\010\014\210F\220!\2201\330\010\t\340\014\023\220:\230T\240\021\240+\250_\270F\300(\310!\330\014\017\210t\220<\230s\240!\330\020\026\220h\230a\320\037N\310a""\310t\320SZ\320Za\320ac\320ci\320ij\330\020\021\330\017\020\360\006\000\005\013\210(\220!\2201";
+    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (963 bytes) */
+const char* const cstring = "x\332]R\315O\033G\024\217U\002\006\354\030C\252(\245\225\226\246\004\251*\2137\025\245\250\207\312\0057J[\2456\037I+\016\243aw\026oY\317,\363\001v\244\"\216s\313\036W\355\241\333\233\217H\275 \365\022\365\304\321\307=\242\374\003\345O\350\233\005L[\333\363\346\371}\315\357\375\336\373\353O\313\232\335\251u\234'+v\r\276\316\354\316j\2553\273S\237\335\371\266\356y\234\010a\341\220\023\354\365\254\200ZJ\220\257\030\223Br\034E\304\263\234Zm\376\355\353?\254[c@\367\254-\306-7\340\256\n\244\260m{\215\251\320\263(\223\326n@\275M\346\356\213&\343\322Z\255-\327&\326\030\225\234\2057\006\007\014l? u%\333\204\312\300\3052`\324\252M\\\376\366\353\357\177\237\275\376Om\313Wa\330\263v\377\215\010S8\256\014\016\311\334\333_\322\233\014\037\007!8%\273\r\266\334\220`\032\366lk\213\367\014jpF\234\271\204x\200\331$\031\304>S\324\263\255gTH\034\206\020\006\276\t\373\313%\017K|%\\\326\261%\341\035\325]\364\243\375=`)\017\205r\334Z\354E\373\301\225.\224\307,\034\311\377\371\027\027\017\t\027\320\342+B\205\013\260\310\222 RE\210\320C;\352\035/\331C\007\202\014\356>\335\250\377\330|\326l4YD(B\315^\027\316z\340J\364\234t\345\006\3617\032\233\215\255\315\255\365\357\267\267\266\233\250\376|\035\255}\327\250o \2040\205\216\260$\240\211\036u\003f\273\2143%\003J\204\013\320\024'\010\376FJ\272m\342\356\347\374 \350\231\270F\240\200\"\340\315%\273\030|\260\021P\310e\024\274fB\000\322\244\003D\203\034\201\000N\340\352\006B\212\374\226W\222t#\030\021\354\021\367\375P\2116B\276\242.\202\352>C\201@CH\020\332\021\346as\004\212x\000%\275\220\355\355\021\016Rq\205P\007\003(\370t\230\247Bb4\212;p\033n\230\210\260l\347\023\025\200\340@\341\360\312i\226\331\324\344\212\202\035\330\276N\002\315#>V\241\024!!\221\200=%\260*\036\341\034$\200\202\265\t\"\241v\257k\n\345\346W\317\374\000\254Y\202\200\346\374J\"\244\221])\203\0161\007\322\201\233|\202\310\340:\304\241\"\342\350\010s\nKu\304\241\333\341\240\355\341\006\234\024.G\357\334\035\315\212\323\361G1\216\017\222\261\344\270\217\316\276~\363\370\274\220M""\226\262\342=\3356\366\2548\241\027\342\352`\372\343\376\207\375\306\351\203\263\302`\365\345\340\345\017&{:\236\216\227\223\311\324I\353\331\310\330\211\324O\364v\274\220T\223\271\254\\\215\253\361'I;\305Y\251\254_\304N\\\277z\257<3\230\231O7\322\237O\237\236}\376\346\263\363\352E\251\014\357]\026\357\334\035;\331\323-\215\263\221\242\036\325X\037\230\204\212\376)\031MpV\034\327\017\342\321\030\224\212~\225T\207WY\267LjI;\331HI\003\214\231\330\271\030\231\320\363\372 .\\\214\334\217\301tO\343\353^\307\263\322L\274\222,\244\017\373sY\251\242e\354dS\200\340ar?y\221:\267&\210/O\351\243\330O\352\311fZ\354\027\372\357\237\266\214;7e\245\017\222V\0362\250<J?\205\036\247\336\203\236\257\323\006\025+}'\375\242\357\016\234o\316\037\235\267\300\236\023z\215xR/\3079\367\305\023\323\341xY7\342w\201\351c \345`\370D\3222\221+\361\343\244pq3\212\241\362\017P\216\nB";
+    PyObject *data = __Pyx_DecompressString(cstring, 963, 1);
+    if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
+    const char* const bytes = __Pyx_PyBytes_AsString(data);
+    #if !CYTHON_ASSUME_SAFE_MACROS
+    if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
+    #endif
+    #else /* compression: none (1370 bytes) */
+const char* const bytes = "\302\273  \033[0m127.0.0.1\033[90m\033[A\033[KAddress already in useBootstrapped 100%\342\217\263 Bootstrapping Tor circuits...Could not bindSocksPort 9050\nControlPort 9051\nCookieAuthentication 0\n\360\237\233\241\357\270\217 Tor circuits fully bootstrapped and active!\342\232\240\357\270\217 Tor failed to bootstrap cleanly. Trying to proceed...Tor not found. Installing...\n.?/data/data/com.termux-fpkg install tor -ypkill torsudo apt install tor -y--versionzenscrape/setup_env.py~/.zenscrape_torrcGRAYPIPEPopen__Pyx_PyDict_NextRefRESETSTDOUTUP_AND_CLEAR___annotate__asyncio.coroutinescapture_outputcheckclean_linecline_in_tracebackcreate_connectionensure_tor_env__enter__exists__exit__exitexpanduserfflush__func__info_is_coroutineitemslinelines_printedloggerloguru__main____module____name__openospathprocess__qualname__readlineruns__set_name__setdefaultsleepsocketstderrstdoutstripsubprocesssuccesssyssystemterminate__test__texttimetimeouttortorrc_pathvalueswwarningwritezenscrape.setup_env\200\001\360\006\000\005\006\330\010\022\220$\220a\220q\230\007\230~\250_\270F\300&\310\001\330\013\014\330\010\016\210h\220a\220q\330\010\n\210'\220\021\320\022*\250\"\250E\260\027\270\001\3209W\320WX\360\006\000\005\022\220\022\2205\230\013\2401\240A\330\004\007\200t\2102\210U\220'\230\021\230!\330\r\021\220\021\220,\230h\240a\330\014\r\210V\2201\220A\360\006\000\005\006\330\r\023\320\023%\240R\240}\260G\2708\3006\310\021\340\014\r\330\013\014\360\010\000\005\007\200g\210Q\210a\330\004\010\210\006\210a\210q\360\006\000\005\017\210j\230\006\230a\330\010\t\210\027\220\006\220a\330\010\017\210z\230\021\330\010\017\210z\230\021\330\010\r\210Q\360\010\000\005\014\2101\330\004\014\210A\330\004\023\2201\340\004\n\210%\210q\220\001\340\004\024\220A\330\004\016\210a\360\006\000\005\006\330\010\t\330\014\023\2207\230'\240\031\250!\330\014\017\210t\2201\330\020\021\340\014\031\230\024\230V\2401\330\014\017\210t\2201\330\020\021\360\006\000\r\020\210w\220f\230A\230S\240\010\250\001\250\034\260Q\330""\014\017\210w\220f\230A\330\014\035\230Q\360\006\000\r\020\320\017#\2403\240a\330\020\032\230!\330\020\021\360\006\000\r\020\320\017 \240\003\240;\250c\3201J\310#\310Q\330\020\021\330\013\014\330\010\017\210z\230\021\330\010\013\2105\220\001\360\006\000\005\010\200q\360\006\000\t\r\210E\220\025\220a\220~\240R\240q\330\014\017\210w\220f\230A\230Q\330\010\013\2107\220&\230\001\340\010\016\210h\220a\220q\340\010\016\210h\220a\220q";
     PyObject *data = NULL;
     CYTHON_UNUSED_VAR(__Pyx_DecompressString);
     #endif
     PyObject **stringtab = __pyx_mstate->__pyx_string_tab;
     Py_ssize_t pos = 0;
-    for (int i = 0; i < 75; i++) {
+    for (int i = 0; i < 89; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyUnicode_DecodeUTF8(bytes + pos, bytes_length, NULL);
-      if (likely(string) && i >= 21) PyUnicode_InternInPlace(&string);
+      if (likely(string) && i >= 24) PyUnicode_InternInPlace(&string);
       if (unlikely(!string)) {
         Py_XDECREF(data);
         __PYX_ERR(0, 1, __pyx_L1_error)
@@ -4291,7 +4715,7 @@ const char* const bytes = ".127.0.0.1:9050SocksPort 9050\nControlPort 9051\nCook
       stringtab[i] = string;
       pos += bytes_length;
     }
-    for (int i = 75; i < 76; i++) {
+    for (int i = 89; i < 90; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyBytes_FromStringAndSize(bytes + pos, bytes_length);
       stringtab[i] = string;
@@ -4302,14 +4726,14 @@ const char* const bytes = ".127.0.0.1:9050SocksPort 9050\nControlPort 9051\nCook
       }
     }
     Py_XDECREF(data);
-    for (Py_ssize_t i = 0; i < 76; i++) {
+    for (Py_ssize_t i = 0; i < 90; i++) {
       if (unlikely(PyObject_Hash(stringtab[i]) == -1)) {
         __PYX_ERR(0, 1, __pyx_L1_error)
       }
     }
     #if CYTHON_IMMORTAL_CONSTANTS
     {
-      PyObject **table = stringtab + 75;
+      PyObject **table = stringtab + 89;
       for (Py_ssize_t i=0; i<1; ++i) {
         #if PY_VERSION_HEX >= 0x030F0000
         PyUnstable_SetImmortal(table[i]);
@@ -4333,7 +4757,7 @@ const char* const bytes = ".127.0.0.1:9050SocksPort 9050\nControlPort 9051\nCook
   }
   {
     PyObject **numbertab = __pyx_mstate->__pyx_number_tab;
-    double const c_constants[] = {1.5};
+    double const c_constants[] = {0.5};
     for (int i = 0; i < 1; i++) {
       numbertab[i] = PyFloat_FromDouble(c_constants[i]);
       if (unlikely(!numbertab[i])) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -4341,9 +4765,10 @@ const char* const bytes = ".127.0.0.1:9050SocksPort 9050\nControlPort 9051\nCook
   }
   {
     PyObject **numbertab = __pyx_mstate->__pyx_number_tab + 1;
-    int8_t const cint_constants_1[] = {0,1,2};
+    int8_t const cint_constants_1[] = {0,1};
+    int16_t const cint_constants_2[] = {9050};
     for (int i = 0; i < 3; i++) {
-      numbertab[i] = PyLong_FromLong(cint_constants_1[i - 0]);
+      numbertab[i] = PyLong_FromLong((i < 2 ? cint_constants_1[i - 0] : cint_constants_2[i - 2]));
       if (unlikely(!numbertab[i])) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
@@ -4379,9 +4804,9 @@ typedef struct {
     unsigned int argcount : 1;
     unsigned int num_posonly_args : 1;
     unsigned int num_kwonly_args : 1;
-    unsigned int nlocals : 3;
+    unsigned int nlocals : 4;
     unsigned int flags : 10;
-    unsigned int first_line : 3;
+    unsigned int first_line : 4;
 } __Pyx_PyCode_New_function_description;
 /* NewCodeObj.proto */
 static PyObject* __Pyx_PyCode_New(
@@ -4398,8 +4823,8 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    const __Pyx_PyCode_New_function_description descr = {0, 0, 0, 6, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 6};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_torrc_path, __pyx_mstate->__pyx_n_u_f_2, __pyx_mstate->__pyx_n_u_check_cmd, __pyx_mstate->__pyx_n_u_res, __pyx_mstate->__pyx_n_u_attempt, __pyx_mstate->__pyx_n_u_ping};
+    const __Pyx_PyCode_New_function_description descr = {0, 0, 0, 12, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 8};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_torrc_path, __pyx_mstate->__pyx_n_u_f_2, __pyx_mstate->__pyx_n_u_s, __pyx_mstate->__pyx_n_u_process, __pyx_mstate->__pyx_n_u_GRAY, __pyx_mstate->__pyx_n_u_RESET, __pyx_mstate->__pyx_n_u_UP_AND_CLEAR, __pyx_mstate->__pyx_n_u_lines_printed, __pyx_mstate->__pyx_n_u_success, __pyx_mstate->__pyx_n_u_line, __pyx_mstate->__pyx_n_u_clean_line, __pyx_mstate->__pyx_n_u__5};
     __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_zenscrape_setup_env_py, __pyx_mstate->__pyx_n_u_ensure_tor_env, __pyx_mstate->__pyx_kp_b_iso88591_aq__F_haq_E_9WWX_5_1A_t2U_ha_V1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
@@ -5296,66 +5721,182 @@ static CYTHON_INLINE PyObject* __Pyx__PyObject_LookupSpecial(PyObject* obj, PyOb
 }
 #endif
 
-/* PyLongCompare */
-static CYTHON_INLINE int __Pyx_PyLong_BoolEqObjC(PyObject *op1, PyObject *op2, long intval, long inplace) {
-    CYTHON_MAYBE_UNUSED_VAR(intval);
-    CYTHON_UNUSED_VAR(inplace);
-    if (op1 == op2) {
-        return 1;
+/* JoinPyUnicode */
+static PyObject* __Pyx_PyUnicode_Join(PyObject** values, Py_ssize_t value_count, Py_ssize_t result_ulength,
+                                      Py_UCS4 max_char) {
+#if CYTHON_USE_UNICODE_INTERNALS && CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+    PyObject *result_uval;
+    int result_ukind, kind_shift;
+    Py_ssize_t i, char_pos;
+    void *result_udata;
+    if (max_char > 1114111) max_char = 1114111;
+    result_uval = PyUnicode_New(result_ulength, max_char);
+    if (unlikely(!result_uval)) return NULL;
+    result_ukind = (max_char <= 255) ? PyUnicode_1BYTE_KIND : (max_char <= 65535) ? PyUnicode_2BYTE_KIND : PyUnicode_4BYTE_KIND;
+    kind_shift = (result_ukind == PyUnicode_4BYTE_KIND) ? 2 : result_ukind - 1;
+    result_udata = PyUnicode_DATA(result_uval);
+    assert(kind_shift == 2 || kind_shift == 1 || kind_shift == 0);
+    if (unlikely((PY_SSIZE_T_MAX >> kind_shift) - result_ulength < 0))
+        goto overflow;
+    char_pos = 0;
+    for (i=0; i < value_count; i++) {
+        int ukind;
+        Py_ssize_t ulength;
+        void *udata;
+        PyObject *uval = values[i];
+        #if !CYTHON_COMPILING_IN_LIMITED_API
+        if (__Pyx_PyUnicode_READY(uval) == (-1))
+            goto bad;
+        #endif
+        ulength = __Pyx_PyUnicode_GET_LENGTH(uval);
+        #if !CYTHON_ASSUME_SAFE_SIZE
+        if (unlikely(ulength < 0)) goto bad;
+        #endif
+        if (unlikely(!ulength))
+            continue;
+        if (unlikely((PY_SSIZE_T_MAX >> kind_shift) - ulength < char_pos))
+            goto overflow;
+        ukind = __Pyx_PyUnicode_KIND(uval);
+        udata = __Pyx_PyUnicode_DATA(uval);
+        if (ukind == result_ukind) {
+            memcpy((char *)result_udata + (char_pos << kind_shift), udata, (size_t) (ulength << kind_shift));
+        } else {
+            #if PY_VERSION_HEX >= 0x030d0000
+            if (unlikely(PyUnicode_CopyCharacters(result_uval, char_pos, uval, 0, ulength) < 0)) goto bad;
+            #elif CYTHON_COMPILING_IN_CPYTHON || defined(_PyUnicode_FastCopyCharacters)
+            _PyUnicode_FastCopyCharacters(result_uval, char_pos, uval, 0, ulength);
+            #else
+            Py_ssize_t j;
+            for (j=0; j < ulength; j++) {
+                Py_UCS4 uchar = __Pyx_PyUnicode_READ(ukind, udata, j);
+                __Pyx_PyUnicode_WRITE(result_ukind, result_udata, char_pos+j, uchar);
+            }
+            #endif
+        }
+        char_pos += ulength;
     }
+    return result_uval;
+overflow:
+    PyErr_SetString(PyExc_OverflowError, "join() result is too long for a Python string");
+bad:
+    Py_DECREF(result_uval);
+    return NULL;
+#else
+    Py_ssize_t i;
+    PyObject *result = NULL;
+    PyObject *value_tuple = PyTuple_New(value_count);
+    if (unlikely(!value_tuple)) return NULL;
+    CYTHON_UNUSED_VAR(max_char);
+    CYTHON_UNUSED_VAR(result_ulength);
+    for (i=0; i<value_count; i++) {
+        Py_INCREF(values[i]);
+        if (__Pyx_PyTuple_SET_ITEM(value_tuple, i, values[i]) != (0)) goto bad;
+    }
+    result = PyUnicode_Join(__pyx_mstate_global->__pyx_empty_unicode, value_tuple);
+bad:
+    Py_DECREF(value_tuple);
+    return result;
+#endif
+}
+
+/* PyLongBinop */
+#if !CYTHON_COMPILING_IN_PYPY
+static PyObject* __Pyx_Fallback___Pyx_PyLong_AddObjC(PyObject *op1, PyObject *op2, int inplace) {
+    return (inplace ? PyNumber_InPlaceAdd : PyNumber_Add)(op1, op2);
+}
+#if CYTHON_USE_PYLONG_INTERNALS
+static PyObject* __Pyx_Unpacked___Pyx_PyLong_AddObjC(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check) {
+    CYTHON_MAYBE_UNUSED_VAR(inplace);
+    CYTHON_UNUSED_VAR(zerodivision_check);
+    const long b = intval;
+    long a;
+    const PY_LONG_LONG llb = intval;
+    PY_LONG_LONG lla;
+    if (unlikely(__Pyx_PyLong_IsZero(op1))) {
+        return __Pyx_NewRef(op2);
+    }
+    const int is_positive = __Pyx_PyLong_IsPos(op1);
+    const digit* digits = __Pyx_PyLong_Digits(op1);
+    const Py_ssize_t size = __Pyx_PyLong_DigitCount(op1);
+    if (likely(size == 1)) {
+        a = (long) digits[0];
+        if (!is_positive) a *= -1;
+    } else {
+        switch (size) {
+            case 2:
+                if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                    a = (long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                    if (!is_positive) a *= -1;
+                    goto calculate_long;
+                } else if (8 * sizeof(PY_LONG_LONG) - 1 > 2 * PyLong_SHIFT) {
+                    lla = (PY_LONG_LONG) (((((unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                    if (!is_positive) lla *= -1;
+                    goto calculate_long_long;
+                }
+                break;
+            case 3:
+                if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                    a = (long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                    if (!is_positive) a *= -1;
+                    goto calculate_long;
+                } else if (8 * sizeof(PY_LONG_LONG) - 1 > 3 * PyLong_SHIFT) {
+                    lla = (PY_LONG_LONG) (((((((unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                    if (!is_positive) lla *= -1;
+                    goto calculate_long_long;
+                }
+                break;
+            case 4:
+                if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
+                    a = (long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                    if (!is_positive) a *= -1;
+                    goto calculate_long;
+                } else if (8 * sizeof(PY_LONG_LONG) - 1 > 4 * PyLong_SHIFT) {
+                    lla = (PY_LONG_LONG) (((((((((unsigned PY_LONG_LONG)digits[3]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                    if (!is_positive) lla *= -1;
+                    goto calculate_long_long;
+                }
+                break;
+        }
+        return PyLong_Type.tp_as_number->nb_add(op1, op2);
+    }
+    calculate_long:
+        {
+            long x;
+            x = a + b;
+            return PyLong_FromLong(x);
+        }
+    calculate_long_long:
+        {
+            PY_LONG_LONG llx;
+            llx = lla + llb;
+            return PyLong_FromLongLong(llx);
+        }
+    
+}
+#endif
+static PyObject* __Pyx_Float___Pyx_PyLong_AddObjC(PyObject *float_val, long intval, int zerodivision_check) {
+    CYTHON_UNUSED_VAR(zerodivision_check);
+    const long b = intval;
+    double a = __Pyx_PyFloat_AS_DOUBLE(float_val);
+        double result;
+        
+        result = ((double)a) + (double)b;
+        return PyFloat_FromDouble(result);
+}
+static CYTHON_INLINE PyObject* __Pyx_PyLong_AddObjC(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check) {
+    CYTHON_MAYBE_UNUSED_VAR(intval);
+    CYTHON_UNUSED_VAR(zerodivision_check);
     #if CYTHON_USE_PYLONG_INTERNALS
     if (likely(PyLong_CheckExact(op1))) {
-        int unequal;
-        unsigned long uintval;
-        Py_ssize_t size = __Pyx_PyLong_DigitCount(op1);
-        const digit* digits = __Pyx_PyLong_Digits(op1);
-        if (intval == 0) {
-            return (__Pyx_PyLong_IsZero(op1) == 1);
-        } else if (intval < 0) {
-            if (__Pyx_PyLong_IsNonNeg(op1))
-                return 0;
-            intval = -intval;
-        } else {
-            if (__Pyx_PyLong_IsNeg(op1))
-                return 0;
-        }
-        uintval = (unsigned long) intval;
-#if PyLong_SHIFT * 4 < SIZEOF_LONG*8
-        if (uintval >> (PyLong_SHIFT * 4)) {
-            unequal = (size != 5) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
-                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[2] != ((uintval >> (2 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[3] != ((uintval >> (3 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[4] != ((uintval >> (4 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
-        } else
-#endif
-#if PyLong_SHIFT * 3 < SIZEOF_LONG*8
-        if (uintval >> (PyLong_SHIFT * 3)) {
-            unequal = (size != 4) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
-                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[2] != ((uintval >> (2 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[3] != ((uintval >> (3 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
-        } else
-#endif
-#if PyLong_SHIFT * 2 < SIZEOF_LONG*8
-        if (uintval >> (PyLong_SHIFT * 2)) {
-            unequal = (size != 3) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
-                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[2] != ((uintval >> (2 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
-        } else
-#endif
-#if PyLong_SHIFT * 1 < SIZEOF_LONG*8
-        if (uintval >> (PyLong_SHIFT * 1)) {
-            unequal = (size != 2) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
-                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
-        } else
-#endif
-            unequal = (size != 1) || (((unsigned long) digits[0]) != (uintval & (unsigned long) PyLong_MASK));
-        return (unequal == 0);
+        return __Pyx_Unpacked___Pyx_PyLong_AddObjC(op1, op2, intval, inplace, zerodivision_check);
     }
     #endif
     if (PyFloat_CheckExact(op1)) {
-        const long b = intval;
-        double a = __Pyx_PyFloat_AS_DOUBLE(op1);
-        return ((double)a == (double)b);
+        return __Pyx_Float___Pyx_PyLong_AddObjC(op1, intval, zerodivision_check);
     }
-    return __Pyx_PyObject_IsTrueAndDecref(
-        PyObject_RichCompare(op1, op2, Py_EQ));
+    return __Pyx_Fallback___Pyx_PyLong_AddObjC(op1, op2, inplace);
 }
+#endif
 
 /* HasAttr (used by ImportImpl) */
 #if __PYX_LIMITED_VERSION_HEX < 0x030d0000
@@ -5514,7 +6055,7 @@ static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
         if (unlikely(!module_name_str)) { goto modbad; }
         module_name = PyUnicode_FromString(module_name_str);
         if (unlikely(!module_name)) { goto modbad; }
-        module_dot = PyUnicode_Concat(module_name, __pyx_mstate_global->__pyx_kp_u_);
+        module_dot = PyUnicode_Concat(module_name, __pyx_mstate_global->__pyx_kp_u__3);
         if (unlikely(!module_dot)) { goto modbad; }
         full_name = PyUnicode_Concat(module_dot, name);
         if (unlikely(!full_name)) { goto modbad; }
@@ -7682,7 +8223,115 @@ bad:
 }
 #endif
 
-/* CIntFromPyVerify */
+/* FormatTypeName */
+#if CYTHON_COMPILING_IN_LIMITED_API && __PYX_LIMITED_VERSION_HEX < 0x030d0000
+static __Pyx_TypeName
+__Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp)
+{
+    PyObject *module = NULL, *name = NULL, *result = NULL;
+    #if __PYX_LIMITED_VERSION_HEX < 0x030b0000
+    name = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
+                                               __pyx_mstate_global->__pyx_n_u_qualname);
+    #else
+    name = PyType_GetQualName(tp);
+    #endif
+    if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) goto bad;
+    module = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
+                                               __pyx_mstate_global->__pyx_n_u_module);
+    if (unlikely(module == NULL) || unlikely(!PyUnicode_Check(module))) goto bad;
+    if (PyUnicode_CompareWithASCIIString(module, "builtins") == 0) {
+        result = name;
+        name = NULL;
+        goto done;
+    }
+    result = PyUnicode_FromFormat("%U.%U", module, name);
+    if (unlikely(result == NULL)) goto bad;
+  done:
+    Py_XDECREF(name);
+    Py_XDECREF(module);
+    return result;
+  bad:
+    PyErr_Clear();
+    if (name) {
+        result = name;
+        name = NULL;
+    } else {
+        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__4);
+    }
+    goto done;
+}
+#endif
+
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const long neg_one = (long) -1, const_zero = (long) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(long) < sizeof(long)) {
+            return PyLong_FromLong((long) value);
+        } else if (sizeof(long) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#if !CYTHON_COMPILING_IN_PYPY
+        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(long) <= sizeof(long)) {
+            return PyLong_FromLong((long) value);
+        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+        }
+    }
+    {
+        unsigned char *bytes = (unsigned char *)&value;
+#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX >= 0x030d00A4
+        if (is_unsigned) {
+            return PyLong_FromUnsignedNativeBytes(bytes, sizeof(value), -1);
+        } else {
+            return PyLong_FromNativeBytes(bytes, sizeof(value), -1);
+        }
+#elif !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        return _PyLong_FromByteArray(bytes, sizeof(long),
+                                     little, !is_unsigned);
+#else
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        PyObject *from_bytes, *result = NULL, *kwds = NULL;
+        PyObject *py_bytes = NULL, *order_str = NULL;
+        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
+        if (!from_bytes) return NULL;
+        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(long));
+        if (!py_bytes) goto limited_bad;
+        order_str = PyUnicode_FromString(little ? "little" : "big");
+        if (!order_str) goto limited_bad;
+        {
+            PyObject *args[3+(CYTHON_VECTORCALL ? 1 : 0)] = { NULL, py_bytes, order_str };
+            if (!is_unsigned) {
+                kwds = __Pyx_MakeVectorcallBuilderKwds(1);
+                if (!kwds) goto limited_bad;
+                if (__Pyx_VectorcallBuilder_AddArgStr("signed", __Pyx_NewRef(Py_True), kwds, args+3, 0) < 0) goto limited_bad;
+            }
+            result = __Pyx_Object_Vectorcall_CallFromBuilder(from_bytes, args+1, 2 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET, kwds);
+        }
+        limited_bad:
+        Py_XDECREF(kwds);
+        Py_XDECREF(order_str);
+        Py_XDECREF(py_bytes);
+        Py_XDECREF(from_bytes);
+        return result;
+#endif
+    }
+}
+
+/* CIntFromPyVerify (used by CIntFromPy) */
 #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
     __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
 #define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
@@ -7952,114 +8601,6 @@ raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
         "can't convert negative value to long");
     return (long) -1;
-}
-
-/* FormatTypeName */
-#if CYTHON_COMPILING_IN_LIMITED_API && __PYX_LIMITED_VERSION_HEX < 0x030d0000
-static __Pyx_TypeName
-__Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp)
-{
-    PyObject *module = NULL, *name = NULL, *result = NULL;
-    #if __PYX_LIMITED_VERSION_HEX < 0x030b0000
-    name = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
-                                               __pyx_mstate_global->__pyx_n_u_qualname);
-    #else
-    name = PyType_GetQualName(tp);
-    #endif
-    if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) goto bad;
-    module = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
-                                               __pyx_mstate_global->__pyx_n_u_module);
-    if (unlikely(module == NULL) || unlikely(!PyUnicode_Check(module))) goto bad;
-    if (PyUnicode_CompareWithASCIIString(module, "builtins") == 0) {
-        result = name;
-        name = NULL;
-        goto done;
-    }
-    result = PyUnicode_FromFormat("%U.%U", module, name);
-    if (unlikely(result == NULL)) goto bad;
-  done:
-    Py_XDECREF(name);
-    Py_XDECREF(module);
-    return result;
-  bad:
-    PyErr_Clear();
-    if (name) {
-        result = name;
-        name = NULL;
-    } else {
-        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__2);
-    }
-    goto done;
-}
-#endif
-
-/* CIntToPy */
-static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value) {
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif
-    const long neg_one = (long) -1, const_zero = (long) 0;
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic pop
-#endif
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(long) < sizeof(long)) {
-            return PyLong_FromLong((long) value);
-        } else if (sizeof(long) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#if !CYTHON_COMPILING_IN_PYPY
-        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(long) <= sizeof(long)) {
-            return PyLong_FromLong((long) value);
-        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-        }
-    }
-    {
-        unsigned char *bytes = (unsigned char *)&value;
-#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX >= 0x030d00A4
-        if (is_unsigned) {
-            return PyLong_FromUnsignedNativeBytes(bytes, sizeof(value), -1);
-        } else {
-            return PyLong_FromNativeBytes(bytes, sizeof(value), -1);
-        }
-#elif !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        return _PyLong_FromByteArray(bytes, sizeof(long),
-                                     little, !is_unsigned);
-#else
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        PyObject *from_bytes, *result = NULL, *kwds = NULL;
-        PyObject *py_bytes = NULL, *order_str = NULL;
-        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
-        if (!from_bytes) return NULL;
-        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(long));
-        if (!py_bytes) goto limited_bad;
-        order_str = PyUnicode_FromString(little ? "little" : "big");
-        if (!order_str) goto limited_bad;
-        {
-            PyObject *args[3+(CYTHON_VECTORCALL ? 1 : 0)] = { NULL, py_bytes, order_str };
-            if (!is_unsigned) {
-                kwds = __Pyx_MakeVectorcallBuilderKwds(1);
-                if (!kwds) goto limited_bad;
-                if (__Pyx_VectorcallBuilder_AddArgStr("signed", __Pyx_NewRef(Py_True), kwds, args+3, 0) < 0) goto limited_bad;
-            }
-            result = __Pyx_Object_Vectorcall_CallFromBuilder(from_bytes, args+1, 2 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET, kwds);
-        }
-        limited_bad:
-        Py_XDECREF(kwds);
-        Py_XDECREF(order_str);
-        Py_XDECREF(py_bytes);
-        Py_XDECREF(from_bytes);
-        return result;
-#endif
-    }
 }
 
 /* CIntFromPy */

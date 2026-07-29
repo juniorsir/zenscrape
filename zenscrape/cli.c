@@ -1580,33 +1580,51 @@ struct __pyx_obj_9zenscrape_3cli___pyx_scope_struct_1_callback {
  *     return user_concurrency
  * 
  * async def run_inspector(args):             # <<<<<<<<<<<<<<
- *     logger.info(f" Scouting {args.url}...")
- *     from curl_cffi.requests import AsyncSession
+ *     if args.tor:
+ *         from .setup_env import ensure_tor_env
 */
 struct __pyx_obj_9zenscrape_3cli___pyx_scope_struct_2_run_inspector {
   PyObject_HEAD
   PyObject *__pyx_v_AsyncSession;
+  PyObject *__pyx_v_ZenSecurityAuditor;
   PyObject *__pyx_v_args;
+  PyObject *__pyx_v_audit_res;
+  PyObject *__pyx_v_audit_session;
+  PyObject *__pyx_v_audit_targets;
   PyObject *__pyx_v_choice;
+  PyObject *__pyx_v_detail;
+  PyObject *__pyx_v_details;
+  PyObject *__pyx_v_dns_report;
+  PyObject *__pyx_v_domain;
   PyObject *__pyx_v_e;
+  PyObject *__pyx_v_ensure_tor_env;
   PyObject *__pyx_v_f;
   PyObject *__pyx_v_field;
   PyObject *__pyx_v_fields;
   PyObject *__pyx_v_fillable_types;
   PyObject *__pyx_v_h;
+  PyObject *__pyx_v_h_name;
+  PyObject *__pyx_v_headers_report;
   PyObject *__pyx_v_i;
   PyObject *__pyx_v_important_meta;
   PyObject *__pyx_v_indent;
   PyObject *__pyx_8genexpr2__pyx_v_inp;
   PyObject *__pyx_v_insp;
+  PyObject *__pyx_v_is_virtual;
   PyObject *__pyx_v_key;
+  PyObject *__pyx_v_parsed_url;
   PyObject *__pyx_v_payload;
   PyObject *__pyx_v_proxy;
+  PyObject *__pyx_v_record_type;
   PyObject *__pyx_v_res;
   PyObject *__pyx_v_s;
   PyObject *__pyx_v_selected_form;
+  PyObject *__pyx_v_signature_match;
   PyObject *__pyx_v_summary;
   PyObject *__pyx_v_t;
+  PyObject *__pyx_v_target;
+  PyObject *__pyx_v_tls_report;
+  PyObject *__pyx_v_urlparse;
   PyObject *__pyx_v_val;
   PyObject *__pyx_t_0;
   PyObject *__pyx_t_1;
@@ -1616,6 +1634,8 @@ struct __pyx_obj_9zenscrape_3cli___pyx_scope_struct_2_run_inspector {
   PyObject *__pyx_t_5;
   PyObject *__pyx_t_6;
   PyObject *__pyx_t_7;
+  Py_ssize_t __pyx_t_8;
+  PyObject *(*__pyx_t_9)(PyObject *);
 };
 
 /* #### Code section: utility_code_proto ### */
@@ -2523,6 +2543,9 @@ static PyObject *__Pyx_PyDict_GetItem(PyObject *d, PyObject* key);
 #define __Pyx_PyObject_Dict_GetItem(obj, name)  PyObject_GetItem(obj, name)
 #endif
 
+/* PyUnicode_Unicode.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyUnicode_Unicode(PyObject *obj);
+
 /* PyObjectDelAttr.proto (used by PyObjectSetAttrStr) */
 #if CYTHON_COMPILING_IN_LIMITED_API && __PYX_LIMITED_VERSION_HEX < 0x030d0000
 #define __Pyx_PyObject_DelAttr(o, n) PyObject_SetAttr(o, n, NULL)
@@ -2552,8 +2575,40 @@ static CYTHON_INLINE PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject *k
 #define __Pyx_PyObject_GetItem(obj, key)  PyObject_GetItem(obj, key)
 #endif
 
-/* PyUnicode_Unicode.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyUnicode_Unicode(PyObject *obj);
+/* IterFinish.proto (used by dict_iter) */
+static CYTHON_INLINE int __Pyx_IterFinish(void);
+
+/* PyObjectCallMethod0.proto (used by dict_iter) */
+static PyObject* __Pyx_PyObject_CallMethod0(PyObject* obj, PyObject* method_name);
+
+/* RaiseNeedMoreValuesToUnpack.proto (used by UnpackTuple2) */
+static CYTHON_INLINE void __Pyx_RaiseNeedMoreValuesError(Py_ssize_t index);
+
+/* RaiseTooManyValuesToUnpack.proto (used by UnpackItemEndCheck) */
+static CYTHON_INLINE void __Pyx_RaiseTooManyValuesError(Py_ssize_t expected);
+
+/* UnpackItemEndCheck.proto (used by UnpackTuple2) */
+static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected);
+
+/* RaiseNoneIterError.proto (used by UnpackTupleError) */
+static CYTHON_INLINE void __Pyx_RaiseNoneNotIterableError(void);
+
+/* UnpackTupleError.proto (used by UnpackTuple2) */
+static void __Pyx_UnpackTupleError(PyObject *, Py_ssize_t index);
+
+/* UnpackTuple2.proto (used by dict_iter) */
+static CYTHON_INLINE int __Pyx_unpack_tuple2(
+    PyObject* tuple, PyObject** value1, PyObject** value2, int is_tuple, int has_known_size, int decref_tuple);
+static CYTHON_INLINE int __Pyx_unpack_tuple2_exact(
+    PyObject* tuple, PyObject** value1, PyObject** value2, int decref_tuple);
+static int __Pyx_unpack_tuple2_generic(
+    PyObject* tuple, PyObject** value1, PyObject** value2, int has_known_size, int decref_tuple);
+
+/* dict_iter.proto */
+static CYTHON_INLINE PyObject* __Pyx_dict_iterator(PyObject* dict, int is_dict, PyObject* method_name,
+                                                   Py_ssize_t* p_orig_length, int* p_is_dict);
+static CYTHON_INLINE int __Pyx_dict_iter_next(PyObject* dict_or_iter, Py_ssize_t orig_length, Py_ssize_t* ppos,
+                                              PyObject** pkey, PyObject** pvalue, PyObject** pitem, int is_dict);
 
 /* CheckTypeForFreelists.proto */
 #if CYTHON_USE_FREELISTS
@@ -2571,9 +2626,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyUnicode_Unicode(PyObject *obj);
 
 /* AllocateExtensionType.proto */
 static PyObject *__Pyx_AllocateExtensionType(PyTypeObject *t, int is_final);
-
-/* PyObjectCallMethod0.proto (used by PyType_Ready) */
-static PyObject* __Pyx_PyObject_CallMethod0(PyObject* obj, PyObject* method_name);
 
 /* ValidateBasesTuple.proto (used by PyType_Ready) */
 #if CYTHON_COMPILING_IN_CPYTHON || CYTHON_COMPILING_IN_LIMITED_API || CYTHON_USE_TYPE_SPECS
@@ -2786,8 +2838,8 @@ typedef struct {
   PyObject *__pyx_slice[4];
   PyObject *__pyx_tuple[3];
   PyObject *__pyx_codeobj_tab[6];
-  PyObject *__pyx_string_tab[343];
-  PyObject *__pyx_number_tab[11];
+  PyObject *__pyx_string_tab[417];
+  PyObject *__pyx_number_tab[12];
 /* #### Code section: module_state_contents ### */
 /* CommonTypesMetaclass.module_state_decls */
 PyTypeObject *__pyx_CommonTypesMetaclassType;
@@ -2872,334 +2924,408 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_kp_u_6_SUBMIT_Fill_and_Submit_Detecte __pyx_string_tab[12]
 #define __pyx_kp_u_7 __pyx_string_tab[13]
 #define __pyx_kp_u_7_AUDIT_Deep_Structural_Audit __pyx_string_tab[14]
-#define __pyx_kp_u_Action_1_7 __pyx_string_tab[15]
-#define __pyx_kp_u_CHOICES __pyx_string_tab[16]
-#define __pyx_kp_u_Columns __pyx_string_tab[17]
-#define __pyx_kp_u_Cores __pyx_string_tab[18]
-#define __pyx_kp_u_DEEP_STRUCTURAL_AUDIT __pyx_string_tab[19]
-#define __pyx_kp_u_Database_not_found __pyx_string_tab[20]
-#define __pyx_kp_u_Desktop_detected_Auto_optimizin __pyx_string_tab[21]
-#define __pyx_kp_u_Exported __pyx_string_tab[22]
-#define __pyx_kp_u_External __pyx_string_tab[23]
-#define __pyx_kp_u_Failed_to_inspect_site __pyx_string_tab[24]
-#define __pyx_kp_u_Failed_to_read_database __pyx_string_tab[25]
-#define __pyx_kp_u_Fields __pyx_string_tab[26]
-#define __pyx_kp_u_Form __pyx_string_tab[27]
-#define __pyx_kp_u_Forms __pyx_string_tab[28]
-#define __pyx_kp_u_HEADING_HIERARCHY_TREE __pyx_string_tab[29]
-#define __pyx_kp_u_INPUTS_DETECTED __pyx_string_tab[30]
-#define __pyx_kp_u_Images __pyx_string_tab[31]
-#define __pyx_kp_u_Interactive_Mode __pyx_string_tab[32]
-#define __pyx_kp_u_Internal __pyx_string_tab[33]
-#define __pyx_kp_u_Links __pyx_string_tab[34]
-#define __pyx_kp_u_Media __pyx_string_tab[35]
-#define __pyx_kp_u_Mobile_detected_Auto_optimizing __pyx_string_tab[36]
-#define __pyx_kp_u_N_A __pyx_string_tab[37]
-#define __pyx_kp_u_No_Data __pyx_string_tab[38]
-#define __pyx_kp_u_No_data_found_to_export __pyx_string_tab[39]
-#define __pyx_kp_u_No_forms_detected_to_submit __pyx_string_tab[40]
-#define __pyx_kp_u_None __pyx_string_tab[41]
-#define __pyx_kp_u_Not_Found __pyx_string_tab[42]
-#define __pyx_kp_u_Note_that_Cython_is_deliberately __pyx_string_tab[43]
-#define __pyx_kp_u_Press_Enter_to_Exit_Audit __pyx_string_tab[44]
-#define __pyx_kp_u_Route_through_Tor __pyx_string_tab[45]
-#define __pyx_kp_u_SCRAPED_RESULTS_FROM_SUBMISSION __pyx_string_tab[46]
-#define __pyx_kp_u_SELECT_url_data_timestamp_FROM_r __pyx_string_tab[47]
-#define __pyx_kp_u_SEO_OPEN_GRAPH_METADATA __pyx_string_tab[48]
-#define __pyx_kp_u_SITE_INTELLIGENCE __pyx_string_tab[49]
-#define __pyx_kp_u_Scouting __pyx_string_tab[50]
-#define __pyx_kp_u_TABLE_SCHEMAS_DETECTED __pyx_string_tab[51]
-#define __pyx_kp_u_Table __pyx_string_tab[52]
-#define __pyx_kp_u_Target_URL __pyx_string_tab[53]
-#define __pyx_kp_u_Value_for __pyx_string_tab[54]
-#define __pyx_kp_u_Warning_High_concurrency __pyx_string_tab[55]
-#define __pyx_kp_u_ZenScrape_Elite_Professional_Web __pyx_string_tab[56]
-#define __pyx_kp_u__10 __pyx_string_tab[57]
-#define __pyx_kp_u__11 __pyx_string_tab[58]
-#define __pyx_kp_u__12 __pyx_string_tab[59]
-#define __pyx_kp_u__13 __pyx_string_tab[60]
-#define __pyx_kp_u__14 __pyx_string_tab[61]
-#define __pyx_kp_u__15 __pyx_string_tab[62]
-#define __pyx_kp_u__16 __pyx_string_tab[63]
-#define __pyx_kp_u__17 __pyx_string_tab[64]
-#define __pyx_kp_u__18 __pyx_string_tab[65]
-#define __pyx_kp_u__19 __pyx_string_tab[66]
-#define __pyx_kp_u__2 __pyx_string_tab[67]
-#define __pyx_kp_u__20 __pyx_string_tab[68]
-#define __pyx_kp_u__21 __pyx_string_tab[69]
-#define __pyx_kp_u__22 __pyx_string_tab[70]
-#define __pyx_kp_u__23 __pyx_string_tab[71]
-#define __pyx_kp_u__24 __pyx_string_tab[72]
-#define __pyx_kp_u__3 __pyx_string_tab[73]
-#define __pyx_kp_u__4 __pyx_string_tab[74]
-#define __pyx_kp_u__5 __pyx_string_tab[75]
-#define __pyx_kp_u__6 __pyx_string_tab[76]
-#define __pyx_kp_u__7 __pyx_string_tab[77]
-#define __pyx_kp_u__8 __pyx_string_tab[78]
-#define __pyx_kp_u__9 __pyx_string_tab[79]
-#define __pyx_kp_u_add_note __pyx_string_tab[80]
-#define __pyx_kp_u_article_product_pod_h3_a_a __pyx_string_tab[81]
-#define __pyx_kp_u_concurrency_2 __pyx_string_tab[82]
-#define __pyx_kp_u_cookies_2 __pyx_string_tab[83]
-#define __pyx_kp_u_css_2 __pyx_string_tab[84]
-#define __pyx_kp_u_csv_2 __pyx_string_tab[85]
-#define __pyx_kp_u_data_2 __pyx_string_tab[86]
-#define __pyx_kp_u_data_data_com_termux __pyx_string_tab[87]
-#define __pyx_kp_u_delay_2 __pyx_string_tab[88]
-#define __pyx_kp_u_depth_2 __pyx_string_tab[89]
-#define __pyx_kp_u_detected __pyx_string_tab[90]
-#define __pyx_kp_u_disable __pyx_string_tab[91]
-#define __pyx_kp_u_enable __pyx_string_tab[92]
-#define __pyx_kp_u_gc __pyx_string_tab[93]
-#define __pyx_kp_u_h2_h3_title __pyx_string_tab[94]
-#define __pyx_kp_u_headers_2 __pyx_string_tab[95]
-#define __pyx_kp_u_inspect __pyx_string_tab[96]
-#define __pyx_kp_u_isenabled __pyx_string_tab[97]
-#define __pyx_kp_u_items_to __pyx_string_tab[98]
-#define __pyx_kp_u_json_2 __pyx_string_tab[99]
-#define __pyx_kp_u_method_2 __pyx_string_tab[100]
-#define __pyx_kp_u_no_cache_2 __pyx_string_tab[101]
-#define __pyx_kp_u_og_description __pyx_string_tab[102]
-#define __pyx_kp_u_og_image __pyx_string_tab[103]
-#define __pyx_kp_u_og_title __pyx_string_tab[104]
-#define __pyx_kp_u_on_mobile_may_cause_crashes_or __pyx_string_tab[105]
-#define __pyx_kp_u_output_2 __pyx_string_tab[106]
-#define __pyx_kp_u_params_2 __pyx_string_tab[107]
-#define __pyx_kp_u_profile_2 __pyx_string_tab[108]
-#define __pyx_kp_u_q_EXIT __pyx_string_tab[109]
-#define __pyx_kp_u_socks5h_127_0_0_1_9050 __pyx_string_tab[110]
-#define __pyx_kp_u_tor_2 __pyx_string_tab[111]
-#define __pyx_kp_u_url_2 __pyx_string_tab[112]
-#define __pyx_kp_u_zenscrape_cli __pyx_string_tab[113]
-#define __pyx_kp_u_zenscrape_cli_py __pyx_string_tab[114]
-#define __pyx_kp_u_zenscrape_config __pyx_string_tab[115]
-#define __pyx_kp_u_zenscrape_engine __pyx_string_tab[116]
-#define __pyx_kp_u_zenscrape_inspector __pyx_string_tab[117]
-#define __pyx_kp_u_zenscrape_models __pyx_string_tab[118]
-#define __pyx_kp_u_zenscrape_results_db __pyx_string_tab[119]
-#define __pyx_kp_u_zenscrape_storage __pyx_string_tab[120]
-#define __pyx_n_u_ArgumentParser __pyx_string_tab[121]
-#define __pyx_n_u_AsyncSession __pyx_string_tab[122]
-#define __pyx_n_u_DATA __pyx_string_tab[123]
-#define __pyx_n_u_GET __pyx_string_tab[124]
-#define __pyx_n_u_H2 __pyx_string_tab[125]
-#define __pyx_n_u_H3 __pyx_string_tab[126]
-#define __pyx_n_u_POST __pyx_string_tab[127]
-#define __pyx_n_u_PUT __pyx_string_tab[128]
-#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[129]
-#define __pyx_n_u_TIMESTAMP __pyx_string_tab[130]
-#define __pyx_n_u_URL __pyx_string_tab[131]
-#define __pyx_n_u_ZenCrawler __pyx_string_tab[132]
-#define __pyx_n_u_ZenDatabase __pyx_string_tab[133]
-#define __pyx_n_u_ZenEngineConfig __pyx_string_tab[134]
-#define __pyx_n_u_ZenInspector __pyx_string_tab[135]
-#define __pyx_n_u_ZenRequest __pyx_string_tab[136]
-#define __pyx_n_u_ZenSecurityConfig __pyx_string_tab[137]
-#define __pyx_n_u_a __pyx_string_tab[138]
-#define __pyx_n_u_action __pyx_string_tab[139]
-#define __pyx_n_u_action_performed __pyx_string_tab[140]
-#define __pyx_n_u_add_argument __pyx_string_tab[141]
-#define __pyx_n_u_add_request __pyx_string_tab[142]
-#define __pyx_n_u_aenter __pyx_string_tab[143]
-#define __pyx_n_u_aexit __pyx_string_tab[144]
-#define __pyx_n_u_annotate __pyx_string_tab[145]
-#define __pyx_n_u_argparse __pyx_string_tab[146]
-#define __pyx_n_u_args __pyx_string_tab[147]
-#define __pyx_n_u_asyncio __pyx_string_tab[148]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[149]
-#define __pyx_n_u_attributes __pyx_string_tab[150]
-#define __pyx_n_u_await __pyx_string_tab[151]
-#define __pyx_n_u_cache_requests __pyx_string_tab[152]
-#define __pyx_n_u_calculate_optimal_concurrency __pyx_string_tab[153]
-#define __pyx_n_u_callback __pyx_string_tab[154]
-#define __pyx_n_u_choice __pyx_string_tab[155]
-#define __pyx_n_u_choices __pyx_string_tab[156]
-#define __pyx_n_u_chrome110 __pyx_string_tab[157]
-#define __pyx_n_u_class_getitem __pyx_string_tab[158]
-#define __pyx_n_u_cli __pyx_string_tab[159]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[160]
-#define __pyx_n_u_close __pyx_string_tab[161]
-#define __pyx_n_u_columns __pyx_string_tab[162]
-#define __pyx_n_u_concurrency __pyx_string_tab[163]
-#define __pyx_n_u_config __pyx_string_tab[164]
-#define __pyx_n_u_conn __pyx_string_tab[165]
-#define __pyx_n_u_connect __pyx_string_tab[166]
-#define __pyx_n_u_cookies __pyx_string_tab[167]
-#define __pyx_n_u_count __pyx_string_tab[168]
-#define __pyx_n_u_cpu_cores __pyx_string_tab[169]
-#define __pyx_n_u_cpu_count __pyx_string_tab[170]
-#define __pyx_n_u_crawler __pyx_string_tab[171]
-#define __pyx_n_u_css __pyx_string_tab[172]
-#define __pyx_n_u_css_first __pyx_string_tab[173]
-#define __pyx_n_u_csv __pyx_string_tab[174]
-#define __pyx_n_u_curl_cffi_requests __pyx_string_tab[175]
-#define __pyx_n_u_cursor __pyx_string_tab[176]
-#define __pyx_n_u_data __pyx_string_tab[177]
-#define __pyx_n_u_db __pyx_string_tab[178]
-#define __pyx_n_u_db_path __pyx_string_tab[179]
-#define __pyx_n_u_default __pyx_string_tab[180]
-#define __pyx_n_u_delay __pyx_string_tab[181]
-#define __pyx_n_u_depth __pyx_string_tab[182]
-#define __pyx_n_u_description __pyx_string_tab[183]
-#define __pyx_n_u_detailed_tables __pyx_string_tab[184]
-#define __pyx_n_u_dump __pyx_string_tab[185]
-#define __pyx_n_u_dumps __pyx_string_tab[186]
-#define __pyx_n_u_e __pyx_string_tab[187]
-#define __pyx_n_u_elems __pyx_string_tab[188]
-#define __pyx_n_u_email __pyx_string_tab[189]
-#define __pyx_n_u_engine __pyx_string_tab[190]
-#define __pyx_n_u_enter __pyx_string_tab[191]
-#define __pyx_n_u_enumerate __pyx_string_tab[192]
-#define __pyx_n_u_error __pyx_string_tab[193]
-#define __pyx_n_u_execute __pyx_string_tab[194]
-#define __pyx_n_u_exists __pyx_string_tab[195]
-#define __pyx_n_u_exit __pyx_string_tab[196]
-#define __pyx_n_u_exit_2 __pyx_string_tab[197]
-#define __pyx_n_u_export __pyx_string_tab[198]
-#define __pyx_n_u_export_data __pyx_string_tab[199]
-#define __pyx_n_u_external __pyx_string_tab[200]
-#define __pyx_n_u_extracted __pyx_string_tab[201]
-#define __pyx_n_u_f __pyx_string_tab[202]
-#define __pyx_n_u_fetchall __pyx_string_tab[203]
-#define __pyx_n_u_field __pyx_string_tab[204]
-#define __pyx_n_u_fields __pyx_string_tab[205]
-#define __pyx_n_u_filename __pyx_string_tab[206]
-#define __pyx_n_u_fillable_types __pyx_string_tab[207]
-#define __pyx_n_u_final_concurrency __pyx_string_tab[208]
-#define __pyx_n_u_form __pyx_string_tab[209]
-#define __pyx_n_u_format __pyx_string_tab[210]
-#define __pyx_n_u_forms __pyx_string_tab[211]
-#define __pyx_n_u_full_url __pyx_string_tab[212]
-#define __pyx_n_u_func __pyx_string_tab[213]
-#define __pyx_n_u_get __pyx_string_tab[214]
-#define __pyx_n_u_get_summary __pyx_string_tab[215]
-#define __pyx_n_u_h __pyx_string_tab[216]
-#define __pyx_n_u_headers __pyx_string_tab[217]
-#define __pyx_n_u_headings __pyx_string_tab[218]
-#define __pyx_n_u_help __pyx_string_tab[219]
-#define __pyx_n_u_href __pyx_string_tab[220]
-#define __pyx_n_u_http __pyx_string_tab[221]
-#define __pyx_n_u_https __pyx_string_tab[222]
-#define __pyx_n_u_i __pyx_string_tab[223]
-#define __pyx_n_u_id __pyx_string_tab[224]
-#define __pyx_n_u_img __pyx_string_tab[225]
-#define __pyx_n_u_impersonate __pyx_string_tab[226]
-#define __pyx_n_u_important_meta __pyx_string_tab[227]
-#define __pyx_n_u_indent __pyx_string_tab[228]
-#define __pyx_n_u_info __pyx_string_tab[229]
-#define __pyx_n_u_inp __pyx_string_tab[230]
-#define __pyx_n_u_input __pyx_string_tab[231]
-#define __pyx_n_u_inputs __pyx_string_tab[232]
-#define __pyx_n_u_insp __pyx_string_tab[233]
-#define __pyx_n_u_inspect_2 __pyx_string_tab[234]
-#define __pyx_n_u_inspector __pyx_string_tab[235]
-#define __pyx_n_u_int __pyx_string_tab[236]
-#define __pyx_n_u_internal __pyx_string_tab[237]
-#define __pyx_n_u_is_android __pyx_string_tab[238]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[239]
-#define __pyx_n_u_items __pyx_string_tab[240]
-#define __pyx_n_u_json __pyx_string_tab[241]
-#define __pyx_n_u_key __pyx_string_tab[242]
-#define __pyx_n_u_keywords __pyx_string_tab[243]
-#define __pyx_n_u_link __pyx_string_tab[244]
-#define __pyx_n_u_links __pyx_string_tab[245]
-#define __pyx_n_u_loads __pyx_string_tab[246]
-#define __pyx_n_u_logger __pyx_string_tab[247]
-#define __pyx_n_u_loguru __pyx_string_tab[248]
-#define __pyx_n_u_lower __pyx_string_tab[249]
-#define __pyx_n_u_main __pyx_string_tab[250]
-#define __pyx_n_u_main_2 __pyx_string_tab[251]
-#define __pyx_n_u_max_depth __pyx_string_tab[252]
-#define __pyx_n_u_media __pyx_string_tab[253]
-#define __pyx_n_u_meta __pyx_string_tab[254]
-#define __pyx_n_u_metadata __pyx_string_tab[255]
-#define __pyx_n_u_method __pyx_string_tab[256]
-#define __pyx_n_u_models __pyx_string_tab[257]
-#define __pyx_n_u_module __pyx_string_tab[258]
-#define __pyx_n_u_name __pyx_string_tab[259]
-#define __pyx_n_u_name_2 __pyx_string_tab[260]
-#define __pyx_n_u_new_depth __pyx_string_tab[261]
-#define __pyx_n_u_newline __pyx_string_tab[262]
-#define __pyx_n_u_next __pyx_string_tab[263]
-#define __pyx_n_u_no_cache __pyx_string_tab[264]
-#define __pyx_n_u_open __pyx_string_tab[265]
-#define __pyx_n_u_optimal __pyx_string_tab[266]
-#define __pyx_n_u_os __pyx_string_tab[267]
-#define __pyx_n_u_output __pyx_string_tab[268]
-#define __pyx_n_u_params __pyx_string_tab[269]
-#define __pyx_n_u_parse_args __pyx_string_tab[270]
-#define __pyx_n_u_parser __pyx_string_tab[271]
-#define __pyx_n_u_password __pyx_string_tab[272]
-#define __pyx_n_u_path __pyx_string_tab[273]
-#define __pyx_n_u_payload __pyx_string_tab[274]
-#define __pyx_n_u_placeholder __pyx_string_tab[275]
-#define __pyx_n_u_pop __pyx_string_tab[276]
-#define __pyx_n_u_post_data __pyx_string_tab[277]
-#define __pyx_n_u_print __pyx_string_tab[278]
-#define __pyx_n_u_print_help __pyx_string_tab[279]
-#define __pyx_n_u_profile __pyx_string_tab[280]
-#define __pyx_n_u_proxies __pyx_string_tab[281]
-#define __pyx_n_u_proxy __pyx_string_tab[282]
-#define __pyx_n_u_q __pyx_string_tab[283]
-#define __pyx_n_u_qualname __pyx_string_tab[284]
-#define __pyx_n_u_r __pyx_string_tab[285]
-#define __pyx_n_u_req __pyx_string_tab[286]
-#define __pyx_n_u_res __pyx_string_tab[287]
-#define __pyx_n_u_response __pyx_string_tab[288]
-#define __pyx_n_u_return __pyx_string_tab[289]
-#define __pyx_n_u_rows __pyx_string_tab[290]
-#define __pyx_n_u_run __pyx_string_tab[291]
-#define __pyx_n_u_run_inspector __pyx_string_tab[292]
-#define __pyx_n_u_s __pyx_string_tab[293]
-#define __pyx_n_u_save_result __pyx_string_tab[294]
-#define __pyx_n_u_search __pyx_string_tab[295]
-#define __pyx_n_u_selected_form __pyx_string_tab[296]
-#define __pyx_n_u_send __pyx_string_tab[297]
-#define __pyx_n_u_set_name __pyx_string_tab[298]
-#define __pyx_n_u_setdefault __pyx_string_tab[299]
-#define __pyx_n_u_setup __pyx_string_tab[300]
-#define __pyx_n_u_sqlite3 __pyx_string_tab[301]
-#define __pyx_n_u_start_scrape __pyx_string_tab[302]
-#define __pyx_n_u_start_scrape_locals_callback __pyx_string_tab[303]
-#define __pyx_n_u_startswith __pyx_string_tab[304]
-#define __pyx_n_u_storage __pyx_string_tab[305]
-#define __pyx_n_u_store_true __pyx_string_tab[306]
-#define __pyx_n_u_strip __pyx_string_tab[307]
-#define __pyx_n_u_structure __pyx_string_tab[308]
-#define __pyx_n_u_submit __pyx_string_tab[309]
-#define __pyx_n_u_success __pyx_string_tab[310]
-#define __pyx_n_u_summary __pyx_string_tab[311]
-#define __pyx_n_u_sys __pyx_string_tab[312]
-#define __pyx_n_u_t __pyx_string_tab[313]
-#define __pyx_n_u_tag __pyx_string_tab[314]
-#define __pyx_n_u_tel __pyx_string_tab[315]
-#define __pyx_n_u_test __pyx_string_tab[316]
-#define __pyx_n_u_text __pyx_string_tab[317]
-#define __pyx_n_u_throw __pyx_string_tab[318]
-#define __pyx_n_u_time __pyx_string_tab[319]
-#define __pyx_n_u_timeout __pyx_string_tab[320]
-#define __pyx_n_u_title __pyx_string_tab[321]
-#define __pyx_n_u_tor __pyx_string_tab[322]
-#define __pyx_n_u_type __pyx_string_tab[323]
-#define __pyx_n_u_url __pyx_string_tab[324]
-#define __pyx_n_u_urljoin __pyx_string_tab[325]
-#define __pyx_n_u_urllib_parse __pyx_string_tab[326]
-#define __pyx_n_u_use_tor __pyx_string_tab[327]
-#define __pyx_n_u_user_concurrency __pyx_string_tab[328]
-#define __pyx_n_u_val __pyx_string_tab[329]
-#define __pyx_n_u_value __pyx_string_tab[330]
-#define __pyx_n_u_values __pyx_string_tab[331]
-#define __pyx_n_u_w __pyx_string_tab[332]
-#define __pyx_n_u_warning __pyx_string_tab[333]
-#define __pyx_n_u_writer __pyx_string_tab[334]
-#define __pyx_n_u_writerow __pyx_string_tab[335]
-#define __pyx_n_u_writerows __pyx_string_tab[336]
-#define __pyx_n_u_zenscrape_cli __pyx_string_tab[337]
-#define __pyx_kp_b_iso88591_4HA_Cs_5_q_1_1_c_BfD_q_I_J_1_Bc __pyx_string_tab[338]
-#define __pyx_kp_b_iso88591_X_A_q_a_q_WN_q_q_e1_q_XQ_q_e81 __pyx_string_tab[339]
-#define __pyx_kp_b_iso88591__25 __pyx_string_tab[340]
-#define __pyx_kp_b_iso88591_a_2 __pyx_string_tab[341]
-#define __pyx_kp_b_iso88591_t2U_fA_1A_7_1_T_haq_vYa_fA_0_F __pyx_string_tab[342]
+#define __pyx_kp_u_8 __pyx_string_tab[15]
+#define __pyx_kp_u_8_SEC_AUD_Exposed_Configuration __pyx_string_tab[16]
+#define __pyx_kp_u_Action_1_7 __pyx_string_tab[17]
+#define __pyx_kp_u_Auditing_HTTP_Security_Headers __pyx_string_tab[18]
+#define __pyx_kp_u_CHOICES __pyx_string_tab[19]
+#define __pyx_kp_u_CONFIGURATION_EXPOSURE_SCAN_LEA __pyx_string_tab[20]
+#define __pyx_kp_u_Cipher __pyx_string_tab[21]
+#define __pyx_kp_u_Columns __pyx_string_tab[22]
+#define __pyx_kp_u_Cores __pyx_string_tab[23]
+#define __pyx_kp_u_DEEP_STRUCTURAL_AUDIT __pyx_string_tab[24]
+#define __pyx_kp_u_DNS_SECURITY_RECORDS __pyx_string_tab[25]
+#define __pyx_kp_u_Database_not_found __pyx_string_tab[26]
+#define __pyx_kp_u_Desktop_detected_Auto_optimizin __pyx_string_tab[27]
+#define __pyx_kp_u_ERROR_Could_not_connect_to __pyx_string_tab[28]
+#define __pyx_kp_u_Error_Details __pyx_string_tab[29]
+#define __pyx_kp_u_Expires __pyx_string_tab[30]
+#define __pyx_kp_u_Exported __pyx_string_tab[31]
+#define __pyx_kp_u_Exposure __pyx_string_tab[32]
+#define __pyx_kp_u_External __pyx_string_tab[33]
+#define __pyx_kp_u_Failed_to_inspect_site __pyx_string_tab[34]
+#define __pyx_kp_u_Failed_to_read_database __pyx_string_tab[35]
+#define __pyx_kp_u_Fields __pyx_string_tab[36]
+#define __pyx_kp_u_Form __pyx_string_tab[37]
+#define __pyx_kp_u_Forms __pyx_string_tab[38]
+#define __pyx_kp_u_HEADING_HIERARCHY_TREE __pyx_string_tab[39]
+#define __pyx_kp_u_HTTP_SECURITY_HEADER_REPORT __pyx_string_tab[40]
+#define __pyx_kp_u_INPUTS_DETECTED __pyx_string_tab[41]
+#define __pyx_kp_u_Images __pyx_string_tab[42]
+#define __pyx_kp_u_Inspecting_SSL_TLS_Certificate __pyx_string_tab[43]
+#define __pyx_kp_u_Interactive_Mode __pyx_string_tab[44]
+#define __pyx_kp_u_Internal __pyx_string_tab[45]
+#define __pyx_kp_u_Issuer __pyx_string_tab[46]
+#define __pyx_kp_u_Links __pyx_string_tab[47]
+#define __pyx_kp_u_Media __pyx_string_tab[48]
+#define __pyx_kp_u_Mobile_detected_Auto_optimizing __pyx_string_tab[49]
+#define __pyx_kp_u_N_A __pyx_string_tab[50]
+#define __pyx_kp_u_No_Data __pyx_string_tab[51]
+#define __pyx_kp_u_No_data_found_to_export __pyx_string_tab[52]
+#define __pyx_kp_u_No_forms_detected_to_submit __pyx_string_tab[53]
+#define __pyx_kp_u_None __pyx_string_tab[54]
+#define __pyx_kp_u_Not_Exposed_HTTP __pyx_string_tab[55]
+#define __pyx_kp_u_Not_Found __pyx_string_tab[56]
+#define __pyx_kp_u_Note_that_Cython_is_deliberately __pyx_string_tab[57]
+#define __pyx_kp_u_Press_Enter_to_Exit_Audit __pyx_string_tab[58]
+#define __pyx_kp_u_Press_Enter_to_Exit_Security_Aud __pyx_string_tab[59]
+#define __pyx_kp_u_Preview __pyx_string_tab[60]
+#define __pyx_kp_u_Protocol __pyx_string_tab[61]
+#define __pyx_kp_u_Purpose __pyx_string_tab[62]
+#define __pyx_kp_u_Querying_DNS_Records_for __pyx_string_tab[63]
+#define __pyx_kp_u_Record __pyx_string_tab[64]
+#define __pyx_kp_u_Route_through_Tor __pyx_string_tab[65]
+#define __pyx_kp_u_SCRAPED_RESULTS_FROM_SUBMISSION __pyx_string_tab[66]
+#define __pyx_kp_u_SECURE __pyx_string_tab[67]
+#define __pyx_kp_u_SELECT_url_data_timestamp_FROM_r __pyx_string_tab[68]
+#define __pyx_kp_u_SEO_OPEN_GRAPH_METADATA __pyx_string_tab[69]
+#define __pyx_kp_u_SITE_INTELLIGENCE __pyx_string_tab[70]
+#define __pyx_kp_u_SSL_TLS_CERTIFICATE_AUDIT __pyx_string_tab[71]
+#define __pyx_kp_u_Scanning_for_Exposed_Administra __pyx_string_tab[72]
+#define __pyx_kp_u_Scouting __pyx_string_tab[73]
+#define __pyx_kp_u_Setting __pyx_string_tab[74]
+#define __pyx_kp_u_Status __pyx_string_tab[75]
+#define __pyx_kp_u_TABLE_SCHEMAS_DETECTED __pyx_string_tab[76]
+#define __pyx_kp_u_Table __pyx_string_tab[77]
+#define __pyx_kp_u_Target_URL __pyx_string_tab[78]
+#define __pyx_kp_u_VALID __pyx_string_tab[79]
+#define __pyx_kp_u_VULNERABLE __pyx_string_tab[80]
+#define __pyx_kp_u_Validity_Left __pyx_string_tab[81]
+#define __pyx_kp_u_Value_for __pyx_string_tab[82]
+#define __pyx_kp_u_Virtual_Fallback __pyx_string_tab[83]
+#define __pyx_kp_u_Warning_High_concurrency __pyx_string_tab[84]
+#define __pyx_kp_u_ZenScrape_Elite_Professional_Web __pyx_string_tab[85]
+#define __pyx_kp_u__10 __pyx_string_tab[86]
+#define __pyx_kp_u__11 __pyx_string_tab[87]
+#define __pyx_kp_u__12 __pyx_string_tab[88]
+#define __pyx_kp_u__13 __pyx_string_tab[89]
+#define __pyx_kp_u__14 __pyx_string_tab[90]
+#define __pyx_kp_u__15 __pyx_string_tab[91]
+#define __pyx_kp_u__16 __pyx_string_tab[92]
+#define __pyx_kp_u__17 __pyx_string_tab[93]
+#define __pyx_kp_u__18 __pyx_string_tab[94]
+#define __pyx_kp_u__19 __pyx_string_tab[95]
+#define __pyx_kp_u__2 __pyx_string_tab[96]
+#define __pyx_kp_u__20 __pyx_string_tab[97]
+#define __pyx_kp_u__21 __pyx_string_tab[98]
+#define __pyx_kp_u__22 __pyx_string_tab[99]
+#define __pyx_kp_u__23 __pyx_string_tab[100]
+#define __pyx_kp_u__24 __pyx_string_tab[101]
+#define __pyx_kp_u__25 __pyx_string_tab[102]
+#define __pyx_kp_u__26 __pyx_string_tab[103]
+#define __pyx_kp_u__27 __pyx_string_tab[104]
+#define __pyx_kp_u__3 __pyx_string_tab[105]
+#define __pyx_kp_u__4 __pyx_string_tab[106]
+#define __pyx_kp_u__5 __pyx_string_tab[107]
+#define __pyx_kp_u__6 __pyx_string_tab[108]
+#define __pyx_kp_u__7 __pyx_string_tab[109]
+#define __pyx_kp_u__8 __pyx_string_tab[110]
+#define __pyx_kp_u__9 __pyx_string_tab[111]
+#define __pyx_kp_u_add_note __pyx_string_tab[112]
+#define __pyx_kp_u_article_product_pod_h3_a_a __pyx_string_tab[113]
+#define __pyx_kp_u_bits_2 __pyx_string_tab[114]
+#define __pyx_kp_u_concurrency_2 __pyx_string_tab[115]
+#define __pyx_kp_u_cookies_2 __pyx_string_tab[116]
+#define __pyx_kp_u_css_2 __pyx_string_tab[117]
+#define __pyx_kp_u_csv_2 __pyx_string_tab[118]
+#define __pyx_kp_u_data_2 __pyx_string_tab[119]
+#define __pyx_kp_u_data_data_com_termux __pyx_string_tab[120]
+#define __pyx_kp_u_days __pyx_string_tab[121]
+#define __pyx_kp_u_delay_2 __pyx_string_tab[122]
+#define __pyx_kp_u_depth_2 __pyx_string_tab[123]
+#define __pyx_kp_u_detected __pyx_string_tab[124]
+#define __pyx_kp_u_disable __pyx_string_tab[125]
+#define __pyx_kp_u_enable __pyx_string_tab[126]
+#define __pyx_kp_u_gc __pyx_string_tab[127]
+#define __pyx_kp_u_h2_h3_title __pyx_string_tab[128]
+#define __pyx_kp_u_headers_2 __pyx_string_tab[129]
+#define __pyx_kp_u_inspect __pyx_string_tab[130]
+#define __pyx_kp_u_isenabled __pyx_string_tab[131]
+#define __pyx_kp_u_items_to __pyx_string_tab[132]
+#define __pyx_kp_u_json_2 __pyx_string_tab[133]
+#define __pyx_kp_u_method_2 __pyx_string_tab[134]
+#define __pyx_kp_u_no_cache_2 __pyx_string_tab[135]
+#define __pyx_kp_u_og_description __pyx_string_tab[136]
+#define __pyx_kp_u_og_image __pyx_string_tab[137]
+#define __pyx_kp_u_og_title __pyx_string_tab[138]
+#define __pyx_kp_u_on_mobile_may_cause_crashes_or __pyx_string_tab[139]
+#define __pyx_kp_u_output_2 __pyx_string_tab[140]
+#define __pyx_kp_u_params_2 __pyx_string_tab[141]
+#define __pyx_kp_u_profile_2 __pyx_string_tab[142]
+#define __pyx_kp_u_q_EXIT __pyx_string_tab[143]
+#define __pyx_kp_u_socks5h_127_0_0_1_9050 __pyx_string_tab[144]
+#define __pyx_kp_u_tor_2 __pyx_string_tab[145]
+#define __pyx_kp_u_url_2 __pyx_string_tab[146]
+#define __pyx_kp_u_zenscrape_auditor __pyx_string_tab[147]
+#define __pyx_kp_u_zenscrape_cli __pyx_string_tab[148]
+#define __pyx_kp_u_zenscrape_cli_py __pyx_string_tab[149]
+#define __pyx_kp_u_zenscrape_config __pyx_string_tab[150]
+#define __pyx_kp_u_zenscrape_engine __pyx_string_tab[151]
+#define __pyx_kp_u_zenscrape_inspector __pyx_string_tab[152]
+#define __pyx_kp_u_zenscrape_models __pyx_string_tab[153]
+#define __pyx_kp_u_zenscrape_results_db __pyx_string_tab[154]
+#define __pyx_kp_u_zenscrape_setup_env __pyx_string_tab[155]
+#define __pyx_kp_u_zenscrape_storage __pyx_string_tab[156]
+#define __pyx_n_u_ArgumentParser __pyx_string_tab[157]
+#define __pyx_n_u_AsyncSession __pyx_string_tab[158]
+#define __pyx_n_u_DATA __pyx_string_tab[159]
+#define __pyx_n_u_GET __pyx_string_tab[160]
+#define __pyx_n_u_H2 __pyx_string_tab[161]
+#define __pyx_n_u_H3 __pyx_string_tab[162]
+#define __pyx_n_u_POST __pyx_string_tab[163]
+#define __pyx_n_u_PUT __pyx_string_tab[164]
+#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[165]
+#define __pyx_n_u_TIMESTAMP __pyx_string_tab[166]
+#define __pyx_n_u_URL __pyx_string_tab[167]
+#define __pyx_n_u_ZenCrawler __pyx_string_tab[168]
+#define __pyx_n_u_ZenDatabase __pyx_string_tab[169]
+#define __pyx_n_u_ZenEngineConfig __pyx_string_tab[170]
+#define __pyx_n_u_ZenInspector __pyx_string_tab[171]
+#define __pyx_n_u_ZenRequest __pyx_string_tab[172]
+#define __pyx_n_u_ZenSecurityAuditor __pyx_string_tab[173]
+#define __pyx_n_u_ZenSecurityConfig __pyx_string_tab[174]
+#define __pyx_n_u_a __pyx_string_tab[175]
+#define __pyx_n_u_action __pyx_string_tab[176]
+#define __pyx_n_u_action_performed __pyx_string_tab[177]
+#define __pyx_n_u_add_argument __pyx_string_tab[178]
+#define __pyx_n_u_add_request __pyx_string_tab[179]
+#define __pyx_n_u_aenter __pyx_string_tab[180]
+#define __pyx_n_u_aexit __pyx_string_tab[181]
+#define __pyx_n_u_annotate __pyx_string_tab[182]
+#define __pyx_n_u_argparse __pyx_string_tab[183]
+#define __pyx_n_u_args __pyx_string_tab[184]
+#define __pyx_n_u_asyncio __pyx_string_tab[185]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[186]
+#define __pyx_n_u_attributes __pyx_string_tab[187]
+#define __pyx_n_u_audit_dns_records __pyx_string_tab[188]
+#define __pyx_n_u_audit_res __pyx_string_tab[189]
+#define __pyx_n_u_audit_security_headers __pyx_string_tab[190]
+#define __pyx_n_u_audit_session __pyx_string_tab[191]
+#define __pyx_n_u_audit_targets __pyx_string_tab[192]
+#define __pyx_n_u_audit_tls_connection __pyx_string_tab[193]
+#define __pyx_n_u_auditor __pyx_string_tab[194]
+#define __pyx_n_u_await __pyx_string_tab[195]
+#define __pyx_n_u_bits __pyx_string_tab[196]
+#define __pyx_n_u_cache_requests __pyx_string_tab[197]
+#define __pyx_n_u_calculate_optimal_concurrency __pyx_string_tab[198]
+#define __pyx_n_u_callback __pyx_string_tab[199]
+#define __pyx_n_u_choice __pyx_string_tab[200]
+#define __pyx_n_u_choices __pyx_string_tab[201]
+#define __pyx_n_u_chrome110 __pyx_string_tab[202]
+#define __pyx_n_u_cipher __pyx_string_tab[203]
+#define __pyx_n_u_class_getitem __pyx_string_tab[204]
+#define __pyx_n_u_cli __pyx_string_tab[205]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[206]
+#define __pyx_n_u_close __pyx_string_tab[207]
+#define __pyx_n_u_columns __pyx_string_tab[208]
+#define __pyx_n_u_concurrency __pyx_string_tab[209]
+#define __pyx_n_u_config __pyx_string_tab[210]
+#define __pyx_n_u_conn __pyx_string_tab[211]
+#define __pyx_n_u_connect __pyx_string_tab[212]
+#define __pyx_n_u_cookies __pyx_string_tab[213]
+#define __pyx_n_u_count __pyx_string_tab[214]
+#define __pyx_n_u_cpu_cores __pyx_string_tab[215]
+#define __pyx_n_u_cpu_count __pyx_string_tab[216]
+#define __pyx_n_u_crawler __pyx_string_tab[217]
+#define __pyx_n_u_css __pyx_string_tab[218]
+#define __pyx_n_u_css_first __pyx_string_tab[219]
+#define __pyx_n_u_csv __pyx_string_tab[220]
+#define __pyx_n_u_curl_cffi_requests __pyx_string_tab[221]
+#define __pyx_n_u_cursor __pyx_string_tab[222]
+#define __pyx_n_u_data __pyx_string_tab[223]
+#define __pyx_n_u_days_left __pyx_string_tab[224]
+#define __pyx_n_u_db __pyx_string_tab[225]
+#define __pyx_n_u_db_path __pyx_string_tab[226]
+#define __pyx_n_u_default __pyx_string_tab[227]
+#define __pyx_n_u_delay __pyx_string_tab[228]
+#define __pyx_n_u_depth __pyx_string_tab[229]
+#define __pyx_n_u_desc __pyx_string_tab[230]
+#define __pyx_n_u_description __pyx_string_tab[231]
+#define __pyx_n_u_detail __pyx_string_tab[232]
+#define __pyx_n_u_detailed_tables __pyx_string_tab[233]
+#define __pyx_n_u_details __pyx_string_tab[234]
+#define __pyx_n_u_dns_report __pyx_string_tab[235]
+#define __pyx_n_u_domain __pyx_string_tab[236]
+#define __pyx_n_u_dump __pyx_string_tab[237]
+#define __pyx_n_u_dumps __pyx_string_tab[238]
+#define __pyx_n_u_e __pyx_string_tab[239]
+#define __pyx_n_u_elems __pyx_string_tab[240]
+#define __pyx_n_u_email __pyx_string_tab[241]
+#define __pyx_n_u_engine __pyx_string_tab[242]
+#define __pyx_n_u_ensure_tor_env __pyx_string_tab[243]
+#define __pyx_n_u_enter __pyx_string_tab[244]
+#define __pyx_n_u_enumerate __pyx_string_tab[245]
+#define __pyx_n_u_error __pyx_string_tab[246]
+#define __pyx_n_u_execute __pyx_string_tab[247]
+#define __pyx_n_u_exists __pyx_string_tab[248]
+#define __pyx_n_u_exit __pyx_string_tab[249]
+#define __pyx_n_u_exit_2 __pyx_string_tab[250]
+#define __pyx_n_u_expires __pyx_string_tab[251]
+#define __pyx_n_u_export __pyx_string_tab[252]
+#define __pyx_n_u_export_data __pyx_string_tab[253]
+#define __pyx_n_u_external __pyx_string_tab[254]
+#define __pyx_n_u_extracted __pyx_string_tab[255]
+#define __pyx_n_u_f __pyx_string_tab[256]
+#define __pyx_n_u_fetchall __pyx_string_tab[257]
+#define __pyx_n_u_field __pyx_string_tab[258]
+#define __pyx_n_u_fields __pyx_string_tab[259]
+#define __pyx_n_u_filename __pyx_string_tab[260]
+#define __pyx_n_u_fillable_types __pyx_string_tab[261]
+#define __pyx_n_u_final_concurrency __pyx_string_tab[262]
+#define __pyx_n_u_form __pyx_string_tab[263]
+#define __pyx_n_u_format __pyx_string_tab[264]
+#define __pyx_n_u_forms __pyx_string_tab[265]
+#define __pyx_n_u_full_url __pyx_string_tab[266]
+#define __pyx_n_u_func __pyx_string_tab[267]
+#define __pyx_n_u_get __pyx_string_tab[268]
+#define __pyx_n_u_get_audit_endpoints __pyx_string_tab[269]
+#define __pyx_n_u_get_summary __pyx_string_tab[270]
+#define __pyx_n_u_h __pyx_string_tab[271]
+#define __pyx_n_u_h_name __pyx_string_tab[272]
+#define __pyx_n_u_headers __pyx_string_tab[273]
+#define __pyx_n_u_headers_report __pyx_string_tab[274]
+#define __pyx_n_u_headings __pyx_string_tab[275]
+#define __pyx_n_u_help __pyx_string_tab[276]
+#define __pyx_n_u_href __pyx_string_tab[277]
+#define __pyx_n_u_http __pyx_string_tab[278]
+#define __pyx_n_u_https __pyx_string_tab[279]
+#define __pyx_n_u_i __pyx_string_tab[280]
+#define __pyx_n_u_id __pyx_string_tab[281]
+#define __pyx_n_u_img __pyx_string_tab[282]
+#define __pyx_n_u_impersonate __pyx_string_tab[283]
+#define __pyx_n_u_important_meta __pyx_string_tab[284]
+#define __pyx_n_u_indent __pyx_string_tab[285]
+#define __pyx_n_u_info __pyx_string_tab[286]
+#define __pyx_n_u_inp __pyx_string_tab[287]
+#define __pyx_n_u_input __pyx_string_tab[288]
+#define __pyx_n_u_inputs __pyx_string_tab[289]
+#define __pyx_n_u_insp __pyx_string_tab[290]
+#define __pyx_n_u_inspect_2 __pyx_string_tab[291]
+#define __pyx_n_u_inspector __pyx_string_tab[292]
+#define __pyx_n_u_int __pyx_string_tab[293]
+#define __pyx_n_u_internal __pyx_string_tab[294]
+#define __pyx_n_u_is_android __pyx_string_tab[295]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[296]
+#define __pyx_n_u_is_virtual __pyx_string_tab[297]
+#define __pyx_n_u_issuer __pyx_string_tab[298]
+#define __pyx_n_u_items __pyx_string_tab[299]
+#define __pyx_n_u_json __pyx_string_tab[300]
+#define __pyx_n_u_key __pyx_string_tab[301]
+#define __pyx_n_u_keywords __pyx_string_tab[302]
+#define __pyx_n_u_link __pyx_string_tab[303]
+#define __pyx_n_u_links __pyx_string_tab[304]
+#define __pyx_n_u_loads __pyx_string_tab[305]
+#define __pyx_n_u_logger __pyx_string_tab[306]
+#define __pyx_n_u_loguru __pyx_string_tab[307]
+#define __pyx_n_u_lower __pyx_string_tab[308]
+#define __pyx_n_u_main __pyx_string_tab[309]
+#define __pyx_n_u_main_2 __pyx_string_tab[310]
+#define __pyx_n_u_max_depth __pyx_string_tab[311]
+#define __pyx_n_u_media __pyx_string_tab[312]
+#define __pyx_n_u_meta __pyx_string_tab[313]
+#define __pyx_n_u_metadata __pyx_string_tab[314]
+#define __pyx_n_u_method __pyx_string_tab[315]
+#define __pyx_n_u_models __pyx_string_tab[316]
+#define __pyx_n_u_module __pyx_string_tab[317]
+#define __pyx_n_u_name __pyx_string_tab[318]
+#define __pyx_n_u_name_2 __pyx_string_tab[319]
+#define __pyx_n_u_netloc __pyx_string_tab[320]
+#define __pyx_n_u_new_depth __pyx_string_tab[321]
+#define __pyx_n_u_newline __pyx_string_tab[322]
+#define __pyx_n_u_next __pyx_string_tab[323]
+#define __pyx_n_u_no_cache __pyx_string_tab[324]
+#define __pyx_n_u_open __pyx_string_tab[325]
+#define __pyx_n_u_optimal __pyx_string_tab[326]
+#define __pyx_n_u_os __pyx_string_tab[327]
+#define __pyx_n_u_output __pyx_string_tab[328]
+#define __pyx_n_u_params __pyx_string_tab[329]
+#define __pyx_n_u_parse_args __pyx_string_tab[330]
+#define __pyx_n_u_parsed_url __pyx_string_tab[331]
+#define __pyx_n_u_parser __pyx_string_tab[332]
+#define __pyx_n_u_password __pyx_string_tab[333]
+#define __pyx_n_u_path __pyx_string_tab[334]
+#define __pyx_n_u_payload __pyx_string_tab[335]
+#define __pyx_n_u_placeholder __pyx_string_tab[336]
+#define __pyx_n_u_pop __pyx_string_tab[337]
+#define __pyx_n_u_post_data __pyx_string_tab[338]
+#define __pyx_n_u_print __pyx_string_tab[339]
+#define __pyx_n_u_print_help __pyx_string_tab[340]
+#define __pyx_n_u_profile __pyx_string_tab[341]
+#define __pyx_n_u_proxies __pyx_string_tab[342]
+#define __pyx_n_u_proxy __pyx_string_tab[343]
+#define __pyx_n_u_purpose __pyx_string_tab[344]
+#define __pyx_n_u_q __pyx_string_tab[345]
+#define __pyx_n_u_qualname __pyx_string_tab[346]
+#define __pyx_n_u_r __pyx_string_tab[347]
+#define __pyx_n_u_record __pyx_string_tab[348]
+#define __pyx_n_u_record_type __pyx_string_tab[349]
+#define __pyx_n_u_req __pyx_string_tab[350]
+#define __pyx_n_u_res __pyx_string_tab[351]
+#define __pyx_n_u_response __pyx_string_tab[352]
+#define __pyx_n_u_return __pyx_string_tab[353]
+#define __pyx_n_u_rows __pyx_string_tab[354]
+#define __pyx_n_u_run __pyx_string_tab[355]
+#define __pyx_n_u_run_inspector __pyx_string_tab[356]
+#define __pyx_n_u_s __pyx_string_tab[357]
+#define __pyx_n_u_save_result __pyx_string_tab[358]
+#define __pyx_n_u_search __pyx_string_tab[359]
+#define __pyx_n_u_selected_form __pyx_string_tab[360]
+#define __pyx_n_u_send __pyx_string_tab[361]
+#define __pyx_n_u_set_name __pyx_string_tab[362]
+#define __pyx_n_u_setdefault __pyx_string_tab[363]
+#define __pyx_n_u_setup __pyx_string_tab[364]
+#define __pyx_n_u_setup_env __pyx_string_tab[365]
+#define __pyx_n_u_signature __pyx_string_tab[366]
+#define __pyx_n_u_signature_match __pyx_string_tab[367]
+#define __pyx_n_u_sqlite3 __pyx_string_tab[368]
+#define __pyx_n_u_start_scrape __pyx_string_tab[369]
+#define __pyx_n_u_start_scrape_locals_callback __pyx_string_tab[370]
+#define __pyx_n_u_startswith __pyx_string_tab[371]
+#define __pyx_n_u_status __pyx_string_tab[372]
+#define __pyx_n_u_status_code __pyx_string_tab[373]
+#define __pyx_n_u_storage __pyx_string_tab[374]
+#define __pyx_n_u_store_true __pyx_string_tab[375]
+#define __pyx_n_u_strip __pyx_string_tab[376]
+#define __pyx_n_u_structure __pyx_string_tab[377]
+#define __pyx_n_u_submit __pyx_string_tab[378]
+#define __pyx_n_u_success __pyx_string_tab[379]
+#define __pyx_n_u_summary __pyx_string_tab[380]
+#define __pyx_n_u_sys __pyx_string_tab[381]
+#define __pyx_n_u_t __pyx_string_tab[382]
+#define __pyx_n_u_tag __pyx_string_tab[383]
+#define __pyx_n_u_target __pyx_string_tab[384]
+#define __pyx_n_u_tel __pyx_string_tab[385]
+#define __pyx_n_u_test __pyx_string_tab[386]
+#define __pyx_n_u_text __pyx_string_tab[387]
+#define __pyx_n_u_throw __pyx_string_tab[388]
+#define __pyx_n_u_time __pyx_string_tab[389]
+#define __pyx_n_u_timeout __pyx_string_tab[390]
+#define __pyx_n_u_title __pyx_string_tab[391]
+#define __pyx_n_u_tls_report __pyx_string_tab[392]
+#define __pyx_n_u_tor __pyx_string_tab[393]
+#define __pyx_n_u_type __pyx_string_tab[394]
+#define __pyx_n_u_url __pyx_string_tab[395]
+#define __pyx_n_u_urljoin __pyx_string_tab[396]
+#define __pyx_n_u_urllib_parse __pyx_string_tab[397]
+#define __pyx_n_u_urlparse __pyx_string_tab[398]
+#define __pyx_n_u_use_tor __pyx_string_tab[399]
+#define __pyx_n_u_user_concurrency __pyx_string_tab[400]
+#define __pyx_n_u_val __pyx_string_tab[401]
+#define __pyx_n_u_value __pyx_string_tab[402]
+#define __pyx_n_u_values __pyx_string_tab[403]
+#define __pyx_n_u_version __pyx_string_tab[404]
+#define __pyx_n_u_virtual __pyx_string_tab[405]
+#define __pyx_n_u_w __pyx_string_tab[406]
+#define __pyx_n_u_warning __pyx_string_tab[407]
+#define __pyx_n_u_writer __pyx_string_tab[408]
+#define __pyx_n_u_writerow __pyx_string_tab[409]
+#define __pyx_n_u_writerows __pyx_string_tab[410]
+#define __pyx_n_u_zenscrape_cli __pyx_string_tab[411]
+#define __pyx_kp_b_iso88591_4HA_Cs_5_q_1_1_c_BfD_q_I_J_1_Bc __pyx_string_tab[412]
+#define __pyx_kp_b_iso88591_X_A_q_a_q_WN_q_q_e1_q_XQ_q_e81 __pyx_string_tab[413]
+#define __pyx_kp_b_iso88591__28 __pyx_string_tab[414]
+#define __pyx_kp_b_iso88591_a_2 __pyx_string_tab[415]
+#define __pyx_kp_b_iso88591_t2U_fA_1A_7_1_T_haq_vYa_fA_0_F __pyx_string_tab[416]
 #define __pyx_float_1_5 __pyx_number_tab[0]
 #define __pyx_int_0 __pyx_number_tab[1]
 #define __pyx_int_1 __pyx_number_tab[2]
@@ -3211,6 +3337,7 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_int_50 __pyx_number_tab[8]
 #define __pyx_int_80 __pyx_number_tab[9]
 #define __pyx_int_100 __pyx_number_tab[10]
+#define __pyx_int_200 __pyx_number_tab[11]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -3234,8 +3361,8 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   for (int i=0; i<4; ++i) { Py_CLEAR(clear_module_state->__pyx_slice[i]); }
   for (int i=0; i<3; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
   for (int i=0; i<6; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<343; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
-  for (int i=0; i<11; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
+  for (int i=0; i<417; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<12; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_clear_contents ### */
 /* CommonTypesMetaclass.module_state_clear */
 Py_CLEAR(clear_module_state->__pyx_CommonTypesMetaclassType);
@@ -3271,8 +3398,8 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   for (int i=0; i<4; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_slice[i]); }
   for (int i=0; i<3; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
   for (int i=0; i<6; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<343; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
-  for (int i=0; i<11; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
+  for (int i=0; i<417; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<12; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_traverse_contents ### */
 /* CommonTypesMetaclass.module_state_traverse */
 Py_VISIT(traverse_module_state->__pyx_CommonTypesMetaclassType);
@@ -7187,8 +7314,8 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *     return user_concurrency
  * 
  * async def run_inspector(args):             # <<<<<<<<<<<<<<
- *     logger.info(f" Scouting {args.url}...")
- *     from curl_cffi.requests import AsyncSession
+ *     if args.tor:
+ *         from .setup_env import ensure_tor_env
 */
 
 /* Python wrapper */
@@ -7317,15 +7444,15 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   struct __pyx_obj_9zenscrape_3cli___pyx_scope_struct_2_run_inspector *__pyx_cur_scope = ((struct __pyx_obj_9zenscrape_3cli___pyx_scope_struct_2_run_inspector *)__pyx_generator->closure);
   PyObject *__pyx_r = NULL;
   PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
+  int __pyx_t_2;
   PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
+  Py_ssize_t __pyx_t_4;
   PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6[3];
+  PyObject *__pyx_t_6 = NULL;
   size_t __pyx_t_7;
   PyObject *__pyx_t_8 = NULL;
-  Py_ssize_t __pyx_t_9;
-  int __pyx_t_10;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10[3];
   PyObject *__pyx_t_11 = NULL;
   __Pyx_PySendResult __pyx_t_12;
   PyObject *__pyx_t_13 = NULL;
@@ -7351,7 +7478,8 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   Py_ssize_t __pyx_t_33;
   PyObject *(*__pyx_t_34)(PyObject *);
   PyObject *__pyx_t_35[4];
-  PyObject *__pyx_t_36[6];
+  PyObject *__pyx_t_36[7];
+  PyObject *__pyx_t_37 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -7359,12 +7487,16 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   __Pyx_RefNannySetupContext("run_inspector", 0);
   switch (__pyx_generator->resume_label) {
     case 0: goto __pyx_L3_first_run;
-    case 1: goto __pyx_L5_resume_from_await;
-    case 2: goto __pyx_L21_resume_from_await;
-    case 3: goto __pyx_L36_resume_from_await;
-    case 4: goto __pyx_L37_resume_from_await;
-    case 5: goto __pyx_L38_resume_from_await;
-    case 6: goto __pyx_L70_resume_from_await;
+    case 1: goto __pyx_L6_resume_from_await;
+    case 2: goto __pyx_L22_resume_from_await;
+    case 3: goto __pyx_L37_resume_from_await;
+    case 4: goto __pyx_L38_resume_from_await;
+    case 5: goto __pyx_L39_resume_from_await;
+    case 6: goto __pyx_L79_resume_from_await;
+    case 7: goto __pyx_L99_resume_from_await;
+    case 8: goto __pyx_L109_resume_from_await;
+    case 9: goto __pyx_L110_resume_from_await;
+    case 10: goto __pyx_L112_resume_from_await;
     default: /* CPython raises the right error here */
     __Pyx_RefNannyFinishContext();
     return NULL;
@@ -7378,53 +7510,138 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   /* "zenscrape/cli.py":138
  * 
  * async def run_inspector(args):
+ *     if args.tor:             # <<<<<<<<<<<<<<
+ *         from .setup_env import ensure_tor_env
+ *         ensure_tor_env()
+*/
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_tor); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 138, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (__pyx_t_2) {
+
+    /* "zenscrape/cli.py":139
+ * async def run_inspector(args):
+ *     if args.tor:
+ *         from .setup_env import ensure_tor_env             # <<<<<<<<<<<<<<
+ *         ensure_tor_env()
+ * 
+*/
+    {
+      PyObject* const __pyx_imported_names[] = {__pyx_mstate_global->__pyx_n_u_ensure_tor_env};
+      __pyx_t_3 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_setup_env, __pyx_imported_names, 1, __pyx_mstate_global->__pyx_kp_u_zenscrape_setup_env, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 139, __pyx_L1_error)
+    }
+    __pyx_t_1 = __pyx_t_3;
+    __Pyx_GOTREF(__pyx_t_1);
+    {
+      PyObject* const __pyx_imported_names[] = {__pyx_mstate_global->__pyx_n_u_ensure_tor_env};
+      __pyx_t_4 = 0; {
+        __pyx_t_5 = __Pyx_ImportFrom(__pyx_t_1, __pyx_imported_names[__pyx_t_4]); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 139, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        switch (__pyx_t_4) {
+          case 0:
+          __Pyx_INCREF(__pyx_t_5);
+          __Pyx_GIVEREF(__pyx_t_5);
+          __pyx_cur_scope->__pyx_v_ensure_tor_env = __pyx_t_5;
+          break;
+          default:;
+        }
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      }
+    }
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+    /* "zenscrape/cli.py":140
+ *     if args.tor:
+ *         from .setup_env import ensure_tor_env
+ *         ensure_tor_env()             # <<<<<<<<<<<<<<
+ * 
+ *     logger.info(f" Scouting {args.url}...")
+*/
+    __pyx_t_5 = NULL;
+    __Pyx_INCREF(__pyx_cur_scope->__pyx_v_ensure_tor_env);
+    __pyx_t_6 = __pyx_cur_scope->__pyx_v_ensure_tor_env; 
+    __pyx_t_7 = 1;
+    #if CYTHON_UNPACK_METHODS
+    if (unlikely(PyMethod_Check(__pyx_t_6))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_6);
+      assert(__pyx_t_5);
+      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_6);
+      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(__pyx__function);
+      __Pyx_DECREF_SET(__pyx_t_6, __pyx__function);
+      __pyx_t_7 = 0;
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_5, NULL};
+      __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_6, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 140, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+    }
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+    /* "zenscrape/cli.py":138
+ * 
+ * async def run_inspector(args):
+ *     if args.tor:             # <<<<<<<<<<<<<<
+ *         from .setup_env import ensure_tor_env
+ *         ensure_tor_env()
+*/
+  }
+
+  /* "zenscrape/cli.py":142
+ *         ensure_tor_env()
+ * 
  *     logger.info(f" Scouting {args.url}...")             # <<<<<<<<<<<<<<
  *     from curl_cffi.requests import AsyncSession
  *     proxy = "socks5h://127.0.0.1:9050" if args.tor else None
 */
-  __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_info); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_3, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 138, __pyx_L1_error)
+  __pyx_t_6 = NULL;
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6[0] = __pyx_mstate_global->__pyx_kp_u_Scouting;
-  __pyx_t_6[1] = __pyx_t_5;
-  __pyx_t_6[2] = __pyx_mstate_global->__pyx_kp_u__9;
-  __pyx_t_3 = __Pyx_PyUnicode_Join(__pyx_t_6, 3, 11 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_5) + 3, 1114111 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5));
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_info); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 142, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 142, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_9 = __Pyx_PyObject_FormatSimple(__pyx_t_5, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 142, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_10[0] = __pyx_mstate_global->__pyx_kp_u_Scouting;
+  __pyx_t_10[1] = __pyx_t_9;
+  __pyx_t_10[2] = __pyx_mstate_global->__pyx_kp_u__9;
+  __pyx_t_5 = __Pyx_PyUnicode_Join(__pyx_t_10, 3, 11 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_9) + 3, 1114111 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_9));
+  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 142, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_t_7 = 1;
   #if CYTHON_UNPACK_METHODS
-  if (unlikely(PyMethod_Check(__pyx_t_4))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_4);
-    assert(__pyx_t_2);
-    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
-    __Pyx_INCREF(__pyx_t_2);
+  if (unlikely(PyMethod_Check(__pyx_t_8))) {
+    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_8);
+    assert(__pyx_t_6);
+    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_8);
+    __Pyx_INCREF(__pyx_t_6);
     __Pyx_INCREF(__pyx__function);
-    __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
+    __Pyx_DECREF_SET(__pyx_t_8, __pyx__function);
     __pyx_t_7 = 0;
   }
   #endif
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_t_3};
-    __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)
+    PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_5};
+    __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_8, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 142, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":139
- * async def run_inspector(args):
+  /* "zenscrape/cli.py":143
+ * 
  *     logger.info(f" Scouting {args.url}...")
  *     from curl_cffi.requests import AsyncSession             # <<<<<<<<<<<<<<
  *     proxy = "socks5h://127.0.0.1:9050" if args.tor else None
@@ -7432,40 +7649,40 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
 */
   {
     PyObject* const __pyx_imported_names[] = {__pyx_mstate_global->__pyx_n_u_AsyncSession};
-    __pyx_t_8 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_curl_cffi_requests, __pyx_imported_names, 1, NULL, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 139, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_curl_cffi_requests, __pyx_imported_names, 1, NULL, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 143, __pyx_L1_error)
   }
-  __pyx_t_1 = __pyx_t_8;
+  __pyx_t_1 = __pyx_t_3;
   __Pyx_GOTREF(__pyx_t_1);
   {
     PyObject* const __pyx_imported_names[] = {__pyx_mstate_global->__pyx_n_u_AsyncSession};
-    __pyx_t_9 = 0; {
-      __pyx_t_4 = __Pyx_ImportFrom(__pyx_t_1, __pyx_imported_names[__pyx_t_9]); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 139, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      switch (__pyx_t_9) {
+    __pyx_t_4 = 0; {
+      __pyx_t_8 = __Pyx_ImportFrom(__pyx_t_1, __pyx_imported_names[__pyx_t_4]); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 143, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      switch (__pyx_t_4) {
         case 0:
-        __Pyx_INCREF(__pyx_t_4);
-        __Pyx_GIVEREF(__pyx_t_4);
-        __pyx_cur_scope->__pyx_v_AsyncSession = __pyx_t_4;
+        __Pyx_INCREF(__pyx_t_8);
+        __Pyx_GIVEREF(__pyx_t_8);
+        __pyx_cur_scope->__pyx_v_AsyncSession = __pyx_t_8;
         break;
         default:;
       }
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     }
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":140
+  /* "zenscrape/cli.py":144
  *     logger.info(f" Scouting {args.url}...")
  *     from curl_cffi.requests import AsyncSession
  *     proxy = "socks5h://127.0.0.1:9050" if args.tor else None             # <<<<<<<<<<<<<<
  * 
  *     async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as s:
 */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_tor); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 140, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_10 < 0))) __PYX_ERR(0, 140, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__pyx_t_10) {
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_tor); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 144, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_8); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 144, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  if (__pyx_t_2) {
     __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_socks5h_127_0_0_1_9050);
     __pyx_t_1 = __pyx_mstate_global->__pyx_kp_u_socks5h_127_0_0_1_9050;
   } else {
@@ -7476,7 +7693,7 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   __pyx_cur_scope->__pyx_v_proxy = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":142
+  /* "zenscrape/cli.py":146
  *     proxy = "socks5h://127.0.0.1:9050" if args.tor else None
  * 
  *     async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as s:             # <<<<<<<<<<<<<<
@@ -7484,107 +7701,107 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *             res = await s.get(args.url, timeout=20)
 */
   /*with:*/ {
-    __pyx_t_4 = NULL;
+    __pyx_t_8 = NULL;
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_AsyncSession);
-    __pyx_t_3 = __pyx_cur_scope->__pyx_v_AsyncSession; 
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_profile); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 142, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_cur_scope->__pyx_v_proxy); if (unlikely((__pyx_t_10 < 0))) __PYX_ERR(0, 142, __pyx_L1_error)
-    if (__pyx_t_10) {
-      __pyx_t_11 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 142, __pyx_L1_error)
+    __pyx_t_5 = __pyx_cur_scope->__pyx_v_AsyncSession; 
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_profile); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 146, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_cur_scope->__pyx_v_proxy); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 146, __pyx_L1_error)
+    if (__pyx_t_2) {
+      __pyx_t_11 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
-      if (PyDict_SetItem(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_http, __pyx_cur_scope->__pyx_v_proxy) < (0)) __PYX_ERR(0, 142, __pyx_L1_error)
-      if (PyDict_SetItem(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_https, __pyx_cur_scope->__pyx_v_proxy) < (0)) __PYX_ERR(0, 142, __pyx_L1_error)
-      __pyx_t_5 = __pyx_t_11;
+      if (PyDict_SetItem(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_http, __pyx_cur_scope->__pyx_v_proxy) < (0)) __PYX_ERR(0, 146, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_https, __pyx_cur_scope->__pyx_v_proxy) < (0)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __pyx_t_9 = __pyx_t_11;
       __pyx_t_11 = 0;
     } else {
       __Pyx_INCREF(Py_None);
-      __pyx_t_5 = Py_None;
+      __pyx_t_9 = Py_None;
     }
     __pyx_t_7 = 1;
     #if CYTHON_UNPACK_METHODS
-    if (unlikely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-      assert(__pyx_t_4);
-      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_3);
-      __Pyx_INCREF(__pyx_t_4);
-      __Pyx_INCREF(__pyx__function);
-      __Pyx_DECREF_SET(__pyx_t_3, __pyx__function);
-      __pyx_t_7 = 0;
-    }
-    #endif
-    {
-      PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_4, NULL};
-      __pyx_t_11 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 142, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_11);
-      if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_impersonate, __pyx_t_2, __pyx_t_11, __pyx_callargs+1, 0) < (0)) __PYX_ERR(0, 142, __pyx_L1_error)
-      if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_proxies, __pyx_t_5, __pyx_t_11, __pyx_callargs+1, 1) < (0)) __PYX_ERR(0, 142, __pyx_L1_error)
-      __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_3, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_11);
-      __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 142, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-    }
-    __pyx_t_8 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_aexit); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 142, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_11 = NULL;
-    __pyx_t_5 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_aenter); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 142, __pyx_L4_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_7 = 1;
-    #if CYTHON_UNPACK_METHODS
-    if (likely(PyMethod_Check(__pyx_t_5))) {
-      __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_5);
-      assert(__pyx_t_11);
+    if (unlikely(PyMethod_Check(__pyx_t_5))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_5);
+      assert(__pyx_t_8);
       PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_5);
-      __Pyx_INCREF(__pyx_t_11);
+      __Pyx_INCREF(__pyx_t_8);
       __Pyx_INCREF(__pyx__function);
       __Pyx_DECREF_SET(__pyx_t_5, __pyx__function);
       __pyx_t_7 = 0;
     }
     #endif
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_11, NULL};
-      __pyx_t_3 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_5, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+      PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_8, NULL};
+      __pyx_t_11 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_11);
+      if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_impersonate, __pyx_t_6, __pyx_t_11, __pyx_callargs+1, 0) < (0)) __PYX_ERR(0, 146, __pyx_L1_error)
+      if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_proxies, __pyx_t_9, __pyx_t_11, __pyx_callargs+1, 1) < (0)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_5, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_11);
+      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 142, __pyx_L4_error)
-      __Pyx_GOTREF(__pyx_t_3);
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
     }
-    __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_3, &__pyx_r);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_aexit); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 146, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_11 = NULL;
+    __pyx_t_9 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_aenter); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 146, __pyx_L5_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_7 = 1;
+    #if CYTHON_UNPACK_METHODS
+    if (likely(PyMethod_Check(__pyx_t_9))) {
+      __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_9);
+      assert(__pyx_t_11);
+      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_9);
+      __Pyx_INCREF(__pyx_t_11);
+      __Pyx_INCREF(__pyx__function);
+      __Pyx_DECREF_SET(__pyx_t_9, __pyx__function);
+      __pyx_t_7 = 0;
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_11, NULL};
+      __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_9, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 146, __pyx_L5_error)
+      __Pyx_GOTREF(__pyx_t_5);
+    }
+    __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_5, &__pyx_r);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     if (likely(__pyx_t_12 == PYGEN_NEXT)) {
       __Pyx_GOTREF(__pyx_r);
       __Pyx_XGIVEREF(__pyx_t_1);
       __pyx_cur_scope->__pyx_t_0 = __pyx_t_1;
-      __Pyx_XGIVEREF(__pyx_t_8);
-      __pyx_cur_scope->__pyx_t_1 = __pyx_t_8;
+      __Pyx_XGIVEREF(__pyx_t_3);
+      __pyx_cur_scope->__pyx_t_1 = __pyx_t_3;
       __Pyx_XGIVEREF(__pyx_r);
       __Pyx_RefNannyFinishContext();
       __Pyx_Coroutine_ResetAndClearException(__pyx_generator);
       /* return from generator, awaiting value */
       __pyx_generator->resume_label = 1;
       return __pyx_r;
-      __pyx_L5_resume_from_await:;
+      __pyx_L6_resume_from_await:;
       __pyx_t_1 = __pyx_cur_scope->__pyx_t_0;
       __pyx_cur_scope->__pyx_t_0 = 0;
       __Pyx_XGOTREF(__pyx_t_1);
-      __pyx_t_8 = __pyx_cur_scope->__pyx_t_1;
+      __pyx_t_3 = __pyx_cur_scope->__pyx_t_1;
       __pyx_cur_scope->__pyx_t_1 = 0;
-      __Pyx_XGOTREF(__pyx_t_8);
-      if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 142, __pyx_L4_error)
-      __pyx_t_3 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_3);
+      __Pyx_XGOTREF(__pyx_t_3);
+      if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 146, __pyx_L5_error)
+      __pyx_t_5 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_5);
     } else if (likely(__pyx_t_12 == PYGEN_RETURN)) {
       __Pyx_GOTREF(__pyx_r);
-      __pyx_t_3 = __pyx_r; __pyx_r = NULL;
+      __pyx_t_5 = __pyx_r; __pyx_r = NULL;
     } else {
       __Pyx_XGOTREF(__pyx_r);
-      __PYX_ERR(0, 142, __pyx_L4_error)
+      __PYX_ERR(0, 146, __pyx_L5_error)
     }
-    __pyx_t_5 = __pyx_t_3;
-    __pyx_t_3 = 0;
+    __pyx_t_9 = __pyx_t_5;
+    __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     /*try:*/ {
       {
@@ -7593,11 +7810,11 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
         __Pyx_XGOTREF(__pyx_t_14);
         __Pyx_XGOTREF(__pyx_t_15);
         /*try:*/ {
-          __Pyx_GIVEREF(__pyx_t_5);
-          __pyx_cur_scope->__pyx_v_s = __pyx_t_5;
-          __pyx_t_5 = 0;
+          __Pyx_GIVEREF(__pyx_t_9);
+          __pyx_cur_scope->__pyx_v_s = __pyx_t_9;
+          __pyx_t_9 = 0;
 
-          /* "zenscrape/cli.py":143
+          /* "zenscrape/cli.py":147
  * 
  *     async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as s:
  *         try:             # <<<<<<<<<<<<<<
@@ -7611,7 +7828,7 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
             __Pyx_XGOTREF(__pyx_t_18);
             /*try:*/ {
 
-              /* "zenscrape/cli.py":144
+              /* "zenscrape/cli.py":148
  *     async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as s:
  *         try:
  *             res = await s.get(args.url, timeout=20)             # <<<<<<<<<<<<<<
@@ -7620,27 +7837,27 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
 */
               __pyx_t_1 = __pyx_cur_scope->__pyx_v_s;
               __Pyx_INCREF(__pyx_t_1);
-              __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 144, __pyx_L15_error)
-              __Pyx_GOTREF(__pyx_t_3);
+              __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 148, __pyx_L16_error)
+              __Pyx_GOTREF(__pyx_t_5);
               __pyx_t_7 = 0;
               {
-                PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_1, __pyx_t_3};
-                __pyx_t_11 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 144, __pyx_L15_error)
+                PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_1, __pyx_t_5};
+                __pyx_t_11 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 148, __pyx_L16_error)
                 __Pyx_GOTREF(__pyx_t_11);
-                if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_timeout, __pyx_mstate_global->__pyx_int_20, __pyx_t_11, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 144, __pyx_L15_error)
-                __pyx_t_5 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_get, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_11);
+                if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_timeout, __pyx_mstate_global->__pyx_int_20, __pyx_t_11, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 148, __pyx_L16_error)
+                __pyx_t_9 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_get, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_11);
                 __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-                __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+                __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
                 __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-                if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 144, __pyx_L15_error)
-                __Pyx_GOTREF(__pyx_t_5);
+                if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 148, __pyx_L16_error)
+                __Pyx_GOTREF(__pyx_t_9);
               }
-              __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_5, &__pyx_r);
-              __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+              __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_9, &__pyx_r);
+              __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
               if (likely(__pyx_t_12 == PYGEN_NEXT)) {
                 __Pyx_GOTREF(__pyx_r);
-                __Pyx_XGIVEREF(__pyx_t_8);
-                __pyx_cur_scope->__pyx_t_0 = __pyx_t_8;
+                __Pyx_XGIVEREF(__pyx_t_3);
+                __pyx_cur_scope->__pyx_t_0 = __pyx_t_3;
                 __Pyx_XGIVEREF(__pyx_t_13);
                 __pyx_cur_scope->__pyx_t_1 = __pyx_t_13;
                 __Pyx_XGIVEREF(__pyx_t_14);
@@ -7659,10 +7876,10 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
                 /* return from generator, awaiting value */
                 __pyx_generator->resume_label = 2;
                 return __pyx_r;
-                __pyx_L21_resume_from_await:;
-                __pyx_t_8 = __pyx_cur_scope->__pyx_t_0;
+                __pyx_L22_resume_from_await:;
+                __pyx_t_3 = __pyx_cur_scope->__pyx_t_0;
                 __pyx_cur_scope->__pyx_t_0 = 0;
-                __Pyx_XGOTREF(__pyx_t_8);
+                __Pyx_XGOTREF(__pyx_t_3);
                 __pyx_t_13 = __pyx_cur_scope->__pyx_t_1;
                 __pyx_cur_scope->__pyx_t_1 = 0;
                 __Pyx_XGOTREF(__pyx_t_13);
@@ -7681,20 +7898,20 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
                 __pyx_t_18 = __pyx_cur_scope->__pyx_t_6;
                 __pyx_cur_scope->__pyx_t_6 = 0;
                 __Pyx_XGOTREF(__pyx_t_18);
-                if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 144, __pyx_L15_error)
-                __pyx_t_5 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_5);
+                if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 148, __pyx_L16_error)
+                __pyx_t_9 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_9);
               } else if (likely(__pyx_t_12 == PYGEN_RETURN)) {
                 __Pyx_GOTREF(__pyx_r);
-                __pyx_t_5 = __pyx_r; __pyx_r = NULL;
+                __pyx_t_9 = __pyx_r; __pyx_r = NULL;
               } else {
                 __Pyx_XGOTREF(__pyx_r);
-                __PYX_ERR(0, 144, __pyx_L15_error)
+                __PYX_ERR(0, 148, __pyx_L16_error)
               }
-              __Pyx_GIVEREF(__pyx_t_5);
-              __pyx_cur_scope->__pyx_v_res = __pyx_t_5;
-              __pyx_t_5 = 0;
+              __Pyx_GIVEREF(__pyx_t_9);
+              __pyx_cur_scope->__pyx_v_res = __pyx_t_9;
+              __pyx_t_9 = 0;
 
-              /* "zenscrape/cli.py":145
+              /* "zenscrape/cli.py":149
  *         try:
  *             res = await s.get(args.url, timeout=20)
  *             insp = ZenInspector(res.text, args.url)             # <<<<<<<<<<<<<<
@@ -7702,60 +7919,60 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *         except Exception as e:
 */
               __pyx_t_11 = NULL;
-              __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_ZenInspector); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 145, __pyx_L15_error)
-              __Pyx_GOTREF(__pyx_t_3);
-              __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_res, __pyx_mstate_global->__pyx_n_u_text); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L15_error)
+              __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_ZenInspector); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 149, __pyx_L16_error)
+              __Pyx_GOTREF(__pyx_t_5);
+              __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_res, __pyx_mstate_global->__pyx_n_u_text); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 149, __pyx_L16_error)
               __Pyx_GOTREF(__pyx_t_1);
-              __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 145, __pyx_L15_error)
-              __Pyx_GOTREF(__pyx_t_2);
+              __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 149, __pyx_L16_error)
+              __Pyx_GOTREF(__pyx_t_6);
               __pyx_t_7 = 1;
               #if CYTHON_UNPACK_METHODS
-              if (unlikely(PyMethod_Check(__pyx_t_3))) {
-                __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_3);
+              if (unlikely(PyMethod_Check(__pyx_t_5))) {
+                __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_5);
                 assert(__pyx_t_11);
-                PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_3);
+                PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_5);
                 __Pyx_INCREF(__pyx_t_11);
                 __Pyx_INCREF(__pyx__function);
-                __Pyx_DECREF_SET(__pyx_t_3, __pyx__function);
+                __Pyx_DECREF_SET(__pyx_t_5, __pyx__function);
                 __pyx_t_7 = 0;
               }
               #endif
               {
-                PyObject *__pyx_callargs[3] = {__pyx_t_11, __pyx_t_1, __pyx_t_2};
-                __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_3, __pyx_callargs+__pyx_t_7, (3-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+                PyObject *__pyx_callargs[3] = {__pyx_t_11, __pyx_t_1, __pyx_t_6};
+                __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_5, __pyx_callargs+__pyx_t_7, (3-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
                 __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
                 __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-                __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-                __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-                if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 145, __pyx_L15_error)
-                __Pyx_GOTREF(__pyx_t_5);
+                __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+                __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+                if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 149, __pyx_L16_error)
+                __Pyx_GOTREF(__pyx_t_9);
               }
-              __Pyx_GIVEREF(__pyx_t_5);
-              __pyx_cur_scope->__pyx_v_insp = __pyx_t_5;
-              __pyx_t_5 = 0;
+              __Pyx_GIVEREF(__pyx_t_9);
+              __pyx_cur_scope->__pyx_v_insp = __pyx_t_9;
+              __pyx_t_9 = 0;
 
-              /* "zenscrape/cli.py":146
+              /* "zenscrape/cli.py":150
  *             res = await s.get(args.url, timeout=20)
  *             insp = ZenInspector(res.text, args.url)
  *             summary = insp.get_summary()             # <<<<<<<<<<<<<<
  *         except Exception as e:
  *             logger.error(f"Failed to inspect site: {e}")
 */
-              __pyx_t_3 = __pyx_cur_scope->__pyx_v_insp;
-              __Pyx_INCREF(__pyx_t_3);
+              __pyx_t_5 = __pyx_cur_scope->__pyx_v_insp;
+              __Pyx_INCREF(__pyx_t_5);
               __pyx_t_7 = 0;
               {
-                PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-                __pyx_t_5 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_get_summary, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-                __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-                if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 146, __pyx_L15_error)
-                __Pyx_GOTREF(__pyx_t_5);
+                PyObject *__pyx_callargs[2] = {__pyx_t_5, NULL};
+                __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_get_summary, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+                __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+                if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 150, __pyx_L16_error)
+                __Pyx_GOTREF(__pyx_t_9);
               }
-              __Pyx_GIVEREF(__pyx_t_5);
-              __pyx_cur_scope->__pyx_v_summary = __pyx_t_5;
-              __pyx_t_5 = 0;
+              __Pyx_GIVEREF(__pyx_t_9);
+              __pyx_cur_scope->__pyx_v_summary = __pyx_t_9;
+              __pyx_t_9 = 0;
 
-              /* "zenscrape/cli.py":143
+              /* "zenscrape/cli.py":147
  * 
  *     async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as s:
  *         try:             # <<<<<<<<<<<<<<
@@ -7766,16 +7983,16 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
             __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
             __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
             __Pyx_XDECREF(__pyx_t_18); __pyx_t_18 = 0;
-            goto __pyx_L20_try_end;
-            __pyx_L15_error:;
+            goto __pyx_L21_try_end;
+            __pyx_L16_error:;
             __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
             __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
-            __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-            __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
             __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+            __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+            __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+            __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-            /* "zenscrape/cli.py":147
+            /* "zenscrape/cli.py":151
  *             insp = ZenInspector(res.text, args.url)
  *             summary = insp.get_summary()
  *         except Exception as e:             # <<<<<<<<<<<<<<
@@ -7785,16 +8002,16 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
             __pyx_t_19 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_Exception))));
             if (__pyx_t_19) {
               __Pyx_AddTraceback("zenscrape.cli.run_inspector", __pyx_clineno, __pyx_lineno, __pyx_filename);
-              if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_3, &__pyx_t_2) < 0) __PYX_ERR(0, 147, __pyx_L17_except_error)
+              if (__Pyx_GetException(&__pyx_t_9, &__pyx_t_5, &__pyx_t_6) < 0) __PYX_ERR(0, 151, __pyx_L18_except_error)
+              __Pyx_XGOTREF(__pyx_t_9);
               __Pyx_XGOTREF(__pyx_t_5);
-              __Pyx_XGOTREF(__pyx_t_3);
-              __Pyx_XGOTREF(__pyx_t_2);
-              __Pyx_INCREF(__pyx_t_3);
-              __Pyx_GIVEREF(__pyx_t_3);
-              __pyx_cur_scope->__pyx_v_e = __pyx_t_3;
+              __Pyx_XGOTREF(__pyx_t_6);
+              __Pyx_INCREF(__pyx_t_5);
+              __Pyx_GIVEREF(__pyx_t_5);
+              __pyx_cur_scope->__pyx_v_e = __pyx_t_5;
               /*try:*/ {
 
-                /* "zenscrape/cli.py":148
+                /* "zenscrape/cli.py":152
  *             summary = insp.get_summary()
  *         except Exception as e:
  *             logger.error(f"Failed to inspect site: {e}")             # <<<<<<<<<<<<<<
@@ -7802,16 +8019,16 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  * 
 */
                 __pyx_t_11 = NULL;
-                __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 148, __pyx_L27_error)
-                __Pyx_GOTREF(__pyx_t_4);
-                __pyx_t_20 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_error); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 148, __pyx_L27_error)
+                __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 152, __pyx_L28_error)
+                __Pyx_GOTREF(__pyx_t_8);
+                __pyx_t_20 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_error); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 152, __pyx_L28_error)
                 __Pyx_GOTREF(__pyx_t_20);
-                __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-                __pyx_t_4 = __Pyx_PyObject_FormatSimple(__pyx_cur_scope->__pyx_v_e, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 148, __pyx_L27_error)
-                __Pyx_GOTREF(__pyx_t_4);
-                __pyx_t_21 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Failed_to_inspect_site, __pyx_t_4); if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 148, __pyx_L27_error)
+                __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+                __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_cur_scope->__pyx_v_e, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 152, __pyx_L28_error)
+                __Pyx_GOTREF(__pyx_t_8);
+                __pyx_t_21 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Failed_to_inspect_site, __pyx_t_8); if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 152, __pyx_L28_error)
                 __Pyx_GOTREF(__pyx_t_21);
-                __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
                 __pyx_t_7 = 1;
                 #if CYTHON_UNPACK_METHODS
                 if (unlikely(PyMethod_Check(__pyx_t_20))) {
@@ -7830,12 +8047,12 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
                   __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
                   __Pyx_DECREF(__pyx_t_21); __pyx_t_21 = 0;
                   __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
-                  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L27_error)
+                  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L28_error)
                   __Pyx_GOTREF(__pyx_t_1);
                 }
                 __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-                /* "zenscrape/cli.py":149
+                /* "zenscrape/cli.py":153
  *         except Exception as e:
  *             logger.error(f"Failed to inspect site: {e}")
  *             return             # <<<<<<<<<<<<<<
@@ -7844,13 +8061,13 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
 */
                 __Pyx_XDECREF(__pyx_r);
                 __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-                __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-                __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
                 __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-                goto __pyx_L26_return;
+                __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+                __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+                goto __pyx_L27_return;
               }
 
-              /* "zenscrape/cli.py":147
+              /* "zenscrape/cli.py":151
  *             insp = ZenInspector(res.text, args.url)
  *             summary = insp.get_summary()
  *         except Exception as e:             # <<<<<<<<<<<<<<
@@ -7858,7 +8075,7 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *             return
 */
               /*finally:*/ {
-                __pyx_L27_error:;
+                __pyx_L28_error:;
                 /*exception exit:*/{
                   __Pyx_PyThreadState_assign
                   __pyx_t_24 = 0; __pyx_t_25 = 0; __pyx_t_26 = 0; __pyx_t_27 = 0; __pyx_t_28 = 0; __pyx_t_29 = 0;
@@ -7866,7 +8083,7 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
                   __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
                   __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
                   __Pyx_XDECREF(__pyx_t_21); __pyx_t_21 = 0;
-                  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+                  __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
                    __Pyx_ExceptionSwap(&__pyx_t_27, &__pyx_t_28, &__pyx_t_29);
                   if ( unlikely(__Pyx_GetException(&__pyx_t_24, &__pyx_t_25, &__pyx_t_26) < 0)) __Pyx_ErrFetch(&__pyx_t_24, &__pyx_t_25, &__pyx_t_26);
                   __Pyx_XGOTREF(__pyx_t_24);
@@ -7890,44 +8107,44 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
                   __Pyx_ErrRestore(__pyx_t_24, __pyx_t_25, __pyx_t_26);
                   __pyx_t_24 = 0; __pyx_t_25 = 0; __pyx_t_26 = 0; __pyx_t_27 = 0; __pyx_t_28 = 0; __pyx_t_29 = 0;
                   __pyx_lineno = __pyx_t_19; __pyx_clineno = __pyx_t_22; __pyx_filename = __pyx_t_23;
-                  goto __pyx_L17_except_error;
+                  goto __pyx_L18_except_error;
                 }
-                __pyx_L26_return: {
+                __pyx_L27_return: {
                   __pyx_t_29 = __pyx_r;
                   __pyx_r = 0;
                   __Pyx_GOTREF(__pyx_cur_scope->__pyx_v_e);
                   __Pyx_DECREF(__pyx_cur_scope->__pyx_v_e); __pyx_cur_scope->__pyx_v_e = 0;
                   __pyx_r = __pyx_t_29;
                   __pyx_t_29 = 0;
-                  goto __pyx_L18_except_return;
+                  goto __pyx_L19_except_return;
                 }
               }
             }
-            goto __pyx_L17_except_error;
+            goto __pyx_L18_except_error;
 
-            /* "zenscrape/cli.py":143
+            /* "zenscrape/cli.py":147
  * 
  *     async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as s:
  *         try:             # <<<<<<<<<<<<<<
  *             res = await s.get(args.url, timeout=20)
  *             insp = ZenInspector(res.text, args.url)
 */
-            __pyx_L17_except_error:;
+            __pyx_L18_except_error:;
             __Pyx_XGIVEREF(__pyx_t_16);
             __Pyx_XGIVEREF(__pyx_t_17);
             __Pyx_XGIVEREF(__pyx_t_18);
             __Pyx_ExceptionReset(__pyx_t_16, __pyx_t_17, __pyx_t_18);
-            goto __pyx_L9_error;
-            __pyx_L18_except_return:;
+            goto __pyx_L10_error;
+            __pyx_L19_except_return:;
             __Pyx_XGIVEREF(__pyx_t_16);
             __Pyx_XGIVEREF(__pyx_t_17);
             __Pyx_XGIVEREF(__pyx_t_18);
             __Pyx_ExceptionReset(__pyx_t_16, __pyx_t_17, __pyx_t_18);
-            goto __pyx_L13_try_return;
-            __pyx_L20_try_end:;
+            goto __pyx_L14_try_return;
+            __pyx_L21_try_end:;
           }
 
-          /* "zenscrape/cli.py":142
+          /* "zenscrape/cli.py":146
  *     proxy = "socks5h://127.0.0.1:9050" if args.tor else None
  * 
  *     async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as s:             # <<<<<<<<<<<<<<
@@ -7938,41 +8155,41 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
         __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
         __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
         __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
-        goto __pyx_L14_try_end;
-        __pyx_L9_error:;
+        goto __pyx_L15_try_end;
+        __pyx_L10_error:;
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
-        __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
         __Pyx_XDECREF(__pyx_t_21); __pyx_t_21 = 0;
-        __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+        __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
         /*except:*/ {
           __Pyx_AddTraceback("zenscrape.cli.run_inspector", __pyx_clineno, __pyx_lineno, __pyx_filename);
-          if (__Pyx_GetException(&__pyx_t_2, &__pyx_t_3, &__pyx_t_5) < 0) __PYX_ERR(0, 142, __pyx_L11_except_error)
-          __Pyx_XGOTREF(__pyx_t_2);
-          __Pyx_XGOTREF(__pyx_t_3);
+          if (__Pyx_GetException(&__pyx_t_6, &__pyx_t_5, &__pyx_t_9) < 0) __PYX_ERR(0, 146, __pyx_L12_except_error)
+          __Pyx_XGOTREF(__pyx_t_6);
           __Pyx_XGOTREF(__pyx_t_5);
-          __pyx_t_1 = PyTuple_Pack(3, __pyx_t_2, __pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 142, __pyx_L11_except_error)
+          __Pyx_XGOTREF(__pyx_t_9);
+          __pyx_t_1 = PyTuple_Pack(3, __pyx_t_6, __pyx_t_5, __pyx_t_9); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L12_except_error)
           __Pyx_GOTREF(__pyx_t_1);
-          __pyx_t_18 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_1, NULL);
-          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          __pyx_t_18 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_1, NULL);
+          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 142, __pyx_L11_except_error)
+          if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 146, __pyx_L12_except_error)
           __Pyx_GOTREF(__pyx_t_18);
           __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_18, &__pyx_r);
           __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
           if (likely(__pyx_t_12 == PYGEN_NEXT)) {
             __Pyx_GOTREF(__pyx_r);
-            __Pyx_XGIVEREF(__pyx_t_2);
-            __pyx_cur_scope->__pyx_t_0 = __pyx_t_2;
             __Pyx_XGIVEREF(__pyx_t_3);
-            __pyx_cur_scope->__pyx_t_1 = __pyx_t_3;
+            __pyx_cur_scope->__pyx_t_0 = __pyx_t_3;
             __Pyx_XGIVEREF(__pyx_t_5);
-            __pyx_cur_scope->__pyx_t_2 = __pyx_t_5;
-            __Pyx_XGIVEREF(__pyx_t_8);
-            __pyx_cur_scope->__pyx_t_3 = __pyx_t_8;
+            __pyx_cur_scope->__pyx_t_1 = __pyx_t_5;
+            __Pyx_XGIVEREF(__pyx_t_6);
+            __pyx_cur_scope->__pyx_t_2 = __pyx_t_6;
+            __Pyx_XGIVEREF(__pyx_t_9);
+            __pyx_cur_scope->__pyx_t_3 = __pyx_t_9;
             __Pyx_XGIVEREF(__pyx_t_13);
             __pyx_cur_scope->__pyx_t_4 = __pyx_t_13;
             __Pyx_XGIVEREF(__pyx_t_14);
@@ -7987,19 +8204,19 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
             /* return from generator, awaiting value */
             __pyx_generator->resume_label = 3;
             return __pyx_r;
-            __pyx_L36_resume_from_await:;
-            __pyx_t_2 = __pyx_cur_scope->__pyx_t_0;
+            __pyx_L37_resume_from_await:;
+            __pyx_t_3 = __pyx_cur_scope->__pyx_t_0;
             __pyx_cur_scope->__pyx_t_0 = 0;
-            __Pyx_XGOTREF(__pyx_t_2);
-            __pyx_t_3 = __pyx_cur_scope->__pyx_t_1;
-            __pyx_cur_scope->__pyx_t_1 = 0;
             __Pyx_XGOTREF(__pyx_t_3);
-            __pyx_t_5 = __pyx_cur_scope->__pyx_t_2;
-            __pyx_cur_scope->__pyx_t_2 = 0;
+            __pyx_t_5 = __pyx_cur_scope->__pyx_t_1;
+            __pyx_cur_scope->__pyx_t_1 = 0;
             __Pyx_XGOTREF(__pyx_t_5);
-            __pyx_t_8 = __pyx_cur_scope->__pyx_t_3;
+            __pyx_t_6 = __pyx_cur_scope->__pyx_t_2;
+            __pyx_cur_scope->__pyx_t_2 = 0;
+            __Pyx_XGOTREF(__pyx_t_6);
+            __pyx_t_9 = __pyx_cur_scope->__pyx_t_3;
             __pyx_cur_scope->__pyx_t_3 = 0;
-            __Pyx_XGOTREF(__pyx_t_8);
+            __Pyx_XGOTREF(__pyx_t_9);
             __pyx_t_13 = __pyx_cur_scope->__pyx_t_4;
             __pyx_cur_scope->__pyx_t_4 = 0;
             __Pyx_XGOTREF(__pyx_t_13);
@@ -8012,67 +8229,67 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
             __pyx_t_18 = __pyx_cur_scope->__pyx_t_7;
             __pyx_cur_scope->__pyx_t_7 = 0;
             __Pyx_XGOTREF(__pyx_t_18);
-            if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 142, __pyx_L11_except_error)
+            if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 146, __pyx_L12_except_error)
             __pyx_t_1 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_1);
           } else if (likely(__pyx_t_12 == PYGEN_RETURN)) {
             __Pyx_GOTREF(__pyx_r);
             __pyx_t_1 = __pyx_r; __pyx_r = NULL;
           } else {
             __Pyx_XGOTREF(__pyx_r);
-            __PYX_ERR(0, 142, __pyx_L11_except_error)
+            __PYX_ERR(0, 146, __pyx_L12_except_error)
           }
           __pyx_t_18 = __pyx_t_1;
           __pyx_t_1 = 0;
-          __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_18);
+          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_18);
           __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
-          if (__pyx_t_10 < (0)) __PYX_ERR(0, 142, __pyx_L11_except_error)
-          __pyx_t_30 = (!__pyx_t_10);
+          if (__pyx_t_2 < (0)) __PYX_ERR(0, 146, __pyx_L12_except_error)
+          __pyx_t_30 = (!__pyx_t_2);
           if (unlikely(__pyx_t_30)) {
-            __Pyx_GIVEREF(__pyx_t_2);
-            __Pyx_GIVEREF(__pyx_t_3);
-            __Pyx_XGIVEREF(__pyx_t_5);
-            __Pyx_ErrRestoreWithState(__pyx_t_2, __pyx_t_3, __pyx_t_5);
-            __pyx_t_2 = 0;  __pyx_t_3 = 0;  __pyx_t_5 = 0; 
-            __PYX_ERR(0, 142, __pyx_L11_except_error)
+            __Pyx_GIVEREF(__pyx_t_6);
+            __Pyx_GIVEREF(__pyx_t_5);
+            __Pyx_XGIVEREF(__pyx_t_9);
+            __Pyx_ErrRestoreWithState(__pyx_t_6, __pyx_t_5, __pyx_t_9);
+            __pyx_t_6 = 0;  __pyx_t_5 = 0;  __pyx_t_9 = 0; 
+            __PYX_ERR(0, 146, __pyx_L12_except_error)
           }
-          __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+          __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-          goto __pyx_L10_exception_handled;
+          __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+          goto __pyx_L11_exception_handled;
         }
-        __pyx_L11_except_error:;
+        __pyx_L12_except_error:;
         __Pyx_XGIVEREF(__pyx_t_13);
         __Pyx_XGIVEREF(__pyx_t_14);
         __Pyx_XGIVEREF(__pyx_t_15);
         __Pyx_ExceptionReset(__pyx_t_13, __pyx_t_14, __pyx_t_15);
         goto __pyx_L1_error;
-        __pyx_L13_try_return:;
+        __pyx_L14_try_return:;
         __Pyx_XGIVEREF(__pyx_t_13);
         __Pyx_XGIVEREF(__pyx_t_14);
         __Pyx_XGIVEREF(__pyx_t_15);
         __Pyx_ExceptionReset(__pyx_t_13, __pyx_t_14, __pyx_t_15);
-        goto __pyx_L6_return;
-        __pyx_L10_exception_handled:;
+        goto __pyx_L7_return;
+        __pyx_L11_exception_handled:;
         __Pyx_XGIVEREF(__pyx_t_13);
         __Pyx_XGIVEREF(__pyx_t_14);
         __Pyx_XGIVEREF(__pyx_t_15);
         __Pyx_ExceptionReset(__pyx_t_13, __pyx_t_14, __pyx_t_15);
-        __pyx_L14_try_end:;
+        __pyx_L15_try_end:;
       }
     }
     /*finally:*/ {
       /*normal exit:*/{
-        if (__pyx_t_8) {
-          __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_mstate_global->__pyx_tuple[0], NULL);
-          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-          if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 142, __pyx_L1_error)
+        if (__pyx_t_3) {
+          __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_mstate_global->__pyx_tuple[0], NULL);
+          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+          if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 146, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_15);
           __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_15, &__pyx_r);
           __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
           if (likely(__pyx_t_12 == PYGEN_NEXT)) {
             __Pyx_GOTREF(__pyx_r);
-            __Pyx_XGIVEREF(__pyx_t_8);
-            __pyx_cur_scope->__pyx_t_0 = __pyx_t_8;
+            __Pyx_XGIVEREF(__pyx_t_3);
+            __pyx_cur_scope->__pyx_t_0 = __pyx_t_3;
             __Pyx_XGIVEREF(__pyx_t_15);
             __pyx_cur_scope->__pyx_t_1 = __pyx_t_15;
             __Pyx_XGIVEREF(__pyx_r);
@@ -8081,42 +8298,42 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
             /* return from generator, awaiting value */
             __pyx_generator->resume_label = 4;
             return __pyx_r;
-            __pyx_L37_resume_from_await:;
-            __pyx_t_8 = __pyx_cur_scope->__pyx_t_0;
+            __pyx_L38_resume_from_await:;
+            __pyx_t_3 = __pyx_cur_scope->__pyx_t_0;
             __pyx_cur_scope->__pyx_t_0 = 0;
-            __Pyx_XGOTREF(__pyx_t_8);
+            __Pyx_XGOTREF(__pyx_t_3);
             __pyx_t_15 = __pyx_cur_scope->__pyx_t_1;
             __pyx_cur_scope->__pyx_t_1 = 0;
             __Pyx_XGOTREF(__pyx_t_15);
-            if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 142, __pyx_L1_error)
-            __pyx_t_5 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_5);
+            if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 146, __pyx_L1_error)
+            __pyx_t_9 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_9);
           } else if (likely(__pyx_t_12 == PYGEN_RETURN)) {
             __Pyx_GOTREF(__pyx_r);
-            __pyx_t_5 = __pyx_r; __pyx_r = NULL;
+            __pyx_t_9 = __pyx_r; __pyx_r = NULL;
           } else {
             __Pyx_XGOTREF(__pyx_r);
-            __PYX_ERR(0, 142, __pyx_L1_error)
+            __PYX_ERR(0, 146, __pyx_L1_error)
           }
-          __pyx_t_15 = __pyx_t_5;
-          __pyx_t_5 = 0;
+          __pyx_t_15 = __pyx_t_9;
+          __pyx_t_9 = 0;
           __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
         }
-        goto __pyx_L8;
+        goto __pyx_L9;
       }
-      __pyx_L6_return: {
+      __pyx_L7_return: {
         __pyx_t_15 = __pyx_r;
         __pyx_r = 0;
-        if (__pyx_t_8) {
-          __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_mstate_global->__pyx_tuple[0], NULL);
-          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-          if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 142, __pyx_L1_error)
+        if (__pyx_t_3) {
+          __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_mstate_global->__pyx_tuple[0], NULL);
+          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+          if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 146, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_14);
           __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_14, &__pyx_r);
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
           if (likely(__pyx_t_12 == PYGEN_NEXT)) {
             __Pyx_GOTREF(__pyx_r);
-            __Pyx_XGIVEREF(__pyx_t_8);
-            __pyx_cur_scope->__pyx_t_0 = __pyx_t_8;
+            __Pyx_XGIVEREF(__pyx_t_3);
+            __pyx_cur_scope->__pyx_t_0 = __pyx_t_3;
             __Pyx_XGIVEREF(__pyx_t_14);
             __pyx_cur_scope->__pyx_t_1 = __pyx_t_14;
             __Pyx_XGIVEREF(__pyx_t_15);
@@ -8127,92 +8344,92 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
             /* return from generator, awaiting value */
             __pyx_generator->resume_label = 5;
             return __pyx_r;
-            __pyx_L38_resume_from_await:;
-            __pyx_t_8 = __pyx_cur_scope->__pyx_t_0;
+            __pyx_L39_resume_from_await:;
+            __pyx_t_3 = __pyx_cur_scope->__pyx_t_0;
             __pyx_cur_scope->__pyx_t_0 = 0;
-            __Pyx_XGOTREF(__pyx_t_8);
+            __Pyx_XGOTREF(__pyx_t_3);
             __pyx_t_14 = __pyx_cur_scope->__pyx_t_1;
             __pyx_cur_scope->__pyx_t_1 = 0;
             __Pyx_XGOTREF(__pyx_t_14);
             __pyx_t_15 = __pyx_cur_scope->__pyx_t_2;
             __pyx_cur_scope->__pyx_t_2 = 0;
             __Pyx_XGOTREF(__pyx_t_15);
-            if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 142, __pyx_L1_error)
-            __pyx_t_5 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_5);
+            if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 146, __pyx_L1_error)
+            __pyx_t_9 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_9);
           } else if (likely(__pyx_t_12 == PYGEN_RETURN)) {
             __Pyx_GOTREF(__pyx_r);
-            __pyx_t_5 = __pyx_r; __pyx_r = NULL;
+            __pyx_t_9 = __pyx_r; __pyx_r = NULL;
           } else {
             __Pyx_XGOTREF(__pyx_r);
-            __PYX_ERR(0, 142, __pyx_L1_error)
+            __PYX_ERR(0, 146, __pyx_L1_error)
           }
-          __pyx_t_14 = __pyx_t_5;
-          __pyx_t_5 = 0;
+          __pyx_t_14 = __pyx_t_9;
+          __pyx_t_9 = 0;
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
         }
         __pyx_r = __pyx_t_15;
         __pyx_t_15 = 0;
         goto __pyx_L0;
       }
-      __pyx_L8:;
+      __pyx_L9:;
     }
-    goto __pyx_L39;
-    __pyx_L4_error:;
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    goto __pyx_L40;
+    __pyx_L5_error:;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     goto __pyx_L1_error;
-    __pyx_L39:;
+    __pyx_L40:;
   }
 
-  /* "zenscrape/cli.py":151
+  /* "zenscrape/cli.py":155
  *             return
  * 
  *     print("\n" + ""*60)             # <<<<<<<<<<<<<<
  *     print(f" SITE INTELLIGENCE: {summary['title'][:50]}")
  *     print(""*60)
 */
-  __pyx_t_3 = NULL;
+  __pyx_t_5 = NULL;
   __pyx_t_7 = 1;
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u__10};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_mstate_global->__pyx_kp_u__10};
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 155, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":152
+  /* "zenscrape/cli.py":156
  * 
  *     print("\n" + ""*60)
  *     print(f" SITE INTELLIGENCE: {summary['title'][:50]}")             # <<<<<<<<<<<<<<
  *     print(""*60)
  *     print(f" Links:  {len(summary['links']['internal'])} Internal | {len(summary['links']['external'])} External")
 */
-  __pyx_t_3 = NULL;
-  if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 152, __pyx_L1_error) }
-  __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_title); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_GetSlice(__pyx_t_2, 0, 50, NULL, NULL, &__pyx_mstate_global->__pyx_slice[1], 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_5 = NULL;
+  if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 156, __pyx_L1_error) }
+  __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_title); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 156, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_1 = __Pyx_PyObject_GetSlice(__pyx_t_6, 0, 50, NULL, NULL, &__pyx_mstate_global->__pyx_slice[1], 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 156, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_FormatSimple(__pyx_t_1, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_PyObject_FormatSimple(__pyx_t_1, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 156, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_SITE_INTELLIGENCE, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_SITE_INTELLIGENCE, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 156, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_7 = 1;
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_t_1};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_t_1};
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 152, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 156, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":153
+  /* "zenscrape/cli.py":157
  *     print("\n" + ""*60)
  *     print(f" SITE INTELLIGENCE: {summary['title'][:50]}")
  *     print(""*60)             # <<<<<<<<<<<<<<
@@ -8223,14 +8440,14 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   __pyx_t_7 = 1;
   {
     PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_mstate_global->__pyx_kp_u__11};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 153, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 157, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":154
+  /* "zenscrape/cli.py":158
  *     print(f" SITE INTELLIGENCE: {summary['title'][:50]}")
  *     print(""*60)
  *     print(f" Links:  {len(summary['links']['internal'])} Internal | {len(summary['links']['external'])} External")             # <<<<<<<<<<<<<<
@@ -8238,81 +8455,81 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *     print(f"  Media:  {summary['media']['count']} Images")
 */
   __pyx_t_1 = NULL;
-  if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 154, __pyx_L1_error) }
-  __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_links); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 154, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_internal); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 154, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_9 = PyObject_Length(__pyx_t_2); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 154, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_9, 0, ' ', 'd'); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 154, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 154, __pyx_L1_error) }
-  __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_links); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 154, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_external); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 154, __pyx_L1_error)
+  if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 158, __pyx_L1_error) }
+  __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_links); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_internal); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_4 = PyObject_Length(__pyx_t_6); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 158, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_4, 0, ' ', 'd'); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 158, __pyx_L1_error) }
+  __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_links); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_external); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_20);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_9 = PyObject_Length(__pyx_t_20); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 154, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_4 = PyObject_Length(__pyx_t_20); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
-  __pyx_t_20 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_9, 0, ' ', 'd'); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 154, __pyx_L1_error)
+  __pyx_t_20 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_4, 0, ' ', 'd'); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_20);
   __pyx_t_31[0] = __pyx_mstate_global->__pyx_kp_u_Links;
-  __pyx_t_31[1] = __pyx_t_2;
+  __pyx_t_31[1] = __pyx_t_6;
   __pyx_t_31[2] = __pyx_mstate_global->__pyx_kp_u_Internal;
   __pyx_t_31[3] = __pyx_t_20;
   __pyx_t_31[4] = __pyx_mstate_global->__pyx_kp_u_External;
-  __pyx_t_3 = __Pyx_PyUnicode_Join(__pyx_t_31, 5, 10 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_2) + 12 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_20) + 9, 1114111);
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 154, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_5 = __Pyx_PyUnicode_Join(__pyx_t_31, 5, 10 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_6) + 12 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_20) + 9, 1114111);
+  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
   __pyx_t_7 = 1;
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_t_3};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_t_5};
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 154, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 158, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":155
+  /* "zenscrape/cli.py":159
  *     print(""*60)
  *     print(f" Links:  {len(summary['links']['internal'])} Internal | {len(summary['links']['external'])} External")
  *     print(f"  Forms:  {len(summary['forms'])} detected")             # <<<<<<<<<<<<<<
  *     print(f"  Media:  {summary['media']['count']} Images")
  * 
 */
-  __pyx_t_3 = NULL;
-  if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 155, __pyx_L1_error) }
-  __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_forms); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 155, __pyx_L1_error)
+  __pyx_t_5 = NULL;
+  if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 159, __pyx_L1_error) }
+  __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_forms); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_9 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 155, __pyx_L1_error)
+  __pyx_t_4 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 159, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_9, 0, ' ', 'd'); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 155, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_4, 0, ' ', 'd'); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6[0] = __pyx_mstate_global->__pyx_kp_u_Forms;
-  __pyx_t_6[1] = __pyx_t_1;
-  __pyx_t_6[2] = __pyx_mstate_global->__pyx_kp_u_detected;
-  __pyx_t_20 = __Pyx_PyUnicode_Join(__pyx_t_6, 3, 12 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_1) + 9, 1114111);
-  if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 155, __pyx_L1_error)
+  __pyx_t_10[0] = __pyx_mstate_global->__pyx_kp_u_Forms;
+  __pyx_t_10[1] = __pyx_t_1;
+  __pyx_t_10[2] = __pyx_mstate_global->__pyx_kp_u_detected;
+  __pyx_t_20 = __Pyx_PyUnicode_Join(__pyx_t_10, 3, 12 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_1) + 9, 1114111);
+  if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 159, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_20);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_7 = 1;
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_t_20};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_t_20};
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 155, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 159, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":156
+  /* "zenscrape/cli.py":160
  *     print(f" Links:  {len(summary['links']['internal'])} Internal | {len(summary['links']['external'])} External")
  *     print(f"  Forms:  {len(summary['forms'])} detected")
  *     print(f"  Media:  {summary['media']['count']} Images")             # <<<<<<<<<<<<<<
@@ -8320,48 +8537,48 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *     if summary['forms']:
 */
   __pyx_t_20 = NULL;
-  if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 156, __pyx_L1_error) }
-  __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_media); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 156, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_count); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 156, __pyx_L1_error)
+  if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 160, __pyx_L1_error) }
+  __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_media); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 160, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_count); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyObject_FormatSimple(__pyx_t_1, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 156, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_1, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 160, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_6[0] = __pyx_mstate_global->__pyx_kp_u_Media;
-  __pyx_t_6[1] = __pyx_t_3;
-  __pyx_t_6[2] = __pyx_mstate_global->__pyx_kp_u_Images;
-  __pyx_t_1 = __Pyx_PyUnicode_Join(__pyx_t_6, 3, 12 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_3) + 7, 1114111 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3));
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 156, __pyx_L1_error)
+  __pyx_t_10[0] = __pyx_mstate_global->__pyx_kp_u_Media;
+  __pyx_t_10[1] = __pyx_t_5;
+  __pyx_t_10[2] = __pyx_mstate_global->__pyx_kp_u_Images;
+  __pyx_t_1 = __Pyx_PyUnicode_Join(__pyx_t_10, 3, 12 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_5) + 7, 1114111 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5));
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_7 = 1;
   {
     PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_t_1};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 156, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 160, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":158
+  /* "zenscrape/cli.py":162
  *     print(f"  Media:  {summary['media']['count']} Images")
  * 
  *     if summary['forms']:             # <<<<<<<<<<<<<<
  *         print("\n INPUTS DETECTED:")
  *         for i, f in enumerate(summary['forms']):
 */
-  if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 158, __pyx_L1_error) }
-  __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_forms); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 158, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 158, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 162, __pyx_L1_error) }
+  __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_forms); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 162, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 162, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   if (__pyx_t_30) {
 
-    /* "zenscrape/cli.py":159
+    /* "zenscrape/cli.py":163
  * 
  *     if summary['forms']:
  *         print("\n INPUTS DETECTED:")             # <<<<<<<<<<<<<<
@@ -8372,33 +8589,33 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
     __pyx_t_7 = 1;
     {
       PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_mstate_global->__pyx_kp_u_INPUTS_DETECTED};
-      __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 159, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 163, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":160
+    /* "zenscrape/cli.py":164
  *     if summary['forms']:
  *         print("\n INPUTS DETECTED:")
  *         for i, f in enumerate(summary['forms']):             # <<<<<<<<<<<<<<
  *             fields = [f"{inp['name']} ({inp['type']})" for inp in f['inputs']]
- *             print(f"  [Form {i+1}] {f['method']} -> {f['action']}")
+ *             # Check if form is virtual
 */
     __Pyx_INCREF(__pyx_mstate_global->__pyx_int_0);
-    __pyx_t_5 = __pyx_mstate_global->__pyx_int_0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 160, __pyx_L1_error) }
-    __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_forms); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+    __pyx_t_9 = __pyx_mstate_global->__pyx_int_0;
+    if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 164, __pyx_L1_error) }
+    __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_forms); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 164, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
       __pyx_t_20 = __pyx_t_1; __Pyx_INCREF(__pyx_t_20);
-      __pyx_t_9 = 0;
+      __pyx_t_4 = 0;
       __pyx_t_32 = NULL;
     } else {
-      __pyx_t_9 = -1; __pyx_t_20 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 160, __pyx_L1_error)
+      __pyx_t_4 = -1; __pyx_t_20 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 164, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_20);
-      __pyx_t_32 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_20); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 160, __pyx_L1_error)
+      __pyx_t_32 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_20); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 164, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     for (;;) {
@@ -8407,34 +8624,34 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
           {
             Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_20);
             #if !CYTHON_ASSUME_SAFE_SIZE
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 160, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 164, __pyx_L1_error)
             #endif
-            if (__pyx_t_9 >= __pyx_temp) break;
+            if (__pyx_t_4 >= __pyx_temp) break;
           }
-          __pyx_t_1 = __Pyx_PyList_GetItemRefFast(__pyx_t_20, __pyx_t_9, __Pyx_ReferenceSharing_OwnStrongReference);
-          ++__pyx_t_9;
+          __pyx_t_1 = __Pyx_PyList_GetItemRefFast(__pyx_t_20, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
+          ++__pyx_t_4;
         } else {
           {
             Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_20);
             #if !CYTHON_ASSUME_SAFE_SIZE
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 160, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 164, __pyx_L1_error)
             #endif
-            if (__pyx_t_9 >= __pyx_temp) break;
+            if (__pyx_t_4 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_1 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_20, __pyx_t_9));
+          __pyx_t_1 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_20, __pyx_t_4));
           #else
-          __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_20, __pyx_t_9);
+          __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_20, __pyx_t_4);
           #endif
-          ++__pyx_t_9;
+          ++__pyx_t_4;
         }
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 164, __pyx_L1_error)
       } else {
         __pyx_t_1 = __pyx_t_32(__pyx_t_20);
         if (unlikely(!__pyx_t_1)) {
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
-            if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 160, __pyx_L1_error)
+            if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 164, __pyx_L1_error)
             PyErr_Clear();
           }
           break;
@@ -8445,193 +8662,228 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
       __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_f, __pyx_t_1);
       __Pyx_GIVEREF(__pyx_t_1);
       __pyx_t_1 = 0;
-      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(__pyx_t_9);
       __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_i);
-      __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_i, __pyx_t_5);
-      __Pyx_GIVEREF(__pyx_t_5);
-      __pyx_t_1 = __Pyx_PyLong_AddObjC(__pyx_t_5, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+      __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_i, __pyx_t_9);
+      __Pyx_GIVEREF(__pyx_t_9);
+      __pyx_t_1 = __Pyx_PyLong_AddObjC(__pyx_t_9, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 164, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_5);
-      __pyx_t_5 = __pyx_t_1;
+      __Pyx_DECREF(__pyx_t_9);
+      __pyx_t_9 = __pyx_t_1;
       __pyx_t_1 = 0;
 
-      /* "zenscrape/cli.py":161
+      /* "zenscrape/cli.py":165
  *         print("\n INPUTS DETECTED:")
  *         for i, f in enumerate(summary['forms']):
  *             fields = [f"{inp['name']} ({inp['type']})" for inp in f['inputs']]             # <<<<<<<<<<<<<<
- *             print(f"  [Form {i+1}] {f['method']} -> {f['action']}")
- *             print(f"    Fields: {', '.join(fields)}")
+ *             # Check if form is virtual
+ *             is_virtual = " (Virtual Fallback)" if f.get("virtual") else ""
 */
       { /* enter inner scope */
-        __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 161, __pyx_L1_error)
+        __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 165, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_f, __pyx_mstate_global->__pyx_n_u_inputs); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 161, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        if (likely(PyList_CheckExact(__pyx_t_3)) || PyTuple_CheckExact(__pyx_t_3)) {
-          __pyx_t_2 = __pyx_t_3; __Pyx_INCREF(__pyx_t_2);
+        __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_f, __pyx_mstate_global->__pyx_n_u_inputs); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 165, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        if (likely(PyList_CheckExact(__pyx_t_5)) || PyTuple_CheckExact(__pyx_t_5)) {
+          __pyx_t_6 = __pyx_t_5; __Pyx_INCREF(__pyx_t_6);
           __pyx_t_33 = 0;
           __pyx_t_34 = NULL;
         } else {
-          __pyx_t_33 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 161, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_34 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_34)) __PYX_ERR(0, 161, __pyx_L1_error)
+          __pyx_t_33 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 165, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_6);
+          __pyx_t_34 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_6); if (unlikely(!__pyx_t_34)) __PYX_ERR(0, 165, __pyx_L1_error)
         }
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         for (;;) {
           if (likely(!__pyx_t_34)) {
-            if (likely(PyList_CheckExact(__pyx_t_2))) {
+            if (likely(PyList_CheckExact(__pyx_t_6))) {
               {
-                Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_2);
+                Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_6);
                 #if !CYTHON_ASSUME_SAFE_SIZE
-                if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 161, __pyx_L1_error)
+                if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 165, __pyx_L1_error)
                 #endif
                 if (__pyx_t_33 >= __pyx_temp) break;
               }
-              __pyx_t_3 = __Pyx_PyList_GetItemRefFast(__pyx_t_2, __pyx_t_33, __Pyx_ReferenceSharing_OwnStrongReference);
+              __pyx_t_5 = __Pyx_PyList_GetItemRefFast(__pyx_t_6, __pyx_t_33, __Pyx_ReferenceSharing_OwnStrongReference);
               ++__pyx_t_33;
             } else {
               {
-                Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_2);
+                Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_6);
                 #if !CYTHON_ASSUME_SAFE_SIZE
-                if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 161, __pyx_L1_error)
+                if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 165, __pyx_L1_error)
                 #endif
                 if (__pyx_t_33 >= __pyx_temp) break;
               }
               #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-              __pyx_t_3 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_33));
+              __pyx_t_5 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_6, __pyx_t_33));
               #else
-              __pyx_t_3 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_33);
+              __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_6, __pyx_t_33);
               #endif
               ++__pyx_t_33;
             }
-            if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 161, __pyx_L1_error)
+            if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 165, __pyx_L1_error)
           } else {
-            __pyx_t_3 = __pyx_t_34(__pyx_t_2);
-            if (unlikely(!__pyx_t_3)) {
+            __pyx_t_5 = __pyx_t_34(__pyx_t_6);
+            if (unlikely(!__pyx_t_5)) {
               PyObject* exc_type = PyErr_Occurred();
               if (exc_type) {
-                if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 161, __pyx_L1_error)
+                if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 165, __pyx_L1_error)
                 PyErr_Clear();
               }
               break;
             }
           }
-          __Pyx_GOTREF(__pyx_t_3);
+          __Pyx_GOTREF(__pyx_t_5);
           __Pyx_XGOTREF(__pyx_cur_scope->__pyx_8genexpr2__pyx_v_inp);
-          __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_8genexpr2__pyx_v_inp, __pyx_t_3);
-          __Pyx_GIVEREF(__pyx_t_3);
-          __pyx_t_3 = 0;
-          __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_8genexpr2__pyx_v_inp, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 161, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_3);
-          __pyx_t_21 = __Pyx_PyObject_FormatSimple(__pyx_t_3, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 161, __pyx_L1_error)
+          __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_8genexpr2__pyx_v_inp, __pyx_t_5);
+          __Pyx_GIVEREF(__pyx_t_5);
+          __pyx_t_5 = 0;
+          __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_8genexpr2__pyx_v_inp, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 165, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_5);
+          __pyx_t_21 = __Pyx_PyObject_FormatSimple(__pyx_t_5, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 165, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_21);
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_8genexpr2__pyx_v_inp, __pyx_mstate_global->__pyx_n_u_type); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 161, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_3);
-          __pyx_t_11 = __Pyx_PyObject_FormatSimple(__pyx_t_3, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 161, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+          __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_8genexpr2__pyx_v_inp, __pyx_mstate_global->__pyx_n_u_type); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 165, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_5);
+          __pyx_t_11 = __Pyx_PyObject_FormatSimple(__pyx_t_5, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 165, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_11);
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
           __pyx_t_35[0] = __pyx_t_21;
           __pyx_t_35[1] = __pyx_mstate_global->__pyx_kp_u__12;
           __pyx_t_35[2] = __pyx_t_11;
           __pyx_t_35[3] = __pyx_mstate_global->__pyx_kp_u__8;
-          __pyx_t_3 = __Pyx_PyUnicode_Join(__pyx_t_35, 4, __Pyx_PyUnicode_GET_LENGTH(__pyx_t_21) + 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_11) + 1, 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_21) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_11));
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 161, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_3);
+          __pyx_t_5 = __Pyx_PyUnicode_Join(__pyx_t_35, 4, __Pyx_PyUnicode_GET_LENGTH(__pyx_t_21) + 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_11) + 1, 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_21) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_11));
+          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 165, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_21); __pyx_t_21 = 0;
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-          if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_3))) __PYX_ERR(0, 161, __pyx_L1_error)
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+          if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_5))) __PYX_ERR(0, 165, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         }
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       } /* exit inner scope */
       __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_fields);
       __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_fields, ((PyObject*)__pyx_t_1));
       __Pyx_GIVEREF(__pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "zenscrape/cli.py":162
- *         for i, f in enumerate(summary['forms']):
+      /* "zenscrape/cli.py":167
  *             fields = [f"{inp['name']} ({inp['type']})" for inp in f['inputs']]
- *             print(f"  [Form {i+1}] {f['method']} -> {f['action']}")             # <<<<<<<<<<<<<<
+ *             # Check if form is virtual
+ *             is_virtual = " (Virtual Fallback)" if f.get("virtual") else ""             # <<<<<<<<<<<<<<
+ *             print(f"  [Form {i+1}] {f['method']} -> {f['action']}{is_virtual}")
+ *             print(f"    Fields: {', '.join(fields)}")
+*/
+      __pyx_t_5 = __pyx_cur_scope->__pyx_v_f;
+      __Pyx_INCREF(__pyx_t_5);
+      __pyx_t_7 = 0;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_mstate_global->__pyx_n_u_virtual};
+        __pyx_t_6 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_get, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+        if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 167, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+      }
+      __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 167, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (__pyx_t_30) {
+        __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_Virtual_Fallback);
+        __pyx_t_1 = __pyx_mstate_global->__pyx_kp_u_Virtual_Fallback;
+      } else {
+        __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__2);
+        __pyx_t_1 = __pyx_mstate_global->__pyx_kp_u__2;
+      }
+      __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_is_virtual);
+      __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_is_virtual, ((PyObject*)__pyx_t_1));
+      __Pyx_GIVEREF(__pyx_t_1);
+      __pyx_t_1 = 0;
+
+      /* "zenscrape/cli.py":168
+ *             # Check if form is virtual
+ *             is_virtual = " (Virtual Fallback)" if f.get("virtual") else ""
+ *             print(f"  [Form {i+1}] {f['method']} -> {f['action']}{is_virtual}")             # <<<<<<<<<<<<<<
  *             print(f"    Fields: {', '.join(fields)}")
  * 
 */
-      __pyx_t_2 = NULL;
-      __pyx_t_3 = __Pyx_PyLong_AddObjC(__pyx_cur_scope->__pyx_v_i, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 162, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_11 = __Pyx_PyObject_FormatSimple(__pyx_t_3, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 162, __pyx_L1_error)
+      __pyx_t_6 = NULL;
+      __pyx_t_5 = __Pyx_PyLong_AddObjC(__pyx_cur_scope->__pyx_v_i, __pyx_mstate_global->__pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 168, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_11 = __Pyx_PyObject_FormatSimple(__pyx_t_5, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 168, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_f, __pyx_mstate_global->__pyx_n_u_method); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 162, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_21 = __Pyx_PyObject_FormatSimple(__pyx_t_3, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 162, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_f, __pyx_mstate_global->__pyx_n_u_method); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 168, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_21 = __Pyx_PyObject_FormatSimple(__pyx_t_5, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 168, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_21);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_f, __pyx_mstate_global->__pyx_n_u_action); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 162, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyObject_FormatSimple(__pyx_t_3, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 162, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_f, __pyx_mstate_global->__pyx_n_u_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 168, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_t_5, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 168, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_5 = __Pyx_PyUnicode_Unicode(__pyx_cur_scope->__pyx_v_is_virtual); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 168, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
       __pyx_t_36[0] = __pyx_mstate_global->__pyx_kp_u_Form;
       __pyx_t_36[1] = __pyx_t_11;
       __pyx_t_36[2] = __pyx_mstate_global->__pyx_kp_u__13;
       __pyx_t_36[3] = __pyx_t_21;
       __pyx_t_36[4] = __pyx_mstate_global->__pyx_kp_u__14;
-      __pyx_t_36[5] = __pyx_t_4;
-      __pyx_t_3 = __Pyx_PyUnicode_Join(__pyx_t_36, 6, 8 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_11) + 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_21) + 4 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_4), 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_11) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_21) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_4));
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 162, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_36[5] = __pyx_t_8;
+      __pyx_t_36[6] = __pyx_t_5;
+      __pyx_t_37 = __Pyx_PyUnicode_Join(__pyx_t_36, 7, 8 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_11) + 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_21) + 4 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_5), 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_11) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_21) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_8) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5));
+      if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 168, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_37);
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
       __Pyx_DECREF(__pyx_t_21); __pyx_t_21 = 0;
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_t_7 = 1;
       {
-        PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_t_3};
+        PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_37};
         __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-        __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 162, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 168, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
       }
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "zenscrape/cli.py":163
- *             fields = [f"{inp['name']} ({inp['type']})" for inp in f['inputs']]
- *             print(f"  [Form {i+1}] {f['method']} -> {f['action']}")
+      /* "zenscrape/cli.py":169
+ *             is_virtual = " (Virtual Fallback)" if f.get("virtual") else ""
+ *             print(f"  [Form {i+1}] {f['method']} -> {f['action']}{is_virtual}")
  *             print(f"    Fields: {', '.join(fields)}")             # <<<<<<<<<<<<<<
  * 
  *     print("\n" + ""*60)
 */
-      __pyx_t_3 = NULL;
-      __pyx_t_2 = PyUnicode_Join(__pyx_mstate_global->__pyx_kp_u__15, __pyx_cur_scope->__pyx_v_fields); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 163, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_4 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Fields, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 163, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __pyx_t_37 = NULL;
+      __pyx_t_6 = PyUnicode_Join(__pyx_mstate_global->__pyx_kp_u__15, __pyx_cur_scope->__pyx_v_fields); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 169, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Fields, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 169, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_7 = 1;
       {
-        PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_t_4};
+        PyObject *__pyx_callargs[2] = {__pyx_t_37, __pyx_t_5};
         __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-        __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 163, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_37); __pyx_t_37 = 0;
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
       }
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "zenscrape/cli.py":160
+      /* "zenscrape/cli.py":164
  *     if summary['forms']:
  *         print("\n INPUTS DETECTED:")
  *         for i, f in enumerate(summary['forms']):             # <<<<<<<<<<<<<<
  *             fields = [f"{inp['name']} ({inp['type']})" for inp in f['inputs']]
- *             print(f"  [Form {i+1}] {f['method']} -> {f['action']}")
+ *             # Check if form is virtual
 */
     }
     __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":158
+    /* "zenscrape/cli.py":162
  *     print(f"  Media:  {summary['media']['count']} Images")
  * 
  *     if summary['forms']:             # <<<<<<<<<<<<<<
@@ -8640,7 +8892,7 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
 */
   }
 
-  /* "zenscrape/cli.py":165
+  /* "zenscrape/cli.py":171
  *             print(f"    Fields: {', '.join(fields)}")
  * 
  *     print("\n" + ""*60)             # <<<<<<<<<<<<<<
@@ -8651,14 +8903,14 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   __pyx_t_7 = 1;
   {
     PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u__10};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 165, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 171, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":166
+  /* "zenscrape/cli.py":172
  * 
  *     print("\n" + ""*60)
  *     print("CHOICES:")             # <<<<<<<<<<<<<<
@@ -8669,14 +8921,14 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   __pyx_t_7 = 1;
   {
     PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_CHOICES};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 166, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 172, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":167
+  /* "zenscrape/cli.py":173
  *     print("\n" + ""*60)
  *     print("CHOICES:")
  *     print("1. [TITLES]   Extract Page Titles")             # <<<<<<<<<<<<<<
@@ -8687,14 +8939,14 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   __pyx_t_7 = 1;
   {
     PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_1_TITLES_Extract_Page_Titles};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 167, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 173, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":168
+  /* "zenscrape/cli.py":174
  *     print("CHOICES:")
  *     print("1. [TITLES]   Extract Page Titles")
  *     print("2. [MAP]      Extract all Internal Links")             # <<<<<<<<<<<<<<
@@ -8705,14 +8957,14 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   __pyx_t_7 = 1;
   {
     PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_2_MAP_Extract_all_Internal_Links};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 168, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 174, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":169
+  /* "zenscrape/cli.py":175
  *     print("1. [TITLES]   Extract Page Titles")
  *     print("2. [MAP]      Extract all Internal Links")
  *     print("3. [FORMS]    Extract Form Actions")             # <<<<<<<<<<<<<<
@@ -8723,14 +8975,14 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   __pyx_t_7 = 1;
   {
     PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_3_FORMS_Extract_Form_Actions};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 169, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 175, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":170
+  /* "zenscrape/cli.py":176
  *     print("2. [MAP]      Extract all Internal Links")
  *     print("3. [FORMS]    Extract Form Actions")
  *     print("4. [IMAGES]   Extract all Image URLs")             # <<<<<<<<<<<<<<
@@ -8741,14 +8993,14 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   __pyx_t_7 = 1;
   {
     PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_4_IMAGES_Extract_all_Image_URLs};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 170, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":171
+  /* "zenscrape/cli.py":177
  *     print("3. [FORMS]    Extract Form Actions")
  *     print("4. [IMAGES]   Extract all Image URLs")
  *     print("5. [DEEP]     Start Recursive Crawl (Depth 1)")             # <<<<<<<<<<<<<<
@@ -8759,52 +9011,70 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   __pyx_t_7 = 1;
   {
     PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_5_DEEP_Start_Recursive_Crawl_Dep};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 171, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 177, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":172
+  /* "zenscrape/cli.py":178
  *     print("4. [IMAGES]   Extract all Image URLs")
  *     print("5. [DEEP]     Start Recursive Crawl (Depth 1)")
  *     print("6. [SUBMIT]   Fill and Submit Detected Form")             # <<<<<<<<<<<<<<
  *     print("7. [AUDIT]    Deep Structural Audit")
- *     print("q. [EXIT]")
+ *     print("8. [SEC_AUD]  Exposed Configuration & Header Scan")
 */
   __pyx_t_20 = NULL;
   __pyx_t_7 = 1;
   {
     PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_6_SUBMIT_Fill_and_Submit_Detecte};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 172, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 178, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":173
+  /* "zenscrape/cli.py":179
  *     print("5. [DEEP]     Start Recursive Crawl (Depth 1)")
  *     print("6. [SUBMIT]   Fill and Submit Detected Form")
  *     print("7. [AUDIT]    Deep Structural Audit")             # <<<<<<<<<<<<<<
+ *     print("8. [SEC_AUD]  Exposed Configuration & Header Scan")
+ *     print("q. [EXIT]")
+*/
+  __pyx_t_20 = NULL;
+  __pyx_t_7 = 1;
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_7_AUDIT_Deep_Structural_Audit};
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 179, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+  }
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+  /* "zenscrape/cli.py":180
+ *     print("6. [SUBMIT]   Fill and Submit Detected Form")
+ *     print("7. [AUDIT]    Deep Structural Audit")
+ *     print("8. [SEC_AUD]  Exposed Configuration & Header Scan")             # <<<<<<<<<<<<<<
  *     print("q. [EXIT]")
  * 
 */
   __pyx_t_20 = NULL;
   __pyx_t_7 = 1;
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_7_AUDIT_Deep_Structural_Audit};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_8_SEC_AUD_Exposed_Configuration};
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 173, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 180, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":174
- *     print("6. [SUBMIT]   Fill and Submit Detected Form")
+  /* "zenscrape/cli.py":181
  *     print("7. [AUDIT]    Deep Structural Audit")
+ *     print("8. [SEC_AUD]  Exposed Configuration & Header Scan")
  *     print("q. [EXIT]")             # <<<<<<<<<<<<<<
  * 
  *     choice = input("\nAction (1-7): ").lower()
@@ -8813,27 +9083,27 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   __pyx_t_7 = 1;
   {
     PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_q_EXIT};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 174, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 181, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":176
+  /* "zenscrape/cli.py":183
  *     print("q. [EXIT]")
  * 
  *     choice = input("\nAction (1-7): ").lower()             # <<<<<<<<<<<<<<
  * 
  *     if choice == '1': args.css = "title"
 */
-  __pyx_t_4 = NULL;
+  __pyx_t_5 = NULL;
   __pyx_t_7 = 1;
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_mstate_global->__pyx_kp_u_Action_1_7};
+    PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_mstate_global->__pyx_kp_u_Action_1_7};
     __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_input, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 183, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __pyx_t_20 = __pyx_t_1;
@@ -8841,107 +9111,107 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   __pyx_t_7 = 0;
   {
     PyObject *__pyx_callargs[2] = {__pyx_t_20, NULL};
-    __pyx_t_5 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_lower, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_lower, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 176, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 183, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
   }
-  __Pyx_GIVEREF(__pyx_t_5);
-  __pyx_cur_scope->__pyx_v_choice = __pyx_t_5;
-  __pyx_t_5 = 0;
+  __Pyx_GIVEREF(__pyx_t_9);
+  __pyx_cur_scope->__pyx_v_choice = __pyx_t_9;
+  __pyx_t_9 = 0;
 
-  /* "zenscrape/cli.py":178
+  /* "zenscrape/cli.py":185
  *     choice = input("\nAction (1-7): ").lower()
  * 
  *     if choice == '1': args.css = "title"             # <<<<<<<<<<<<<<
  *     elif choice == '2': args.css = "a"
  *     elif choice == '3': args.css = "form"
 */
-  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_1, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 178, __pyx_L1_error)
+  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_1, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 185, __pyx_L1_error)
   if (__pyx_t_30) {
-    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_css, __pyx_mstate_global->__pyx_n_u_title) < (0)) __PYX_ERR(0, 178, __pyx_L1_error)
-    goto __pyx_L47;
+    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_css, __pyx_mstate_global->__pyx_n_u_title) < (0)) __PYX_ERR(0, 185, __pyx_L1_error)
+    goto __pyx_L48;
   }
 
-  /* "zenscrape/cli.py":179
+  /* "zenscrape/cli.py":186
  * 
  *     if choice == '1': args.css = "title"
  *     elif choice == '2': args.css = "a"             # <<<<<<<<<<<<<<
  *     elif choice == '3': args.css = "form"
  *     elif choice == '4': args.css = "img"
 */
-  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_2, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 179, __pyx_L1_error)
+  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_2, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 186, __pyx_L1_error)
   if (__pyx_t_30) {
-    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_css, __pyx_mstate_global->__pyx_n_u_a) < (0)) __PYX_ERR(0, 179, __pyx_L1_error)
-    goto __pyx_L47;
+    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_css, __pyx_mstate_global->__pyx_n_u_a) < (0)) __PYX_ERR(0, 186, __pyx_L1_error)
+    goto __pyx_L48;
   }
 
-  /* "zenscrape/cli.py":180
+  /* "zenscrape/cli.py":187
  *     if choice == '1': args.css = "title"
  *     elif choice == '2': args.css = "a"
  *     elif choice == '3': args.css = "form"             # <<<<<<<<<<<<<<
  *     elif choice == '4': args.css = "img"
  *     elif choice == '5': args.depth = 1
 */
-  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_3, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_3, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 187, __pyx_L1_error)
   if (__pyx_t_30) {
-    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_css, __pyx_mstate_global->__pyx_n_u_form) < (0)) __PYX_ERR(0, 180, __pyx_L1_error)
-    goto __pyx_L47;
+    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_css, __pyx_mstate_global->__pyx_n_u_form) < (0)) __PYX_ERR(0, 187, __pyx_L1_error)
+    goto __pyx_L48;
   }
 
-  /* "zenscrape/cli.py":181
+  /* "zenscrape/cli.py":188
  *     elif choice == '2': args.css = "a"
  *     elif choice == '3': args.css = "form"
  *     elif choice == '4': args.css = "img"             # <<<<<<<<<<<<<<
  *     elif choice == '5': args.depth = 1
  *     elif choice == '6':
 */
-  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_4, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_4, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 188, __pyx_L1_error)
   if (__pyx_t_30) {
-    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_css, __pyx_mstate_global->__pyx_n_u_img) < (0)) __PYX_ERR(0, 181, __pyx_L1_error)
-    goto __pyx_L47;
+    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_css, __pyx_mstate_global->__pyx_n_u_img) < (0)) __PYX_ERR(0, 188, __pyx_L1_error)
+    goto __pyx_L48;
   }
 
-  /* "zenscrape/cli.py":182
+  /* "zenscrape/cli.py":189
  *     elif choice == '3': args.css = "form"
  *     elif choice == '4': args.css = "img"
  *     elif choice == '5': args.depth = 1             # <<<<<<<<<<<<<<
  *     elif choice == '6':
  *         if not summary['forms']:
 */
-  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_5, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 182, __pyx_L1_error)
+  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_5, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 189, __pyx_L1_error)
   if (__pyx_t_30) {
-    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_depth, __pyx_mstate_global->__pyx_int_1) < (0)) __PYX_ERR(0, 182, __pyx_L1_error)
-    goto __pyx_L47;
+    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_depth, __pyx_mstate_global->__pyx_int_1) < (0)) __PYX_ERR(0, 189, __pyx_L1_error)
+    goto __pyx_L48;
   }
 
-  /* "zenscrape/cli.py":183
+  /* "zenscrape/cli.py":190
  *     elif choice == '4': args.css = "img"
  *     elif choice == '5': args.depth = 1
  *     elif choice == '6':             # <<<<<<<<<<<<<<
  *         if not summary['forms']:
  *             logger.error("No forms detected to submit!")
 */
-  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_6, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 183, __pyx_L1_error)
+  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_6, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 190, __pyx_L1_error)
   if (__pyx_t_30) {
 
-    /* "zenscrape/cli.py":184
+    /* "zenscrape/cli.py":191
  *     elif choice == '5': args.depth = 1
  *     elif choice == '6':
  *         if not summary['forms']:             # <<<<<<<<<<<<<<
  *             logger.error("No forms detected to submit!")
  *             return
 */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 184, __pyx_L1_error) }
-    __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_forms); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 184, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 184, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_10 = (!__pyx_t_30);
-    if (__pyx_t_10) {
+    if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 191, __pyx_L1_error) }
+    __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_forms); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 191, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 191, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_2 = (!__pyx_t_30);
+    if (__pyx_t_2) {
 
-      /* "zenscrape/cli.py":185
+      /* "zenscrape/cli.py":192
  *     elif choice == '6':
  *         if not summary['forms']:
  *             logger.error("No forms detected to submit!")             # <<<<<<<<<<<<<<
@@ -8949,34 +9219,34 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *         selected_form = summary['forms'][0]
 */
       __pyx_t_1 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 185, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 192, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_20);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_error); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 185, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_error); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 192, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
       __pyx_t_7 = 1;
       #if CYTHON_UNPACK_METHODS
-      if (unlikely(PyMethod_Check(__pyx_t_4))) {
-        __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_4);
+      if (unlikely(PyMethod_Check(__pyx_t_5))) {
+        __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_5);
         assert(__pyx_t_1);
-        PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
+        PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_5);
         __Pyx_INCREF(__pyx_t_1);
         __Pyx_INCREF(__pyx__function);
-        __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
+        __Pyx_DECREF_SET(__pyx_t_5, __pyx__function);
         __pyx_t_7 = 0;
       }
       #endif
       {
         PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_mstate_global->__pyx_kp_u_No_forms_detected_to_submit};
-        __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_5, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 185, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 192, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
       }
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-      /* "zenscrape/cli.py":186
+      /* "zenscrape/cli.py":193
  *         if not summary['forms']:
  *             logger.error("No forms detected to submit!")
  *             return             # <<<<<<<<<<<<<<
@@ -8987,7 +9257,7 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
       __pyx_r = Py_None; __Pyx_INCREF(Py_None);
       goto __pyx_L0;
 
-      /* "zenscrape/cli.py":184
+      /* "zenscrape/cli.py":191
  *     elif choice == '5': args.depth = 1
  *     elif choice == '6':
  *         if not summary['forms']:             # <<<<<<<<<<<<<<
@@ -8996,145 +9266,145 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
 */
     }
 
-    /* "zenscrape/cli.py":187
+    /* "zenscrape/cli.py":194
  *             logger.error("No forms detected to submit!")
  *             return
  *         selected_form = summary['forms'][0]             # <<<<<<<<<<<<<<
  *         payload = {}
  *         fillable_types = ["text", "search", "password", "email", "tel", "url"]
 */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 187, __pyx_L1_error) }
-    __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_forms); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 187, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 194, __pyx_L1_error) }
+    __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_forms); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 194, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_5 = __Pyx_GetItemInt(__pyx_t_9, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1, __Pyx_ReferenceSharing_OwnStrongReference); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 194, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_5, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1, __Pyx_ReferenceSharing_OwnStrongReference); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 187, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __Pyx_GIVEREF(__pyx_t_4);
-    __pyx_cur_scope->__pyx_v_selected_form = __pyx_t_4;
-    __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_GIVEREF(__pyx_t_5);
+    __pyx_cur_scope->__pyx_v_selected_form = __pyx_t_5;
+    __pyx_t_5 = 0;
 
-    /* "zenscrape/cli.py":188
+    /* "zenscrape/cli.py":195
  *             return
  *         selected_form = summary['forms'][0]
  *         payload = {}             # <<<<<<<<<<<<<<
  *         fillable_types = ["text", "search", "password", "email", "tel", "url"]
  *         for field in selected_form['inputs']:
 */
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 188, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_GIVEREF(__pyx_t_4);
-    __pyx_cur_scope->__pyx_v_payload = ((PyObject*)__pyx_t_4);
-    __pyx_t_4 = 0;
+    __pyx_t_5 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 195, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_GIVEREF(__pyx_t_5);
+    __pyx_cur_scope->__pyx_v_payload = ((PyObject*)__pyx_t_5);
+    __pyx_t_5 = 0;
 
-    /* "zenscrape/cli.py":189
+    /* "zenscrape/cli.py":196
  *         selected_form = summary['forms'][0]
  *         payload = {}
  *         fillable_types = ["text", "search", "password", "email", "tel", "url"]             # <<<<<<<<<<<<<<
  *         for field in selected_form['inputs']:
  *             if field['type'] in fillable_types:
 */
-    __pyx_t_4 = PyList_New(6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 189, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_5 = PyList_New(6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 196, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
     __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_text);
     __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_text);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_4, 0, __pyx_mstate_global->__pyx_n_u_text) != (0)) __PYX_ERR(0, 189, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 0, __pyx_mstate_global->__pyx_n_u_text) != (0)) __PYX_ERR(0, 196, __pyx_L1_error);
     __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_search);
     __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_search);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_4, 1, __pyx_mstate_global->__pyx_n_u_search) != (0)) __PYX_ERR(0, 189, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 1, __pyx_mstate_global->__pyx_n_u_search) != (0)) __PYX_ERR(0, 196, __pyx_L1_error);
     __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_password);
     __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_password);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_4, 2, __pyx_mstate_global->__pyx_n_u_password) != (0)) __PYX_ERR(0, 189, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 2, __pyx_mstate_global->__pyx_n_u_password) != (0)) __PYX_ERR(0, 196, __pyx_L1_error);
     __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_email);
     __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_email);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_4, 3, __pyx_mstate_global->__pyx_n_u_email) != (0)) __PYX_ERR(0, 189, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 3, __pyx_mstate_global->__pyx_n_u_email) != (0)) __PYX_ERR(0, 196, __pyx_L1_error);
     __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_tel);
     __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_tel);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_4, 4, __pyx_mstate_global->__pyx_n_u_tel) != (0)) __PYX_ERR(0, 189, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 4, __pyx_mstate_global->__pyx_n_u_tel) != (0)) __PYX_ERR(0, 196, __pyx_L1_error);
     __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_url);
     __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_url);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_4, 5, __pyx_mstate_global->__pyx_n_u_url) != (0)) __PYX_ERR(0, 189, __pyx_L1_error);
-    __Pyx_GIVEREF(__pyx_t_4);
-    __pyx_cur_scope->__pyx_v_fillable_types = ((PyObject*)__pyx_t_4);
-    __pyx_t_4 = 0;
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 5, __pyx_mstate_global->__pyx_n_u_url) != (0)) __PYX_ERR(0, 196, __pyx_L1_error);
+    __Pyx_GIVEREF(__pyx_t_5);
+    __pyx_cur_scope->__pyx_v_fillable_types = ((PyObject*)__pyx_t_5);
+    __pyx_t_5 = 0;
 
-    /* "zenscrape/cli.py":190
+    /* "zenscrape/cli.py":197
  *         payload = {}
  *         fillable_types = ["text", "search", "password", "email", "tel", "url"]
  *         for field in selected_form['inputs']:             # <<<<<<<<<<<<<<
  *             if field['type'] in fillable_types:
  *                 val = input(f"   Value for '{field['name']}' ({field['type']}): ")
 */
-    __pyx_t_4 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_selected_form, __pyx_mstate_global->__pyx_n_u_inputs); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 190, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
-      __pyx_t_5 = __pyx_t_4; __Pyx_INCREF(__pyx_t_5);
-      __pyx_t_9 = 0;
+    __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_selected_form, __pyx_mstate_global->__pyx_n_u_inputs); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 197, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    if (likely(PyList_CheckExact(__pyx_t_5)) || PyTuple_CheckExact(__pyx_t_5)) {
+      __pyx_t_9 = __pyx_t_5; __Pyx_INCREF(__pyx_t_9);
+      __pyx_t_4 = 0;
       __pyx_t_32 = NULL;
     } else {
-      __pyx_t_9 = -1; __pyx_t_5 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 190, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_32 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_5); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 190, __pyx_L1_error)
+      __pyx_t_4 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_t_5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 197, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      __pyx_t_32 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_9); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 197, __pyx_L1_error)
     }
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     for (;;) {
       if (likely(!__pyx_t_32)) {
-        if (likely(PyList_CheckExact(__pyx_t_5))) {
+        if (likely(PyList_CheckExact(__pyx_t_9))) {
           {
-            Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_5);
+            Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_9);
             #if !CYTHON_ASSUME_SAFE_SIZE
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 190, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 197, __pyx_L1_error)
             #endif
-            if (__pyx_t_9 >= __pyx_temp) break;
+            if (__pyx_t_4 >= __pyx_temp) break;
           }
-          __pyx_t_4 = __Pyx_PyList_GetItemRefFast(__pyx_t_5, __pyx_t_9, __Pyx_ReferenceSharing_OwnStrongReference);
-          ++__pyx_t_9;
+          __pyx_t_5 = __Pyx_PyList_GetItemRefFast(__pyx_t_9, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
+          ++__pyx_t_4;
         } else {
           {
-            Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_5);
+            Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_9);
             #if !CYTHON_ASSUME_SAFE_SIZE
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 190, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 197, __pyx_L1_error)
             #endif
-            if (__pyx_t_9 >= __pyx_temp) break;
+            if (__pyx_t_4 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_5, __pyx_t_9));
+          __pyx_t_5 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_4));
           #else
-          __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_5, __pyx_t_9);
+          __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_9, __pyx_t_4);
           #endif
-          ++__pyx_t_9;
+          ++__pyx_t_4;
         }
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 190, __pyx_L1_error)
+        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 197, __pyx_L1_error)
       } else {
-        __pyx_t_4 = __pyx_t_32(__pyx_t_5);
-        if (unlikely(!__pyx_t_4)) {
+        __pyx_t_5 = __pyx_t_32(__pyx_t_9);
+        if (unlikely(!__pyx_t_5)) {
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
-            if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 190, __pyx_L1_error)
+            if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 197, __pyx_L1_error)
             PyErr_Clear();
           }
           break;
         }
       }
-      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_GOTREF(__pyx_t_5);
       __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_field);
-      __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_field, __pyx_t_4);
-      __Pyx_GIVEREF(__pyx_t_4);
-      __pyx_t_4 = 0;
+      __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_field, __pyx_t_5);
+      __Pyx_GIVEREF(__pyx_t_5);
+      __pyx_t_5 = 0;
 
-      /* "zenscrape/cli.py":191
+      /* "zenscrape/cli.py":198
  *         fillable_types = ["text", "search", "password", "email", "tel", "url"]
  *         for field in selected_form['inputs']:
  *             if field['type'] in fillable_types:             # <<<<<<<<<<<<<<
  *                 val = input(f"   Value for '{field['name']}' ({field['type']}): ")
  *                 if val: payload[field['name']] = val
 */
-      __pyx_t_4 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_type); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 191, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_10 = (__Pyx_PySequence_ContainsTF(__pyx_t_4, __pyx_cur_scope->__pyx_v_fillable_types, Py_EQ)); if (unlikely((__pyx_t_10 < 0))) __PYX_ERR(0, 191, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (__pyx_t_10) {
+      __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_type); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 198, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_t_5, __pyx_cur_scope->__pyx_v_fillable_types, Py_EQ)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 198, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      if (__pyx_t_2) {
 
-        /* "zenscrape/cli.py":192
+        /* "zenscrape/cli.py":199
  *         for field in selected_form['inputs']:
  *             if field['type'] in fillable_types:
  *                 val = input(f"   Value for '{field['name']}' ({field['type']}): ")             # <<<<<<<<<<<<<<
@@ -9142,106 +9412,106 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *             elif field['type'] == "submit":
 */
         __pyx_t_1 = NULL;
-        __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 192, __pyx_L1_error)
+        __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 199, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_20);
-        __pyx_t_3 = __Pyx_PyObject_FormatSimple(__pyx_t_20, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 192, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_37 = __Pyx_PyObject_FormatSimple(__pyx_t_20, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 199, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
         __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
-        __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_type); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 192, __pyx_L1_error)
+        __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_type); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 199, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_20);
-        __pyx_t_2 = __Pyx_PyObject_FormatSimple(__pyx_t_20, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 192, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
+        __pyx_t_6 = __Pyx_PyObject_FormatSimple(__pyx_t_20, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 199, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
         __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
         __pyx_t_31[0] = __pyx_mstate_global->__pyx_kp_u_Value_for;
-        __pyx_t_31[1] = __pyx_t_3;
+        __pyx_t_31[1] = __pyx_t_37;
         __pyx_t_31[2] = __pyx_mstate_global->__pyx_kp_u__16;
-        __pyx_t_31[3] = __pyx_t_2;
+        __pyx_t_31[3] = __pyx_t_6;
         __pyx_t_31[4] = __pyx_mstate_global->__pyx_kp_u__17;
-        __pyx_t_20 = __Pyx_PyUnicode_Join(__pyx_t_31, 5, 14 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_3) + 3 * 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_2), 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_2));
-        if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 192, __pyx_L1_error)
+        __pyx_t_20 = __Pyx_PyUnicode_Join(__pyx_t_31, 5, 14 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_37) + 3 * 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_6), 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_37) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_6));
+        if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 199, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_20);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_t_7 = 1;
         {
           PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_t_20};
-          __pyx_t_4 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_input, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_input, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
           __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
-          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 192, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_4);
+          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 199, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_5);
         }
         __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_val);
-        __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_val, __pyx_t_4);
-        __Pyx_GIVEREF(__pyx_t_4);
-        __pyx_t_4 = 0;
+        __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_val, __pyx_t_5);
+        __Pyx_GIVEREF(__pyx_t_5);
+        __pyx_t_5 = 0;
 
-        /* "zenscrape/cli.py":193
+        /* "zenscrape/cli.py":200
  *             if field['type'] in fillable_types:
  *                 val = input(f"   Value for '{field['name']}' ({field['type']}): ")
  *                 if val: payload[field['name']] = val             # <<<<<<<<<<<<<<
  *             elif field['type'] == "submit":
  *                 payload[field['name']] = field['placeholder'] or "submit"
 */
-        __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_cur_scope->__pyx_v_val); if (unlikely((__pyx_t_10 < 0))) __PYX_ERR(0, 193, __pyx_L1_error)
-        if (__pyx_t_10) {
-          __pyx_t_4 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 193, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_4);
-          if (unlikely((PyDict_SetItem(__pyx_cur_scope->__pyx_v_payload, __pyx_t_4, __pyx_cur_scope->__pyx_v_val) < 0))) __PYX_ERR(0, 193, __pyx_L1_error)
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_cur_scope->__pyx_v_val); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 200, __pyx_L1_error)
+        if (__pyx_t_2) {
+          __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 200, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_5);
+          if (unlikely((PyDict_SetItem(__pyx_cur_scope->__pyx_v_payload, __pyx_t_5, __pyx_cur_scope->__pyx_v_val) < 0))) __PYX_ERR(0, 200, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         }
 
-        /* "zenscrape/cli.py":191
+        /* "zenscrape/cli.py":198
  *         fillable_types = ["text", "search", "password", "email", "tel", "url"]
  *         for field in selected_form['inputs']:
  *             if field['type'] in fillable_types:             # <<<<<<<<<<<<<<
  *                 val = input(f"   Value for '{field['name']}' ({field['type']}): ")
  *                 if val: payload[field['name']] = val
 */
-        goto __pyx_L51;
+        goto __pyx_L52;
       }
 
-      /* "zenscrape/cli.py":194
+      /* "zenscrape/cli.py":201
  *                 val = input(f"   Value for '{field['name']}' ({field['type']}): ")
  *                 if val: payload[field['name']] = val
  *             elif field['type'] == "submit":             # <<<<<<<<<<<<<<
  *                 payload[field['name']] = field['placeholder'] or "submit"
  * 
 */
-      __pyx_t_4 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_type); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 194, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_10 = (__Pyx_PyUnicode_Equals(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_submit, Py_EQ)); if (unlikely((__pyx_t_10 < 0))) __PYX_ERR(0, 194, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (__pyx_t_10) {
+      __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_type); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 201, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_submit, Py_EQ)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 201, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      if (__pyx_t_2) {
 
-        /* "zenscrape/cli.py":195
+        /* "zenscrape/cli.py":202
  *                 if val: payload[field['name']] = val
  *             elif field['type'] == "submit":
  *                 payload[field['name']] = field['placeholder'] or "submit"             # <<<<<<<<<<<<<<
  * 
  *         args.url = selected_form['action']
 */
-        __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_placeholder); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 195, __pyx_L1_error)
+        __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_placeholder); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 202, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_20);
-        __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_20); if (unlikely((__pyx_t_10 < 0))) __PYX_ERR(0, 195, __pyx_L1_error)
-        if (!__pyx_t_10) {
+        __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_20); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 202, __pyx_L1_error)
+        if (!__pyx_t_2) {
           __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
         } else {
           __Pyx_INCREF(__pyx_t_20);
-          __pyx_t_4 = __pyx_t_20;
+          __pyx_t_5 = __pyx_t_20;
           __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
-          goto __pyx_L53_bool_binop_done;
+          goto __pyx_L54_bool_binop_done;
         }
         __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_submit);
-        __pyx_t_4 = __pyx_mstate_global->__pyx_n_u_submit;
-        __pyx_L53_bool_binop_done:;
-        __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 195, __pyx_L1_error)
+        __pyx_t_5 = __pyx_mstate_global->__pyx_n_u_submit;
+        __pyx_L54_bool_binop_done:;
+        __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_field, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 202, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_20);
-        if (unlikely((PyDict_SetItem(__pyx_cur_scope->__pyx_v_payload, __pyx_t_20, __pyx_t_4) < 0))) __PYX_ERR(0, 195, __pyx_L1_error)
+        if (unlikely((PyDict_SetItem(__pyx_cur_scope->__pyx_v_payload, __pyx_t_20, __pyx_t_5) < 0))) __PYX_ERR(0, 202, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
-        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-        /* "zenscrape/cli.py":194
+        /* "zenscrape/cli.py":201
  *                 val = input(f"   Value for '{field['name']}' ({field['type']}): ")
  *                 if val: payload[field['name']] = val
  *             elif field['type'] == "submit":             # <<<<<<<<<<<<<<
@@ -9249,9 +9519,9 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  * 
 */
       }
-      __pyx_L51:;
+      __pyx_L52:;
 
-      /* "zenscrape/cli.py":190
+      /* "zenscrape/cli.py":197
  *         payload = {}
  *         fillable_types = ["text", "search", "password", "email", "tel", "url"]
  *         for field in selected_form['inputs']:             # <<<<<<<<<<<<<<
@@ -9259,101 +9529,101 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *                 val = input(f"   Value for '{field['name']}' ({field['type']}): ")
 */
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":197
+    /* "zenscrape/cli.py":204
  *                 payload[field['name']] = field['placeholder'] or "submit"
  * 
  *         args.url = selected_form['action']             # <<<<<<<<<<<<<<
  *         args.method = selected_form['method']
  *         if selected_form['method'] == "POST":
 */
-    __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_selected_form, __pyx_mstate_global->__pyx_n_u_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 197, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_url, __pyx_t_5) < (0)) __PYX_ERR(0, 197, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_selected_form, __pyx_mstate_global->__pyx_n_u_action); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_url, __pyx_t_9) < (0)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":198
+    /* "zenscrape/cli.py":205
  * 
  *         args.url = selected_form['action']
  *         args.method = selected_form['method']             # <<<<<<<<<<<<<<
  *         if selected_form['method'] == "POST":
  *             args.data = json.dumps(payload)
 */
-    __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_selected_form, __pyx_mstate_global->__pyx_n_u_method); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 198, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_method, __pyx_t_5) < (0)) __PYX_ERR(0, 198, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_selected_form, __pyx_mstate_global->__pyx_n_u_method); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 205, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_method, __pyx_t_9) < (0)) __PYX_ERR(0, 205, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":199
+    /* "zenscrape/cli.py":206
  *         args.url = selected_form['action']
  *         args.method = selected_form['method']
  *         if selected_form['method'] == "POST":             # <<<<<<<<<<<<<<
  *             args.data = json.dumps(payload)
  *             args.params = "{}"
 */
-    __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_selected_form, __pyx_mstate_global->__pyx_n_u_method); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 199, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_10 = (__Pyx_PyUnicode_Equals(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_POST, Py_EQ)); if (unlikely((__pyx_t_10 < 0))) __PYX_ERR(0, 199, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (__pyx_t_10) {
+    __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_selected_form, __pyx_mstate_global->__pyx_n_u_method); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 206, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_POST, Py_EQ)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 206, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (__pyx_t_2) {
 
-      /* "zenscrape/cli.py":200
+      /* "zenscrape/cli.py":207
  *         args.method = selected_form['method']
  *         if selected_form['method'] == "POST":
  *             args.data = json.dumps(payload)             # <<<<<<<<<<<<<<
  *             args.params = "{}"
  *         else:
 */
-      __pyx_t_4 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_json); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 200, __pyx_L1_error)
+      __pyx_t_5 = NULL;
+      __Pyx_GetModuleGlobalName(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_json); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 207, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_20);
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_dumps); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 200, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_dumps); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
       __pyx_t_7 = 1;
       #if CYTHON_UNPACK_METHODS
       if (unlikely(PyMethod_Check(__pyx_t_1))) {
-        __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_1);
-        assert(__pyx_t_4);
+        __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_1);
+        assert(__pyx_t_5);
         PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_1);
-        __Pyx_INCREF(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_5);
         __Pyx_INCREF(__pyx__function);
         __Pyx_DECREF_SET(__pyx_t_1, __pyx__function);
         __pyx_t_7 = 0;
       }
       #endif
       {
-        PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_cur_scope->__pyx_v_payload};
-        __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_1, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+        PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_cur_scope->__pyx_v_payload};
+        __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_1, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 200, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_5);
+        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 207, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
       }
-      if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_data, __pyx_t_5) < (0)) __PYX_ERR(0, 200, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_data, __pyx_t_9) < (0)) __PYX_ERR(0, 207, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-      /* "zenscrape/cli.py":201
+      /* "zenscrape/cli.py":208
  *         if selected_form['method'] == "POST":
  *             args.data = json.dumps(payload)
  *             args.params = "{}"             # <<<<<<<<<<<<<<
  *         else:
  *             args.params = json.dumps(payload)
 */
-      if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_params, __pyx_mstate_global->__pyx_kp_u__18) < (0)) __PYX_ERR(0, 201, __pyx_L1_error)
+      if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_params, __pyx_mstate_global->__pyx_kp_u__18) < (0)) __PYX_ERR(0, 208, __pyx_L1_error)
 
-      /* "zenscrape/cli.py":199
+      /* "zenscrape/cli.py":206
  *         args.url = selected_form['action']
  *         args.method = selected_form['method']
  *         if selected_form['method'] == "POST":             # <<<<<<<<<<<<<<
  *             args.data = json.dumps(payload)
  *             args.params = "{}"
 */
-      goto __pyx_L56;
+      goto __pyx_L57;
     }
 
-    /* "zenscrape/cli.py":203
+    /* "zenscrape/cli.py":210
  *             args.params = "{}"
  *         else:
  *             args.params = json.dumps(payload)             # <<<<<<<<<<<<<<
@@ -9362,11 +9632,11 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
 */
     /*else*/ {
       __pyx_t_1 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_json); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 203, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_20 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_dumps); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 203, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_json); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 210, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_20 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_dumps); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 210, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_20);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_t_7 = 1;
       #if CYTHON_UNPACK_METHODS
       if (unlikely(PyMethod_Check(__pyx_t_20))) {
@@ -9381,63 +9651,63 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
       #endif
       {
         PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_cur_scope->__pyx_v_payload};
-        __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_20, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_20, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
-        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 203, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_5);
+        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 210, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
       }
-      if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_params, __pyx_t_5) < (0)) __PYX_ERR(0, 203, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_params, __pyx_t_9) < (0)) __PYX_ERR(0, 210, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-      /* "zenscrape/cli.py":204
+      /* "zenscrape/cli.py":211
  *         else:
  *             args.params = json.dumps(payload)
  *             args.data = "{}"             # <<<<<<<<<<<<<<
  *         if not args.css: args.css = "h2, h3, title"
  * 
 */
-      if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_data, __pyx_mstate_global->__pyx_kp_u__18) < (0)) __PYX_ERR(0, 204, __pyx_L1_error)
+      if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_data, __pyx_mstate_global->__pyx_kp_u__18) < (0)) __PYX_ERR(0, 211, __pyx_L1_error)
     }
-    __pyx_L56:;
+    __pyx_L57:;
 
-    /* "zenscrape/cli.py":205
+    /* "zenscrape/cli.py":212
  *             args.params = json.dumps(payload)
  *             args.data = "{}"
  *         if not args.css: args.css = "h2, h3, title"             # <<<<<<<<<<<<<<
  * 
  *     elif choice == '7':
 */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_css); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 205, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely((__pyx_t_10 < 0))) __PYX_ERR(0, 205, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_30 = (!__pyx_t_10);
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_css); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 212, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 212, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_30 = (!__pyx_t_2);
     if (__pyx_t_30) {
-      if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_css, __pyx_mstate_global->__pyx_kp_u_h2_h3_title) < (0)) __PYX_ERR(0, 205, __pyx_L1_error)
+      if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_css, __pyx_mstate_global->__pyx_kp_u_h2_h3_title) < (0)) __PYX_ERR(0, 212, __pyx_L1_error)
     }
 
-    /* "zenscrape/cli.py":183
+    /* "zenscrape/cli.py":190
  *     elif choice == '4': args.css = "img"
  *     elif choice == '5': args.depth = 1
  *     elif choice == '6':             # <<<<<<<<<<<<<<
  *         if not summary['forms']:
  *             logger.error("No forms detected to submit!")
 */
-    goto __pyx_L47;
+    goto __pyx_L48;
   }
 
-  /* "zenscrape/cli.py":207
+  /* "zenscrape/cli.py":214
  *         if not args.css: args.css = "h2, h3, title"
  * 
  *     elif choice == '7':             # <<<<<<<<<<<<<<
  *         print("\n" + ""*60)
  *         print(" DEEP STRUCTURAL AUDIT")
 */
-  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_7, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_7, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 214, __pyx_L1_error)
   if (__pyx_t_30) {
 
-    /* "zenscrape/cli.py":208
+    /* "zenscrape/cli.py":215
  * 
  *     elif choice == '7':
  *         print("\n" + ""*60)             # <<<<<<<<<<<<<<
@@ -9448,14 +9718,14 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
     __pyx_t_7 = 1;
     {
       PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u__10};
-      __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 208, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 215, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":209
+    /* "zenscrape/cli.py":216
  *     elif choice == '7':
  *         print("\n" + ""*60)
  *         print(" DEEP STRUCTURAL AUDIT")             # <<<<<<<<<<<<<<
@@ -9466,14 +9736,14 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
     __pyx_t_7 = 1;
     {
       PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_DEEP_STRUCTURAL_AUDIT};
-      __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 209, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 216, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":210
+    /* "zenscrape/cli.py":217
  *         print("\n" + ""*60)
  *         print(" DEEP STRUCTURAL AUDIT")
  *         print(""*60)             # <<<<<<<<<<<<<<
@@ -9484,14 +9754,14 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
     __pyx_t_7 = 1;
     {
       PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u__11};
-      __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 210, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 217, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":211
+    /* "zenscrape/cli.py":218
  *         print(" DEEP STRUCTURAL AUDIT")
  *         print(""*60)
  *         print("\n SEO & OPEN GRAPH METADATA:")             # <<<<<<<<<<<<<<
@@ -9502,82 +9772,82 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
     __pyx_t_7 = 1;
     {
       PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_SEO_OPEN_GRAPH_METADATA};
-      __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 211, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 218, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":212
+    /* "zenscrape/cli.py":219
  *         print(""*60)
  *         print("\n SEO & OPEN GRAPH METADATA:")
  *         important_meta = ["description", "og:title", "og:description", "og:image", "keywords"]             # <<<<<<<<<<<<<<
  *         for key in important_meta:
  *             if key in summary["metadata"]:
 */
-    __pyx_t_5 = PyList_New(5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 212, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_9 = PyList_New(5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 219, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
     __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_description);
     __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_description);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 0, __pyx_mstate_global->__pyx_n_u_description) != (0)) __PYX_ERR(0, 212, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_9, 0, __pyx_mstate_global->__pyx_n_u_description) != (0)) __PYX_ERR(0, 219, __pyx_L1_error);
     __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_og_title);
     __Pyx_GIVEREF(__pyx_mstate_global->__pyx_kp_u_og_title);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 1, __pyx_mstate_global->__pyx_kp_u_og_title) != (0)) __PYX_ERR(0, 212, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_9, 1, __pyx_mstate_global->__pyx_kp_u_og_title) != (0)) __PYX_ERR(0, 219, __pyx_L1_error);
     __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_og_description);
     __Pyx_GIVEREF(__pyx_mstate_global->__pyx_kp_u_og_description);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 2, __pyx_mstate_global->__pyx_kp_u_og_description) != (0)) __PYX_ERR(0, 212, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_9, 2, __pyx_mstate_global->__pyx_kp_u_og_description) != (0)) __PYX_ERR(0, 219, __pyx_L1_error);
     __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_og_image);
     __Pyx_GIVEREF(__pyx_mstate_global->__pyx_kp_u_og_image);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 3, __pyx_mstate_global->__pyx_kp_u_og_image) != (0)) __PYX_ERR(0, 212, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_9, 3, __pyx_mstate_global->__pyx_kp_u_og_image) != (0)) __PYX_ERR(0, 219, __pyx_L1_error);
     __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_keywords);
     __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_keywords);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_5, 4, __pyx_mstate_global->__pyx_n_u_keywords) != (0)) __PYX_ERR(0, 212, __pyx_L1_error);
-    __Pyx_GIVEREF(__pyx_t_5);
-    __pyx_cur_scope->__pyx_v_important_meta = ((PyObject*)__pyx_t_5);
-    __pyx_t_5 = 0;
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_9, 4, __pyx_mstate_global->__pyx_n_u_keywords) != (0)) __PYX_ERR(0, 219, __pyx_L1_error);
+    __Pyx_GIVEREF(__pyx_t_9);
+    __pyx_cur_scope->__pyx_v_important_meta = ((PyObject*)__pyx_t_9);
+    __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":213
+    /* "zenscrape/cli.py":220
  *         print("\n SEO & OPEN GRAPH METADATA:")
  *         important_meta = ["description", "og:title", "og:description", "og:image", "keywords"]
  *         for key in important_meta:             # <<<<<<<<<<<<<<
  *             if key in summary["metadata"]:
  *                 print(f"   {key}: {summary['metadata'][key][:80]}...")
 */
-    __pyx_t_5 = __pyx_cur_scope->__pyx_v_important_meta; __Pyx_INCREF(__pyx_t_5);
-    __pyx_t_9 = 0;
+    __pyx_t_9 = __pyx_cur_scope->__pyx_v_important_meta; __Pyx_INCREF(__pyx_t_9);
+    __pyx_t_4 = 0;
     for (;;) {
       {
-        Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_5);
+        Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_9);
         #if !CYTHON_ASSUME_SAFE_SIZE
-        if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 213, __pyx_L1_error)
+        if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 220, __pyx_L1_error)
         #endif
-        if (__pyx_t_9 >= __pyx_temp) break;
+        if (__pyx_t_4 >= __pyx_temp) break;
       }
-      __pyx_t_20 = __Pyx_PyList_GetItemRefFast(__pyx_t_5, __pyx_t_9, __Pyx_ReferenceSharing_OwnStrongReference);
-      ++__pyx_t_9;
-      if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 213, __pyx_L1_error)
+      __pyx_t_20 = __Pyx_PyList_GetItemRefFast(__pyx_t_9, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
+      ++__pyx_t_4;
+      if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 220, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_20);
       __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_key);
       __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_key, __pyx_t_20);
       __Pyx_GIVEREF(__pyx_t_20);
       __pyx_t_20 = 0;
 
-      /* "zenscrape/cli.py":214
+      /* "zenscrape/cli.py":221
  *         important_meta = ["description", "og:title", "og:description", "og:image", "keywords"]
  *         for key in important_meta:
  *             if key in summary["metadata"]:             # <<<<<<<<<<<<<<
  *                 print(f"   {key}: {summary['metadata'][key][:80]}...")
  *         if summary["structure"]["headings"]:
 */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 214, __pyx_L1_error) }
-      __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_metadata); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 214, __pyx_L1_error)
+      if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 221, __pyx_L1_error) }
+      __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_metadata); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 221, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_20);
-      __pyx_t_30 = (__Pyx_PySequence_ContainsTF(__pyx_cur_scope->__pyx_v_key, __pyx_t_20, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 214, __pyx_L1_error)
+      __pyx_t_30 = (__Pyx_PySequence_ContainsTF(__pyx_cur_scope->__pyx_v_key, __pyx_t_20, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 221, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
       if (__pyx_t_30) {
 
-        /* "zenscrape/cli.py":215
+        /* "zenscrape/cli.py":222
  *         for key in important_meta:
  *             if key in summary["metadata"]:
  *                 print(f"   {key}: {summary['metadata'][key][:80]}...")             # <<<<<<<<<<<<<<
@@ -9585,42 +9855,42 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *             print("\n HEADING HIERARCHY TREE:")
 */
         __pyx_t_1 = NULL;
-        __pyx_t_4 = __Pyx_PyObject_FormatSimple(__pyx_cur_scope->__pyx_v_key, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 215, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_4);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 215, __pyx_L1_error) }
-        __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_metadata); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 215, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_cur_scope->__pyx_v_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 215, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_t_2 = __Pyx_PyObject_GetSlice(__pyx_t_3, 0, 80, NULL, NULL, &__pyx_mstate_global->__pyx_slice[2], 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 215, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_3 = __Pyx_PyObject_FormatSimple(__pyx_t_2, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 215, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_cur_scope->__pyx_v_key, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 222, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 222, __pyx_L1_error) }
+        __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_metadata); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 222, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        __pyx_t_37 = __Pyx_PyObject_GetItem(__pyx_t_6, __pyx_cur_scope->__pyx_v_key); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 222, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __pyx_t_6 = __Pyx_PyObject_GetSlice(__pyx_t_37, 0, 80, NULL, NULL, &__pyx_mstate_global->__pyx_slice[2], 0, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 222, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+        __pyx_t_37 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 222, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_t_31[0] = __pyx_mstate_global->__pyx_kp_u__19;
-        __pyx_t_31[1] = __pyx_t_4;
+        __pyx_t_31[1] = __pyx_t_5;
         __pyx_t_31[2] = __pyx_mstate_global->__pyx_kp_u__20;
-        __pyx_t_31[3] = __pyx_t_3;
+        __pyx_t_31[3] = __pyx_t_37;
         __pyx_t_31[4] = __pyx_mstate_global->__pyx_kp_u__9;
-        __pyx_t_2 = __Pyx_PyUnicode_Join(__pyx_t_31, 5, 4 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_4) + 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_3) + 3, 65535 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_4) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3));
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 215, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __pyx_t_6 = __Pyx_PyUnicode_Join(__pyx_t_31, 5, 4 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_5) + 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_37) + 3, 65535 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_37));
+        if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 222, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
         __pyx_t_7 = 1;
         {
-          PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_t_2};
+          PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_t_6};
           __pyx_t_20 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 215, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+          if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 222, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_20);
         }
         __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
 
-        /* "zenscrape/cli.py":214
+        /* "zenscrape/cli.py":221
  *         important_meta = ["description", "og:title", "og:description", "og:image", "keywords"]
  *         for key in important_meta:
  *             if key in summary["metadata"]:             # <<<<<<<<<<<<<<
@@ -9629,7 +9899,7 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
 */
       }
 
-      /* "zenscrape/cli.py":213
+      /* "zenscrape/cli.py":220
  *         print("\n SEO & OPEN GRAPH METADATA:")
  *         important_meta = ["description", "og:title", "og:description", "og:image", "keywords"]
  *         for key in important_meta:             # <<<<<<<<<<<<<<
@@ -9637,188 +9907,188 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *                 print(f"   {key}: {summary['metadata'][key][:80]}...")
 */
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":216
+    /* "zenscrape/cli.py":223
  *             if key in summary["metadata"]:
  *                 print(f"   {key}: {summary['metadata'][key][:80]}...")
  *         if summary["structure"]["headings"]:             # <<<<<<<<<<<<<<
  *             print("\n HEADING HIERARCHY TREE:")
  *             for h in summary["structure"]["headings"]:
 */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 216, __pyx_L1_error) }
-    __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_structure); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 216, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_headings); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 216, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 223, __pyx_L1_error) }
+    __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_structure); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 223, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_headings); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 223, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_20);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_20); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 216, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_20); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 223, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
     if (__pyx_t_30) {
 
-      /* "zenscrape/cli.py":217
+      /* "zenscrape/cli.py":224
  *                 print(f"   {key}: {summary['metadata'][key][:80]}...")
  *         if summary["structure"]["headings"]:
  *             print("\n HEADING HIERARCHY TREE:")             # <<<<<<<<<<<<<<
  *             for h in summary["structure"]["headings"]:
  *                 indent = "  " if h["tag"] == "H2" else "    " if h["tag"] == "H3" else ""
 */
-      __pyx_t_5 = NULL;
+      __pyx_t_9 = NULL;
       __pyx_t_7 = 1;
       {
-        PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_mstate_global->__pyx_kp_u_HEADING_HIERARCHY_TREE};
+        PyObject *__pyx_callargs[2] = {__pyx_t_9, __pyx_mstate_global->__pyx_kp_u_HEADING_HIERARCHY_TREE};
         __pyx_t_20 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-        __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 217, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+        if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 224, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_20);
       }
       __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
 
-      /* "zenscrape/cli.py":218
+      /* "zenscrape/cli.py":225
  *         if summary["structure"]["headings"]:
  *             print("\n HEADING HIERARCHY TREE:")
  *             for h in summary["structure"]["headings"]:             # <<<<<<<<<<<<<<
  *                 indent = "  " if h["tag"] == "H2" else "    " if h["tag"] == "H3" else ""
  *                 print(f"{indent} [{h['tag']}] {h['text']}")
 */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 218, __pyx_L1_error) }
-      __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_structure); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 218, __pyx_L1_error)
+      if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 225, __pyx_L1_error) }
+      __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_structure); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 225, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_20);
-      __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_headings); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 218, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_headings); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 225, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
-      if (likely(PyList_CheckExact(__pyx_t_5)) || PyTuple_CheckExact(__pyx_t_5)) {
-        __pyx_t_20 = __pyx_t_5; __Pyx_INCREF(__pyx_t_20);
-        __pyx_t_9 = 0;
+      if (likely(PyList_CheckExact(__pyx_t_9)) || PyTuple_CheckExact(__pyx_t_9)) {
+        __pyx_t_20 = __pyx_t_9; __Pyx_INCREF(__pyx_t_20);
+        __pyx_t_4 = 0;
         __pyx_t_32 = NULL;
       } else {
-        __pyx_t_9 = -1; __pyx_t_20 = PyObject_GetIter(__pyx_t_5); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 218, __pyx_L1_error)
+        __pyx_t_4 = -1; __pyx_t_20 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 225, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_20);
-        __pyx_t_32 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_20); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 218, __pyx_L1_error)
+        __pyx_t_32 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_20); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 225, __pyx_L1_error)
       }
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       for (;;) {
         if (likely(!__pyx_t_32)) {
           if (likely(PyList_CheckExact(__pyx_t_20))) {
             {
               Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_20);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 218, __pyx_L1_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 225, __pyx_L1_error)
               #endif
-              if (__pyx_t_9 >= __pyx_temp) break;
+              if (__pyx_t_4 >= __pyx_temp) break;
             }
-            __pyx_t_5 = __Pyx_PyList_GetItemRefFast(__pyx_t_20, __pyx_t_9, __Pyx_ReferenceSharing_OwnStrongReference);
-            ++__pyx_t_9;
+            __pyx_t_9 = __Pyx_PyList_GetItemRefFast(__pyx_t_20, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
+            ++__pyx_t_4;
           } else {
             {
               Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_20);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 218, __pyx_L1_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 225, __pyx_L1_error)
               #endif
-              if (__pyx_t_9 >= __pyx_temp) break;
+              if (__pyx_t_4 >= __pyx_temp) break;
             }
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_5 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_20, __pyx_t_9));
+            __pyx_t_9 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_20, __pyx_t_4));
             #else
-            __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_20, __pyx_t_9);
+            __pyx_t_9 = __Pyx_PySequence_ITEM(__pyx_t_20, __pyx_t_4);
             #endif
-            ++__pyx_t_9;
+            ++__pyx_t_4;
           }
-          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 218, __pyx_L1_error)
+          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 225, __pyx_L1_error)
         } else {
-          __pyx_t_5 = __pyx_t_32(__pyx_t_20);
-          if (unlikely(!__pyx_t_5)) {
+          __pyx_t_9 = __pyx_t_32(__pyx_t_20);
+          if (unlikely(!__pyx_t_9)) {
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
-              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 218, __pyx_L1_error)
+              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 225, __pyx_L1_error)
               PyErr_Clear();
             }
             break;
           }
         }
-        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_GOTREF(__pyx_t_9);
         __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_h);
-        __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_h, __pyx_t_5);
-        __Pyx_GIVEREF(__pyx_t_5);
-        __pyx_t_5 = 0;
+        __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_h, __pyx_t_9);
+        __Pyx_GIVEREF(__pyx_t_9);
+        __pyx_t_9 = 0;
 
-        /* "zenscrape/cli.py":219
+        /* "zenscrape/cli.py":226
  *             print("\n HEADING HIERARCHY TREE:")
  *             for h in summary["structure"]["headings"]:
  *                 indent = "  " if h["tag"] == "H2" else "    " if h["tag"] == "H3" else ""             # <<<<<<<<<<<<<<
  *                 print(f"{indent} [{h['tag']}] {h['text']}")
  *         if summary["structure"]["detailed_tables"]:
 */
-        __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_h, __pyx_mstate_global->__pyx_n_u_tag); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 219, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_H2, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 219, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_h, __pyx_mstate_global->__pyx_n_u_tag); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 226, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_H2, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 226, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         if (__pyx_t_30) {
           __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__21);
-          __pyx_t_5 = __pyx_mstate_global->__pyx_kp_u__21;
+          __pyx_t_9 = __pyx_mstate_global->__pyx_kp_u__21;
         } else {
-          __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_h, __pyx_mstate_global->__pyx_n_u_tag); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 219, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_h, __pyx_mstate_global->__pyx_n_u_tag); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 226, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
-          __pyx_t_10 = (__Pyx_PyUnicode_Equals(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_H3, Py_EQ)); if (unlikely((__pyx_t_10 < 0))) __PYX_ERR(0, 219, __pyx_L1_error)
+          __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_H3, Py_EQ)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 226, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          if (__pyx_t_10) {
+          if (__pyx_t_2) {
             __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__22);
-            __pyx_t_2 = __pyx_mstate_global->__pyx_kp_u__22;
+            __pyx_t_6 = __pyx_mstate_global->__pyx_kp_u__22;
           } else {
             __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u__2);
-            __pyx_t_2 = __pyx_mstate_global->__pyx_kp_u__2;
+            __pyx_t_6 = __pyx_mstate_global->__pyx_kp_u__2;
           }
-          __pyx_t_5 = __pyx_t_2;
-          __pyx_t_2 = 0;
+          __pyx_t_9 = __pyx_t_6;
+          __pyx_t_6 = 0;
         }
         __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_indent);
-        __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_indent, ((PyObject*)__pyx_t_5));
-        __Pyx_GIVEREF(__pyx_t_5);
-        __pyx_t_5 = 0;
+        __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_indent, ((PyObject*)__pyx_t_9));
+        __Pyx_GIVEREF(__pyx_t_9);
+        __pyx_t_9 = 0;
 
-        /* "zenscrape/cli.py":220
+        /* "zenscrape/cli.py":227
  *             for h in summary["structure"]["headings"]:
  *                 indent = "  " if h["tag"] == "H2" else "    " if h["tag"] == "H3" else ""
  *                 print(f"{indent} [{h['tag']}] {h['text']}")             # <<<<<<<<<<<<<<
  *         if summary["structure"]["detailed_tables"]:
  *             print("\n TABLE SCHEMAS DETECTED:")
 */
-        __pyx_t_2 = NULL;
-        __pyx_t_1 = __Pyx_PyUnicode_Unicode(__pyx_cur_scope->__pyx_v_indent); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 220, __pyx_L1_error)
+        __pyx_t_6 = NULL;
+        __pyx_t_1 = __Pyx_PyUnicode_Unicode(__pyx_cur_scope->__pyx_v_indent); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 227, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_h, __pyx_mstate_global->__pyx_n_u_tag); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 220, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_4 = __Pyx_PyObject_FormatSimple(__pyx_t_3, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 220, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_4);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_h, __pyx_mstate_global->__pyx_n_u_text); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 220, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_21 = __Pyx_PyObject_FormatSimple(__pyx_t_3, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 220, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_21);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __pyx_t_37 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_h, __pyx_mstate_global->__pyx_n_u_tag); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 227, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
+        __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_37, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 227, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+        __pyx_t_37 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_h, __pyx_mstate_global->__pyx_n_u_text); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 227, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
+        __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_t_37, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 227, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
         __pyx_t_31[0] = __pyx_t_1;
         __pyx_t_31[1] = __pyx_mstate_global->__pyx_kp_u__23;
-        __pyx_t_31[2] = __pyx_t_4;
+        __pyx_t_31[2] = __pyx_t_5;
         __pyx_t_31[3] = __pyx_mstate_global->__pyx_kp_u__13;
-        __pyx_t_31[4] = __pyx_t_21;
-        __pyx_t_3 = __Pyx_PyUnicode_Join(__pyx_t_31, 5, __Pyx_PyUnicode_GET_LENGTH(__pyx_t_1) + 3 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_4) + 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_21), 65535 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_1) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_4) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_21));
-        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 220, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_31[4] = __pyx_t_8;
+        __pyx_t_37 = __Pyx_PyUnicode_Join(__pyx_t_31, 5, __Pyx_PyUnicode_GET_LENGTH(__pyx_t_1) + 3 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_5) + 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8), 65535 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_1) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_8));
+        if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 227, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __Pyx_DECREF(__pyx_t_21); __pyx_t_21 = 0;
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
         __pyx_t_7 = 1;
         {
-          PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_t_3};
-          __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 220, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_5);
+          PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_37};
+          __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+          __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 227, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
         }
-        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-        /* "zenscrape/cli.py":218
+        /* "zenscrape/cli.py":225
  *         if summary["structure"]["headings"]:
  *             print("\n HEADING HIERARCHY TREE:")
  *             for h in summary["structure"]["headings"]:             # <<<<<<<<<<<<<<
@@ -9828,7 +10098,7 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
       }
       __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
 
-      /* "zenscrape/cli.py":216
+      /* "zenscrape/cli.py":223
  *             if key in summary["metadata"]:
  *                 print(f"   {key}: {summary['metadata'][key][:80]}...")
  *         if summary["structure"]["headings"]:             # <<<<<<<<<<<<<<
@@ -9837,24 +10107,24 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
 */
     }
 
-    /* "zenscrape/cli.py":221
+    /* "zenscrape/cli.py":228
  *                 indent = "  " if h["tag"] == "H2" else "    " if h["tag"] == "H3" else ""
  *                 print(f"{indent} [{h['tag']}] {h['text']}")
  *         if summary["structure"]["detailed_tables"]:             # <<<<<<<<<<<<<<
  *             print("\n TABLE SCHEMAS DETECTED:")
  *             for t in summary["structure"]["detailed_tables"]:
 */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 221, __pyx_L1_error) }
-    __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_structure); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 221, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 228, __pyx_L1_error) }
+    __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_structure); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_20);
-    __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_detailed_tables); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 221, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_detailed_tables); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
-    __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 221, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 228, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     if (__pyx_t_30) {
 
-      /* "zenscrape/cli.py":222
+      /* "zenscrape/cli.py":229
  *                 print(f"{indent} [{h['tag']}] {h['text']}")
  *         if summary["structure"]["detailed_tables"]:
  *             print("\n TABLE SCHEMAS DETECTED:")             # <<<<<<<<<<<<<<
@@ -9865,70 +10135,70 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
       __pyx_t_7 = 1;
       {
         PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_TABLE_SCHEMAS_DETECTED};
-        __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 222, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_5);
+        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 229, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
       }
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-      /* "zenscrape/cli.py":223
+      /* "zenscrape/cli.py":230
  *         if summary["structure"]["detailed_tables"]:
  *             print("\n TABLE SCHEMAS DETECTED:")
  *             for t in summary["structure"]["detailed_tables"]:             # <<<<<<<<<<<<<<
  *                 print(f"   Table #{t['id']} Columns: {', '.join(t['columns'][:5])}")
  *         print("\n" + ""*60)
 */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 223, __pyx_L1_error) }
-      __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_structure); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 223, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_detailed_tables); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 223, __pyx_L1_error)
+      if (unlikely(!__pyx_cur_scope->__pyx_v_summary)) { __Pyx_RaiseUnboundLocalError("summary"); __PYX_ERR(0, 230, __pyx_L1_error) }
+      __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_summary, __pyx_mstate_global->__pyx_n_u_structure); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 230, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_detailed_tables); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 230, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_20);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       if (likely(PyList_CheckExact(__pyx_t_20)) || PyTuple_CheckExact(__pyx_t_20)) {
-        __pyx_t_5 = __pyx_t_20; __Pyx_INCREF(__pyx_t_5);
-        __pyx_t_9 = 0;
+        __pyx_t_9 = __pyx_t_20; __Pyx_INCREF(__pyx_t_9);
+        __pyx_t_4 = 0;
         __pyx_t_32 = NULL;
       } else {
-        __pyx_t_9 = -1; __pyx_t_5 = PyObject_GetIter(__pyx_t_20); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 223, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_5);
-        __pyx_t_32 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_5); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 223, __pyx_L1_error)
+        __pyx_t_4 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_t_20); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 230, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+        __pyx_t_32 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_9); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 230, __pyx_L1_error)
       }
       __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
       for (;;) {
         if (likely(!__pyx_t_32)) {
-          if (likely(PyList_CheckExact(__pyx_t_5))) {
+          if (likely(PyList_CheckExact(__pyx_t_9))) {
             {
-              Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_5);
+              Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_9);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 223, __pyx_L1_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 230, __pyx_L1_error)
               #endif
-              if (__pyx_t_9 >= __pyx_temp) break;
+              if (__pyx_t_4 >= __pyx_temp) break;
             }
-            __pyx_t_20 = __Pyx_PyList_GetItemRefFast(__pyx_t_5, __pyx_t_9, __Pyx_ReferenceSharing_OwnStrongReference);
-            ++__pyx_t_9;
+            __pyx_t_20 = __Pyx_PyList_GetItemRefFast(__pyx_t_9, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
+            ++__pyx_t_4;
           } else {
             {
-              Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_5);
+              Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_9);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 223, __pyx_L1_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 230, __pyx_L1_error)
               #endif
-              if (__pyx_t_9 >= __pyx_temp) break;
+              if (__pyx_t_4 >= __pyx_temp) break;
             }
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_20 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_5, __pyx_t_9));
+            __pyx_t_20 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_4));
             #else
-            __pyx_t_20 = __Pyx_PySequence_ITEM(__pyx_t_5, __pyx_t_9);
+            __pyx_t_20 = __Pyx_PySequence_ITEM(__pyx_t_9, __pyx_t_4);
             #endif
-            ++__pyx_t_9;
+            ++__pyx_t_4;
           }
-          if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 223, __pyx_L1_error)
+          if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 230, __pyx_L1_error)
         } else {
-          __pyx_t_20 = __pyx_t_32(__pyx_t_5);
+          __pyx_t_20 = __pyx_t_32(__pyx_t_9);
           if (unlikely(!__pyx_t_20)) {
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
-              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 223, __pyx_L1_error)
+              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 230, __pyx_L1_error)
               PyErr_Clear();
             }
             break;
@@ -9940,48 +10210,48 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
         __Pyx_GIVEREF(__pyx_t_20);
         __pyx_t_20 = 0;
 
-        /* "zenscrape/cli.py":224
+        /* "zenscrape/cli.py":231
  *             print("\n TABLE SCHEMAS DETECTED:")
  *             for t in summary["structure"]["detailed_tables"]:
  *                 print(f"   Table #{t['id']} Columns: {', '.join(t['columns'][:5])}")             # <<<<<<<<<<<<<<
  *         print("\n" + ""*60)
  *         input("\nPress Enter to Exit Audit...")
 */
-        __pyx_t_3 = NULL;
-        __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_t, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_21 = __Pyx_PyObject_FormatSimple(__pyx_t_2, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 224, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_21);
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_t, __pyx_mstate_global->__pyx_n_u_columns); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_4 = __Pyx_PyObject_GetSlice(__pyx_t_2, 0, 5, NULL, NULL, &__pyx_mstate_global->__pyx_slice[3], 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 224, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_4);
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_t_2 = PyUnicode_Join(__pyx_mstate_global->__pyx_kp_u__15, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __pyx_t_37 = NULL;
+        __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_t, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 231, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 231, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_t, __pyx_mstate_global->__pyx_n_u_columns); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 231, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        __pyx_t_5 = __Pyx_PyObject_GetSlice(__pyx_t_6, 0, 5, NULL, NULL, &__pyx_mstate_global->__pyx_slice[3], 0, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 231, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __pyx_t_6 = PyUnicode_Join(__pyx_mstate_global->__pyx_kp_u__15, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 231, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __pyx_t_35[0] = __pyx_mstate_global->__pyx_kp_u_Table;
-        __pyx_t_35[1] = __pyx_t_21;
+        __pyx_t_35[1] = __pyx_t_8;
         __pyx_t_35[2] = __pyx_mstate_global->__pyx_kp_u_Columns;
-        __pyx_t_35[3] = __pyx_t_2;
-        __pyx_t_4 = __Pyx_PyUnicode_Join(__pyx_t_35, 4, 11 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_21) + 10 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_2), 65535 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_21) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_2));
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 224, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_4);
-        __Pyx_DECREF(__pyx_t_21); __pyx_t_21 = 0;
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __pyx_t_35[3] = __pyx_t_6;
+        __pyx_t_5 = __Pyx_PyUnicode_Join(__pyx_t_35, 4, 11 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8) + 10 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_6), 65535 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_8) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_6));
+        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 231, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_t_7 = 1;
         {
-          PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_t_4};
+          PyObject *__pyx_callargs[2] = {__pyx_t_37, __pyx_t_5};
           __pyx_t_20 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 224, __pyx_L1_error)
+          __Pyx_XDECREF(__pyx_t_37); __pyx_t_37 = 0;
+          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+          if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 231, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_20);
         }
         __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
 
-        /* "zenscrape/cli.py":223
+        /* "zenscrape/cli.py":230
  *         if summary["structure"]["detailed_tables"]:
  *             print("\n TABLE SCHEMAS DETECTED:")
  *             for t in summary["structure"]["detailed_tables"]:             # <<<<<<<<<<<<<<
@@ -9989,9 +10259,9 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *         print("\n" + ""*60)
 */
       }
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-      /* "zenscrape/cli.py":221
+      /* "zenscrape/cli.py":228
  *                 indent = "  " if h["tag"] == "H2" else "    " if h["tag"] == "H3" else ""
  *                 print(f"{indent} [{h['tag']}] {h['text']}")
  *         if summary["structure"]["detailed_tables"]:             # <<<<<<<<<<<<<<
@@ -10000,7 +10270,7 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
 */
     }
 
-    /* "zenscrape/cli.py":225
+    /* "zenscrape/cli.py":232
  *             for t in summary["structure"]["detailed_tables"]:
  *                 print(f"   Table #{t['id']} Columns: {', '.join(t['columns'][:5])}")
  *         print("\n" + ""*60)             # <<<<<<<<<<<<<<
@@ -10011,163 +10281,2232 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
     __pyx_t_7 = 1;
     {
       PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u__10};
-      __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 225, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 232, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":226
+    /* "zenscrape/cli.py":233
  *                 print(f"   Table #{t['id']} Columns: {', '.join(t['columns'][:5])}")
  *         print("\n" + ""*60)
  *         input("\nPress Enter to Exit Audit...")             # <<<<<<<<<<<<<<
  *         sys.exit()
- *     elif choice == 'q': sys.exit()
+ *     elif choice == '8':
 */
     __pyx_t_20 = NULL;
     __pyx_t_7 = 1;
     {
       PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_Press_Enter_to_Exit_Audit};
-      __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_input, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_input, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 226, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 233, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":227
+    /* "zenscrape/cli.py":234
  *         print("\n" + ""*60)
  *         input("\nPress Enter to Exit Audit...")
  *         sys.exit()             # <<<<<<<<<<<<<<
- *     elif choice == 'q': sys.exit()
- * 
+ *     elif choice == '8':
+ *         from .auditor import ZenSecurityAuditor
 */
     __pyx_t_20 = NULL;
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_sys); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 227, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_exit_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 227, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_sys); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 234, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_37 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_exit_2); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 234, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_37);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_7 = 1;
     #if CYTHON_UNPACK_METHODS
-    if (unlikely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_20 = PyMethod_GET_SELF(__pyx_t_3);
+    if (unlikely(PyMethod_Check(__pyx_t_37))) {
+      __pyx_t_20 = PyMethod_GET_SELF(__pyx_t_37);
       assert(__pyx_t_20);
-      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_37);
       __Pyx_INCREF(__pyx_t_20);
       __Pyx_INCREF(__pyx__function);
-      __Pyx_DECREF_SET(__pyx_t_3, __pyx__function);
+      __Pyx_DECREF_SET(__pyx_t_37, __pyx__function);
       __pyx_t_7 = 0;
     }
     #endif
     {
       PyObject *__pyx_callargs[2] = {__pyx_t_20, NULL};
-      __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_3, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_37, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 227, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 234, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "zenscrape/cli.py":207
+    /* "zenscrape/cli.py":214
  *         if not args.css: args.css = "h2, h3, title"
  * 
  *     elif choice == '7':             # <<<<<<<<<<<<<<
  *         print("\n" + ""*60)
  *         print(" DEEP STRUCTURAL AUDIT")
 */
-    goto __pyx_L47;
+    goto __pyx_L48;
   }
 
-  /* "zenscrape/cli.py":228
+  /* "zenscrape/cli.py":235
  *         input("\nPress Enter to Exit Audit...")
+ *         sys.exit()
+ *     elif choice == '8':             # <<<<<<<<<<<<<<
+ *         from .auditor import ZenSecurityAuditor
+ *         from urllib.parse import urlparse
+*/
+  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_kp_u_8, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 235, __pyx_L1_error)
+  if (__pyx_t_30) {
+
+    /* "zenscrape/cli.py":236
+ *         sys.exit()
+ *     elif choice == '8':
+ *         from .auditor import ZenSecurityAuditor             # <<<<<<<<<<<<<<
+ *         from urllib.parse import urlparse
+ * 
+*/
+    {
+      PyObject* const __pyx_imported_names[] = {__pyx_mstate_global->__pyx_n_u_ZenSecurityAuditor};
+      __pyx_t_3 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_auditor, __pyx_imported_names, 1, __pyx_mstate_global->__pyx_kp_u_zenscrape_auditor, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 236, __pyx_L1_error)
+    }
+    __pyx_t_9 = __pyx_t_3;
+    __Pyx_GOTREF(__pyx_t_9);
+    {
+      PyObject* const __pyx_imported_names[] = {__pyx_mstate_global->__pyx_n_u_ZenSecurityAuditor};
+      __pyx_t_4 = 0; {
+        __pyx_t_37 = __Pyx_ImportFrom(__pyx_t_9, __pyx_imported_names[__pyx_t_4]); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 236, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
+        switch (__pyx_t_4) {
+          case 0:
+          __Pyx_INCREF(__pyx_t_37);
+          __Pyx_GIVEREF(__pyx_t_37);
+          __pyx_cur_scope->__pyx_v_ZenSecurityAuditor = __pyx_t_37;
+          break;
+          default:;
+        }
+        __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+      }
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":237
+ *     elif choice == '8':
+ *         from .auditor import ZenSecurityAuditor
+ *         from urllib.parse import urlparse             # <<<<<<<<<<<<<<
+ * 
+ *         parsed_url = urlparse(args.url)
+*/
+    {
+      PyObject* const __pyx_imported_names[] = {__pyx_mstate_global->__pyx_n_u_urlparse};
+      __pyx_t_3 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_urllib_parse, __pyx_imported_names, 1, NULL, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 237, __pyx_L1_error)
+    }
+    __pyx_t_9 = __pyx_t_3;
+    __Pyx_GOTREF(__pyx_t_9);
+    {
+      PyObject* const __pyx_imported_names[] = {__pyx_mstate_global->__pyx_n_u_urlparse};
+      __pyx_t_4 = 0; {
+        __pyx_t_37 = __Pyx_ImportFrom(__pyx_t_9, __pyx_imported_names[__pyx_t_4]); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 237, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
+        switch (__pyx_t_4) {
+          case 0:
+          __Pyx_INCREF(__pyx_t_37);
+          __Pyx_GIVEREF(__pyx_t_37);
+          __pyx_cur_scope->__pyx_v_urlparse = __pyx_t_37;
+          break;
+          default:;
+        }
+        __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+      }
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":239
+ *         from urllib.parse import urlparse
+ * 
+ *         parsed_url = urlparse(args.url)             # <<<<<<<<<<<<<<
+ *         domain = parsed_url.netloc
+ * 
+*/
+    __pyx_t_37 = NULL;
+    __Pyx_INCREF(__pyx_cur_scope->__pyx_v_urlparse);
+    __pyx_t_20 = __pyx_cur_scope->__pyx_v_urlparse; 
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 239, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_7 = 1;
+    #if CYTHON_UNPACK_METHODS
+    if (unlikely(PyMethod_Check(__pyx_t_20))) {
+      __pyx_t_37 = PyMethod_GET_SELF(__pyx_t_20);
+      assert(__pyx_t_37);
+      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_20);
+      __Pyx_INCREF(__pyx_t_37);
+      __Pyx_INCREF(__pyx__function);
+      __Pyx_DECREF_SET(__pyx_t_20, __pyx__function);
+      __pyx_t_7 = 0;
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_37, __pyx_t_5};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_20, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_37); __pyx_t_37 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 239, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_GIVEREF(__pyx_t_9);
+    __pyx_cur_scope->__pyx_v_parsed_url = __pyx_t_9;
+    __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":240
+ * 
+ *         parsed_url = urlparse(args.url)
+ *         domain = parsed_url.netloc             # <<<<<<<<<<<<<<
+ * 
+ *         # 1. Audit HTTP Headers
+*/
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parsed_url, __pyx_mstate_global->__pyx_n_u_netloc); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 240, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_GIVEREF(__pyx_t_9);
+    __pyx_cur_scope->__pyx_v_domain = __pyx_t_9;
+    __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":243
+ * 
+ *         # 1. Audit HTTP Headers
+ *         logger.info(" Auditing HTTP Security Headers...")             # <<<<<<<<<<<<<<
+ *         headers_report = ZenSecurityAuditor.audit_security_headers(res.headers)
+ * 
+*/
+    __pyx_t_20 = NULL;
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 243, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_37 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_info); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 243, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_37);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_7 = 1;
+    #if CYTHON_UNPACK_METHODS
+    if (unlikely(PyMethod_Check(__pyx_t_37))) {
+      __pyx_t_20 = PyMethod_GET_SELF(__pyx_t_37);
+      assert(__pyx_t_20);
+      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_37);
+      __Pyx_INCREF(__pyx_t_20);
+      __Pyx_INCREF(__pyx__function);
+      __Pyx_DECREF_SET(__pyx_t_37, __pyx__function);
+      __pyx_t_7 = 0;
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_Auditing_HTTP_Security_Headers};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_37, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 243, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":244
+ *         # 1. Audit HTTP Headers
+ *         logger.info(" Auditing HTTP Security Headers...")
+ *         headers_report = ZenSecurityAuditor.audit_security_headers(res.headers)             # <<<<<<<<<<<<<<
+ * 
+ *         print("\n" + ""*60)
+*/
+    __pyx_t_37 = __pyx_cur_scope->__pyx_v_ZenSecurityAuditor;
+    __Pyx_INCREF(__pyx_t_37);
+    if (unlikely(!__pyx_cur_scope->__pyx_v_res)) { __Pyx_RaiseUnboundLocalError("res"); __PYX_ERR(0, 244, __pyx_L1_error) }
+    __pyx_t_20 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_res, __pyx_mstate_global->__pyx_n_u_headers); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 244, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_20);
+    __pyx_t_7 = 0;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_37, __pyx_t_20};
+      __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_audit_security_headers, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_37); __pyx_t_37 = 0;
+      __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 244, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_GIVEREF(__pyx_t_9);
+    __pyx_cur_scope->__pyx_v_headers_report = __pyx_t_9;
+    __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":246
+ *         headers_report = ZenSecurityAuditor.audit_security_headers(res.headers)
+ * 
+ *         print("\n" + ""*60)             # <<<<<<<<<<<<<<
+ *         print(" HTTP SECURITY HEADER REPORT")
+ *         print(""*60)
+*/
+    __pyx_t_20 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u__10};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 246, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":247
+ * 
+ *         print("\n" + ""*60)
+ *         print(" HTTP SECURITY HEADER REPORT")             # <<<<<<<<<<<<<<
+ *         print(""*60)
+ *         for h_name, detail in headers_report.items():
+*/
+    __pyx_t_20 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_HTTP_SECURITY_HEADER_REPORT};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 247, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":248
+ *         print("\n" + ""*60)
+ *         print(" HTTP SECURITY HEADER REPORT")
+ *         print(""*60)             # <<<<<<<<<<<<<<
+ *         for h_name, detail in headers_report.items():
+ *             print(f" {h_name}: {detail['status']}")
+*/
+    __pyx_t_20 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u__11};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 248, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":249
+ *         print(" HTTP SECURITY HEADER REPORT")
+ *         print(""*60)
+ *         for h_name, detail in headers_report.items():             # <<<<<<<<<<<<<<
+ *             print(f" {h_name}: {detail['status']}")
+ *             print(f"  Purpose: {detail['purpose']}")
+*/
+    __pyx_t_4 = 0;
+    if (unlikely(__pyx_cur_scope->__pyx_v_headers_report == Py_None)) {
+      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "items");
+      __PYX_ERR(0, 249, __pyx_L1_error)
+    }
+    __pyx_t_20 = __Pyx_dict_iterator(__pyx_cur_scope->__pyx_v_headers_report, 0, __pyx_mstate_global->__pyx_n_u_items, (&__pyx_t_33), (&__pyx_t_22)); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 249, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_20);
+    __Pyx_XDECREF(__pyx_t_9);
+    __pyx_t_9 = __pyx_t_20;
+    __pyx_t_20 = 0;
+    while (1) {
+      __pyx_t_19 = __Pyx_dict_iter_next(__pyx_t_9, __pyx_t_33, &__pyx_t_4, &__pyx_t_20, &__pyx_t_37, NULL, __pyx_t_22);
+      if (unlikely(__pyx_t_19 == 0)) break;
+      if (unlikely(__pyx_t_19 == -1)) __PYX_ERR(0, 249, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_20);
+      __Pyx_GOTREF(__pyx_t_37);
+      __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_h_name);
+      __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_h_name, __pyx_t_20);
+      __Pyx_GIVEREF(__pyx_t_20);
+      __pyx_t_20 = 0;
+      __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_detail);
+      __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_detail, __pyx_t_37);
+      __Pyx_GIVEREF(__pyx_t_37);
+      __pyx_t_37 = 0;
+
+      /* "zenscrape/cli.py":250
+ *         print(""*60)
+ *         for h_name, detail in headers_report.items():
+ *             print(f" {h_name}: {detail['status']}")             # <<<<<<<<<<<<<<
+ *             print(f"  Purpose: {detail['purpose']}")
+ *             if detail['value'] != "N/A":
+*/
+      __pyx_t_20 = NULL;
+      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_cur_scope->__pyx_v_h_name, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 250, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_detail, __pyx_mstate_global->__pyx_n_u_status); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 250, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 250, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_35[0] = __pyx_mstate_global->__pyx_kp_u__24;
+      __pyx_t_35[1] = __pyx_t_5;
+      __pyx_t_35[2] = __pyx_mstate_global->__pyx_kp_u__20;
+      __pyx_t_35[3] = __pyx_t_8;
+      __pyx_t_6 = __Pyx_PyUnicode_Join(__pyx_t_35, 4, 2 * 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_5) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8), 65535 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_8));
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 250, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __pyx_t_7 = 1;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_t_6};
+        __pyx_t_37 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 250, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
+      }
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+
+      /* "zenscrape/cli.py":251
+ *         for h_name, detail in headers_report.items():
+ *             print(f" {h_name}: {detail['status']}")
+ *             print(f"  Purpose: {detail['purpose']}")             # <<<<<<<<<<<<<<
+ *             if detail['value'] != "N/A":
+ *                 print(f"  Setting: {detail['value'][:80]}...")
+*/
+      __pyx_t_6 = NULL;
+      __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_detail, __pyx_mstate_global->__pyx_n_u_purpose); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 251, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_20);
+      __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_t_20, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 251, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+      __pyx_t_20 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Purpose, __pyx_t_8); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 251, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_20);
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __pyx_t_7 = 1;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_20};
+        __pyx_t_37 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+        if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 251, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
+      }
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+
+      /* "zenscrape/cli.py":252
+ *             print(f" {h_name}: {detail['status']}")
+ *             print(f"  Purpose: {detail['purpose']}")
+ *             if detail['value'] != "N/A":             # <<<<<<<<<<<<<<
+ *                 print(f"  Setting: {detail['value'][:80]}...")
+ *             print()
+*/
+      __pyx_t_37 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_detail, __pyx_mstate_global->__pyx_n_u_value); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 252, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_37);
+      __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_t_37, __pyx_mstate_global->__pyx_kp_u_N_A, Py_NE)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 252, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+      if (__pyx_t_30) {
+
+        /* "zenscrape/cli.py":253
+ *             print(f"  Purpose: {detail['purpose']}")
+ *             if detail['value'] != "N/A":
+ *                 print(f"  Setting: {detail['value'][:80]}...")             # <<<<<<<<<<<<<<
+ *             print()
+ * 
+*/
+        __pyx_t_20 = NULL;
+        __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_detail, __pyx_mstate_global->__pyx_n_u_value); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 253, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        __pyx_t_8 = __Pyx_PyObject_GetSlice(__pyx_t_6, 0, 80, NULL, NULL, &__pyx_mstate_global->__pyx_slice[2], 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 253, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __pyx_t_6 = __Pyx_PyObject_FormatSimple(__pyx_t_8, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 253, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+        __pyx_t_10[0] = __pyx_mstate_global->__pyx_kp_u_Setting;
+        __pyx_t_10[1] = __pyx_t_6;
+        __pyx_t_10[2] = __pyx_mstate_global->__pyx_kp_u__9;
+        __pyx_t_8 = __Pyx_PyUnicode_Join(__pyx_t_10, 3, 11 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_6) + 3, 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_6));
+        if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 253, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __pyx_t_7 = 1;
+        {
+          PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_t_8};
+          __pyx_t_37 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 253, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_37);
+        }
+        __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+
+        /* "zenscrape/cli.py":252
+ *             print(f" {h_name}: {detail['status']}")
+ *             print(f"  Purpose: {detail['purpose']}")
+ *             if detail['value'] != "N/A":             # <<<<<<<<<<<<<<
+ *                 print(f"  Setting: {detail['value'][:80]}...")
+ *             print()
+*/
+      }
+
+      /* "zenscrape/cli.py":254
+ *             if detail['value'] != "N/A":
+ *                 print(f"  Setting: {detail['value'][:80]}...")
+ *             print()             # <<<<<<<<<<<<<<
+ * 
+ *         # 2. NEW: TLS/SSL Certificate Audit
+*/
+      __pyx_t_8 = NULL;
+      __pyx_t_7 = 1;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_8, NULL};
+        __pyx_t_37 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+        if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 254, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
+      }
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":257
+ * 
+ *         # 2. NEW: TLS/SSL Certificate Audit
+ *         logger.info(f" Inspecting SSL/TLS Certificate for {domain}...")             # <<<<<<<<<<<<<<
+ *         tls_report = ZenSecurityAuditor.audit_tls_connection(domain)
+ * 
+*/
+    __pyx_t_37 = NULL;
+    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 257, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __pyx_t_20 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_info); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 257, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_20);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_cur_scope->__pyx_v_domain, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 257, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __pyx_t_10[0] = __pyx_mstate_global->__pyx_kp_u_Inspecting_SSL_TLS_Certificate;
+    __pyx_t_10[1] = __pyx_t_8;
+    __pyx_t_10[2] = __pyx_mstate_global->__pyx_kp_u__9;
+    __pyx_t_6 = __Pyx_PyUnicode_Join(__pyx_t_10, 3, 38 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8) + 3, 1114111 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_8));
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 257, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __pyx_t_7 = 1;
+    #if CYTHON_UNPACK_METHODS
+    if (unlikely(PyMethod_Check(__pyx_t_20))) {
+      __pyx_t_37 = PyMethod_GET_SELF(__pyx_t_20);
+      assert(__pyx_t_37);
+      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_20);
+      __Pyx_INCREF(__pyx_t_37);
+      __Pyx_INCREF(__pyx__function);
+      __Pyx_DECREF_SET(__pyx_t_20, __pyx__function);
+      __pyx_t_7 = 0;
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_37, __pyx_t_6};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_20, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_37); __pyx_t_37 = 0;
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 257, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":258
+ *         # 2. NEW: TLS/SSL Certificate Audit
+ *         logger.info(f" Inspecting SSL/TLS Certificate for {domain}...")
+ *         tls_report = ZenSecurityAuditor.audit_tls_connection(domain)             # <<<<<<<<<<<<<<
+ * 
+ *         print(""*60)
+*/
+    __pyx_t_20 = __pyx_cur_scope->__pyx_v_ZenSecurityAuditor;
+    __Pyx_INCREF(__pyx_t_20);
+    __pyx_t_7 = 0;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_cur_scope->__pyx_v_domain};
+      __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_audit_tls_connection, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 258, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_GIVEREF(__pyx_t_9);
+    __pyx_cur_scope->__pyx_v_tls_report = __pyx_t_9;
+    __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":260
+ *         tls_report = ZenSecurityAuditor.audit_tls_connection(domain)
+ * 
+ *         print(""*60)             # <<<<<<<<<<<<<<
+ *         print(" SSL/TLS CERTIFICATE AUDIT")
+ *         print(""*60)
+*/
+    __pyx_t_20 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u__11};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 260, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":261
+ * 
+ *         print(""*60)
+ *         print(" SSL/TLS CERTIFICATE AUDIT")             # <<<<<<<<<<<<<<
+ *         print(""*60)
+ *         print(f" Status:       {tls_report['status']}")
+*/
+    __pyx_t_20 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_SSL_TLS_CERTIFICATE_AUDIT};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 261, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":262
+ *         print(""*60)
+ *         print(" SSL/TLS CERTIFICATE AUDIT")
+ *         print(""*60)             # <<<<<<<<<<<<<<
+ *         print(f" Status:       {tls_report['status']}")
+ *         if tls_report['status'] == " VALID":
+*/
+    __pyx_t_20 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u__11};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 262, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":263
+ *         print(" SSL/TLS CERTIFICATE AUDIT")
+ *         print(""*60)
+ *         print(f" Status:       {tls_report['status']}")             # <<<<<<<<<<<<<<
+ *         if tls_report['status'] == " VALID":
+ *             print(f"  Issuer:       {tls_report['issuer']}")
+*/
+    __pyx_t_20 = NULL;
+    __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_tls_report, __pyx_mstate_global->__pyx_n_u_status); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 263, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_t_37 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 263, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_37);
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Status, __pyx_t_37); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 263, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_t_6};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 263, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":264
+ *         print(""*60)
+ *         print(f" Status:       {tls_report['status']}")
+ *         if tls_report['status'] == " VALID":             # <<<<<<<<<<<<<<
+ *             print(f"  Issuer:       {tls_report['issuer']}")
+ *             print(f"  Protocol:     {tls_report['version']}")
+*/
+    __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_tls_report, __pyx_mstate_global->__pyx_n_u_status); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 264, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_t_9, __pyx_mstate_global->__pyx_kp_u_VALID, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 264, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (__pyx_t_30) {
+
+      /* "zenscrape/cli.py":265
+ *         print(f" Status:       {tls_report['status']}")
+ *         if tls_report['status'] == " VALID":
+ *             print(f"  Issuer:       {tls_report['issuer']}")             # <<<<<<<<<<<<<<
+ *             print(f"  Protocol:     {tls_report['version']}")
+ *             print(f"  Cipher:       {tls_report['cipher']} ({tls_report['bits']} bits)")
+*/
+      __pyx_t_6 = NULL;
+      __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_tls_report, __pyx_mstate_global->__pyx_n_u_issuer); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 265, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_20);
+      __pyx_t_37 = __Pyx_PyObject_FormatSimple(__pyx_t_20, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 265, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_37);
+      __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+      __pyx_t_20 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Issuer, __pyx_t_37); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 265, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_20);
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+      __pyx_t_7 = 1;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_20};
+        __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 265, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+      }
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+      /* "zenscrape/cli.py":266
+ *         if tls_report['status'] == " VALID":
+ *             print(f"  Issuer:       {tls_report['issuer']}")
+ *             print(f"  Protocol:     {tls_report['version']}")             # <<<<<<<<<<<<<<
+ *             print(f"  Cipher:       {tls_report['cipher']} ({tls_report['bits']} bits)")
+ *             print(f"  Expires:      {tls_report['expires']}")
+*/
+      __pyx_t_20 = NULL;
+      __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_tls_report, __pyx_mstate_global->__pyx_n_u_version); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 266, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_37 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 266, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_37);
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Protocol, __pyx_t_37); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 266, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+      __pyx_t_7 = 1;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_t_6};
+        __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 266, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+      }
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+      /* "zenscrape/cli.py":267
+ *             print(f"  Issuer:       {tls_report['issuer']}")
+ *             print(f"  Protocol:     {tls_report['version']}")
+ *             print(f"  Cipher:       {tls_report['cipher']} ({tls_report['bits']} bits)")             # <<<<<<<<<<<<<<
+ *             print(f"  Expires:      {tls_report['expires']}")
+ *             print(f"  Validity Left: {tls_report['days_left']} days")
+*/
+      __pyx_t_6 = NULL;
+      __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_tls_report, __pyx_mstate_global->__pyx_n_u_cipher); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 267, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_20);
+      __pyx_t_37 = __Pyx_PyObject_FormatSimple(__pyx_t_20, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 267, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_37);
+      __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+      __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_tls_report, __pyx_mstate_global->__pyx_n_u_bits); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 267, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_20);
+      __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_t_20, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 267, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+      __pyx_t_31[0] = __pyx_mstate_global->__pyx_kp_u_Cipher;
+      __pyx_t_31[1] = __pyx_t_37;
+      __pyx_t_31[2] = __pyx_mstate_global->__pyx_kp_u__12;
+      __pyx_t_31[3] = __pyx_t_8;
+      __pyx_t_31[4] = __pyx_mstate_global->__pyx_kp_u_bits_2;
+      __pyx_t_20 = __Pyx_PyUnicode_Join(__pyx_t_31, 5, 16 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_37) + 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8) + 6, 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_37) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_8));
+      if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 267, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_20);
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __pyx_t_7 = 1;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_20};
+        __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 267, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+      }
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+      /* "zenscrape/cli.py":268
+ *             print(f"  Protocol:     {tls_report['version']}")
+ *             print(f"  Cipher:       {tls_report['cipher']} ({tls_report['bits']} bits)")
+ *             print(f"  Expires:      {tls_report['expires']}")             # <<<<<<<<<<<<<<
+ *             print(f"  Validity Left: {tls_report['days_left']} days")
+ *         elif tls_report['error']:
+*/
+      __pyx_t_20 = NULL;
+      __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_tls_report, __pyx_mstate_global->__pyx_n_u_expires); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 268, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 268, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Expires, __pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 268, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __pyx_t_7 = 1;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_t_6};
+        __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 268, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+      }
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+      /* "zenscrape/cli.py":269
+ *             print(f"  Cipher:       {tls_report['cipher']} ({tls_report['bits']} bits)")
+ *             print(f"  Expires:      {tls_report['expires']}")
+ *             print(f"  Validity Left: {tls_report['days_left']} days")             # <<<<<<<<<<<<<<
+ *         elif tls_report['error']:
+ *             print(f"  Error Details: {tls_report['error']}")
+*/
+      __pyx_t_6 = NULL;
+      __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_tls_report, __pyx_mstate_global->__pyx_n_u_days_left); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 269, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_20);
+      __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_t_20, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 269, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+      __pyx_t_10[0] = __pyx_mstate_global->__pyx_kp_u_Validity_Left;
+      __pyx_t_10[1] = __pyx_t_8;
+      __pyx_t_10[2] = __pyx_mstate_global->__pyx_kp_u_days;
+      __pyx_t_20 = __Pyx_PyUnicode_Join(__pyx_t_10, 3, 17 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8) + 5, 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_8));
+      if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 269, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_20);
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __pyx_t_7 = 1;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_20};
+        __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 269, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+      }
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+      /* "zenscrape/cli.py":264
+ *         print(""*60)
+ *         print(f" Status:       {tls_report['status']}")
+ *         if tls_report['status'] == " VALID":             # <<<<<<<<<<<<<<
+ *             print(f"  Issuer:       {tls_report['issuer']}")
+ *             print(f"  Protocol:     {tls_report['version']}")
+*/
+      goto __pyx_L74;
+    }
+
+    /* "zenscrape/cli.py":270
+ *             print(f"  Expires:      {tls_report['expires']}")
+ *             print(f"  Validity Left: {tls_report['days_left']} days")
+ *         elif tls_report['error']:             # <<<<<<<<<<<<<<
+ *             print(f"  Error Details: {tls_report['error']}")
+ *         print()
+*/
+    __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_tls_report, __pyx_mstate_global->__pyx_n_u_error); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 270, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 270, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (__pyx_t_30) {
+
+      /* "zenscrape/cli.py":271
+ *             print(f"  Validity Left: {tls_report['days_left']} days")
+ *         elif tls_report['error']:
+ *             print(f"  Error Details: {tls_report['error']}")             # <<<<<<<<<<<<<<
+ *         print()
+ * 
+*/
+      __pyx_t_20 = NULL;
+      __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_tls_report, __pyx_mstate_global->__pyx_n_u_error); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 271, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 271, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Error_Details, __pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 271, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __pyx_t_7 = 1;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_t_6};
+        __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 271, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+      }
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+      /* "zenscrape/cli.py":270
+ *             print(f"  Expires:      {tls_report['expires']}")
+ *             print(f"  Validity Left: {tls_report['days_left']} days")
+ *         elif tls_report['error']:             # <<<<<<<<<<<<<<
+ *             print(f"  Error Details: {tls_report['error']}")
+ *         print()
+*/
+    }
+    __pyx_L74:;
+
+    /* "zenscrape/cli.py":272
+ *         elif tls_report['error']:
+ *             print(f"  Error Details: {tls_report['error']}")
+ *         print()             # <<<<<<<<<<<<<<
+ * 
+ *         # 3. NEW: DNS Security Records Audit
+*/
+    __pyx_t_6 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_6, NULL};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 272, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":275
+ * 
+ *         # 3. NEW: DNS Security Records Audit
+ *         logger.info(f" Querying DNS Records for {domain}...")             # <<<<<<<<<<<<<<
+ *         dns_report = ZenSecurityAuditor.audit_dns_records(domain)
+ * 
+*/
+    __pyx_t_6 = NULL;
+    __Pyx_GetModuleGlobalName(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 275, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_20);
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_info); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 275, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+    __pyx_t_20 = __Pyx_PyObject_FormatSimple(__pyx_cur_scope->__pyx_v_domain, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 275, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_20);
+    __pyx_t_10[0] = __pyx_mstate_global->__pyx_kp_u_Querying_DNS_Records_for;
+    __pyx_t_10[1] = __pyx_t_20;
+    __pyx_t_10[2] = __pyx_mstate_global->__pyx_kp_u__9;
+    __pyx_t_37 = __Pyx_PyUnicode_Join(__pyx_t_10, 3, 28 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_20) + 3, 1114111 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_20));
+    if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 275, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_37);
+    __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+    __pyx_t_7 = 1;
+    #if CYTHON_UNPACK_METHODS
+    if (unlikely(PyMethod_Check(__pyx_t_8))) {
+      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_8);
+      assert(__pyx_t_6);
+      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_8);
+      __Pyx_INCREF(__pyx_t_6);
+      __Pyx_INCREF(__pyx__function);
+      __Pyx_DECREF_SET(__pyx_t_8, __pyx__function);
+      __pyx_t_7 = 0;
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_37};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_8, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 275, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":276
+ *         # 3. NEW: DNS Security Records Audit
+ *         logger.info(f" Querying DNS Records for {domain}...")
+ *         dns_report = ZenSecurityAuditor.audit_dns_records(domain)             # <<<<<<<<<<<<<<
+ * 
+ *         print(""*60)
+*/
+    __pyx_t_8 = __pyx_cur_scope->__pyx_v_ZenSecurityAuditor;
+    __Pyx_INCREF(__pyx_t_8);
+    __pyx_t_7 = 0;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_cur_scope->__pyx_v_domain};
+      __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_audit_dns_records, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 276, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_GIVEREF(__pyx_t_9);
+    __pyx_cur_scope->__pyx_v_dns_report = __pyx_t_9;
+    __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":278
+ *         dns_report = ZenSecurityAuditor.audit_dns_records(domain)
+ * 
+ *         print(""*60)             # <<<<<<<<<<<<<<
+ *         print(" DNS SECURITY RECORDS")
+ *         print(""*60)
+*/
+    __pyx_t_8 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_mstate_global->__pyx_kp_u__11};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 278, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":279
+ * 
+ *         print(""*60)
+ *         print(" DNS SECURITY RECORDS")             # <<<<<<<<<<<<<<
+ *         print(""*60)
+ *         for record_type, details in dns_report.items():
+*/
+    __pyx_t_8 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_mstate_global->__pyx_kp_u_DNS_SECURITY_RECORDS};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 279, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":280
+ *         print(""*60)
+ *         print(" DNS SECURITY RECORDS")
+ *         print(""*60)             # <<<<<<<<<<<<<<
+ *         for record_type, details in dns_report.items():
+ *             print(f" {record_type}: {details['status']}")
+*/
+    __pyx_t_8 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_mstate_global->__pyx_kp_u__11};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 280, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":281
+ *         print(" DNS SECURITY RECORDS")
+ *         print(""*60)
+ *         for record_type, details in dns_report.items():             # <<<<<<<<<<<<<<
+ *             print(f" {record_type}: {details['status']}")
+ *             if details['record'] != "N/A":
+*/
+    __pyx_t_33 = 0;
+    if (unlikely(__pyx_cur_scope->__pyx_v_dns_report == Py_None)) {
+      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "items");
+      __PYX_ERR(0, 281, __pyx_L1_error)
+    }
+    __pyx_t_8 = __Pyx_dict_iterator(__pyx_cur_scope->__pyx_v_dns_report, 0, __pyx_mstate_global->__pyx_n_u_items, (&__pyx_t_4), (&__pyx_t_22)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 281, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __Pyx_XDECREF(__pyx_t_9);
+    __pyx_t_9 = __pyx_t_8;
+    __pyx_t_8 = 0;
+    while (1) {
+      __pyx_t_19 = __Pyx_dict_iter_next(__pyx_t_9, __pyx_t_4, &__pyx_t_33, &__pyx_t_8, &__pyx_t_37, NULL, __pyx_t_22);
+      if (unlikely(__pyx_t_19 == 0)) break;
+      if (unlikely(__pyx_t_19 == -1)) __PYX_ERR(0, 281, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_GOTREF(__pyx_t_37);
+      __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_record_type);
+      __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_record_type, __pyx_t_8);
+      __Pyx_GIVEREF(__pyx_t_8);
+      __pyx_t_8 = 0;
+      __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_details);
+      __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_details, __pyx_t_37);
+      __Pyx_GIVEREF(__pyx_t_37);
+      __pyx_t_37 = 0;
+
+      /* "zenscrape/cli.py":282
+ *         print(""*60)
+ *         for record_type, details in dns_report.items():
+ *             print(f" {record_type}: {details['status']}")             # <<<<<<<<<<<<<<
+ *             if details['record'] != "N/A":
+ *                 print(f"  Record: {details['record']}")
+*/
+      __pyx_t_8 = NULL;
+      __pyx_t_6 = __Pyx_PyObject_FormatSimple(__pyx_cur_scope->__pyx_v_record_type, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 282, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_20 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_details, __pyx_mstate_global->__pyx_n_u_status); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 282, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_20);
+      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_20, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 282, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+      __pyx_t_35[0] = __pyx_mstate_global->__pyx_kp_u__24;
+      __pyx_t_35[1] = __pyx_t_6;
+      __pyx_t_35[2] = __pyx_mstate_global->__pyx_kp_u__20;
+      __pyx_t_35[3] = __pyx_t_5;
+      __pyx_t_20 = __Pyx_PyUnicode_Join(__pyx_t_35, 4, 2 * 2 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_6) + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_5), 65535 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_6) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5));
+      if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 282, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_20);
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_7 = 1;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_t_20};
+        __pyx_t_37 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+        __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+        if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 282, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
+      }
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+
+      /* "zenscrape/cli.py":283
+ *         for record_type, details in dns_report.items():
+ *             print(f" {record_type}: {details['status']}")
+ *             if details['record'] != "N/A":             # <<<<<<<<<<<<<<
+ *                 print(f"  Record: {details['record']}")
+ *             print()
+*/
+      __pyx_t_37 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_details, __pyx_mstate_global->__pyx_n_u_record); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 283, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_37);
+      __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_t_37, __pyx_mstate_global->__pyx_kp_u_N_A, Py_NE)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 283, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+      if (__pyx_t_30) {
+
+        /* "zenscrape/cli.py":284
+ *             print(f" {record_type}: {details['status']}")
+ *             if details['record'] != "N/A":
+ *                 print(f"  Record: {details['record']}")             # <<<<<<<<<<<<<<
+ *             print()
+ * 
+*/
+        __pyx_t_20 = NULL;
+        __pyx_t_8 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_details, __pyx_mstate_global->__pyx_n_u_record); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 284, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_8, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 284, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+        __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Record, __pyx_t_5); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 284, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __pyx_t_7 = 1;
+        {
+          PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_t_8};
+          __pyx_t_37 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+          __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 284, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_37);
+        }
+        __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+
+        /* "zenscrape/cli.py":283
+ *         for record_type, details in dns_report.items():
+ *             print(f" {record_type}: {details['status']}")
+ *             if details['record'] != "N/A":             # <<<<<<<<<<<<<<
+ *                 print(f"  Record: {details['record']}")
+ *             print()
+*/
+      }
+
+      /* "zenscrape/cli.py":285
+ *             if details['record'] != "N/A":
+ *                 print(f"  Record: {details['record']}")
+ *             print()             # <<<<<<<<<<<<<<
+ * 
+ *         # 4. Audit Exposed Configuration Leaks
+*/
+      __pyx_t_8 = NULL;
+      __pyx_t_7 = 1;
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_8, NULL};
+        __pyx_t_37 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+        if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 285, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
+      }
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":288
+ * 
+ *         # 4. Audit Exposed Configuration Leaks
+ *         logger.info(" Scanning for Exposed Administrative/Config Files...")             # <<<<<<<<<<<<<<
+ *         audit_targets = ZenSecurityAuditor.get_audit_endpoints(args.url)
+ * 
+*/
+    __pyx_t_37 = NULL;
+    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_logger); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 288, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __pyx_t_20 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_info); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 288, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_20);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __pyx_t_7 = 1;
+    #if CYTHON_UNPACK_METHODS
+    if (unlikely(PyMethod_Check(__pyx_t_20))) {
+      __pyx_t_37 = PyMethod_GET_SELF(__pyx_t_20);
+      assert(__pyx_t_37);
+      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_20);
+      __Pyx_INCREF(__pyx_t_37);
+      __Pyx_INCREF(__pyx__function);
+      __Pyx_DECREF_SET(__pyx_t_20, __pyx__function);
+      __pyx_t_7 = 0;
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_37, __pyx_mstate_global->__pyx_kp_u_Scanning_for_Exposed_Administra};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_20, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_37); __pyx_t_37 = 0;
+      __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 288, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":289
+ *         # 4. Audit Exposed Configuration Leaks
+ *         logger.info(" Scanning for Exposed Administrative/Config Files...")
+ *         audit_targets = ZenSecurityAuditor.get_audit_endpoints(args.url)             # <<<<<<<<<<<<<<
+ * 
+ *         print(""*60)
+*/
+    __pyx_t_20 = __pyx_cur_scope->__pyx_v_ZenSecurityAuditor;
+    __Pyx_INCREF(__pyx_t_20);
+    __pyx_t_37 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 289, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_37);
+    __pyx_t_7 = 0;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_t_37};
+      __pyx_t_9 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_get_audit_endpoints, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 289, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_GIVEREF(__pyx_t_9);
+    __pyx_cur_scope->__pyx_v_audit_targets = __pyx_t_9;
+    __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":291
+ *         audit_targets = ZenSecurityAuditor.get_audit_endpoints(args.url)
+ * 
+ *         print(""*60)             # <<<<<<<<<<<<<<
+ *         print(" CONFIGURATION EXPOSURE SCAN (LEAK DETECTION)")
+ *         print(""*60)
+*/
+    __pyx_t_37 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_37, __pyx_mstate_global->__pyx_kp_u__11};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_37); __pyx_t_37 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 291, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":292
+ * 
+ *         print(""*60)
+ *         print(" CONFIGURATION EXPOSURE SCAN (LEAK DETECTION)")             # <<<<<<<<<<<<<<
+ *         print(""*60)
+ * 
+*/
+    __pyx_t_37 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_37, __pyx_mstate_global->__pyx_kp_u_CONFIGURATION_EXPOSURE_SCAN_LEA};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_37); __pyx_t_37 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 292, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":293
+ *         print(""*60)
+ *         print(" CONFIGURATION EXPOSURE SCAN (LEAK DETECTION)")
+ *         print(""*60)             # <<<<<<<<<<<<<<
+ * 
+ *         from curl_cffi.requests import AsyncSession
+*/
+    __pyx_t_37 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_37, __pyx_mstate_global->__pyx_kp_u__11};
+      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_37); __pyx_t_37 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 293, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":295
+ *         print(""*60)
+ * 
+ *         from curl_cffi.requests import AsyncSession             # <<<<<<<<<<<<<<
+ *         proxy = "socks5h://127.0.0.1:9050" if args.tor else None
+ * 
+*/
+    {
+      PyObject* const __pyx_imported_names[] = {__pyx_mstate_global->__pyx_n_u_AsyncSession};
+      __pyx_t_3 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_curl_cffi_requests, __pyx_imported_names, 1, NULL, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 295, __pyx_L1_error)
+    }
+    __pyx_t_9 = __pyx_t_3;
+    __Pyx_GOTREF(__pyx_t_9);
+    {
+      PyObject* const __pyx_imported_names[] = {__pyx_mstate_global->__pyx_n_u_AsyncSession};
+      __pyx_t_4 = 0; {
+        __pyx_t_37 = __Pyx_ImportFrom(__pyx_t_9, __pyx_imported_names[__pyx_t_4]); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 295, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_37);
+        switch (__pyx_t_4) {
+          case 0:
+          __Pyx_INCREF(__pyx_t_37);
+          __Pyx_GOTREF(__pyx_cur_scope->__pyx_v_AsyncSession);
+          __Pyx_DECREF_SET(__pyx_cur_scope->__pyx_v_AsyncSession, __pyx_t_37);
+          __Pyx_GIVEREF(__pyx_t_37);
+          break;
+          default:;
+        }
+        __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+      }
+    }
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":296
+ * 
+ *         from curl_cffi.requests import AsyncSession
+ *         proxy = "socks5h://127.0.0.1:9050" if args.tor else None             # <<<<<<<<<<<<<<
+ * 
+ *         async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as audit_session:
+*/
+    __pyx_t_37 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_tor); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 296, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_37);
+    __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_37); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 296, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+    if (__pyx_t_30) {
+      __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_socks5h_127_0_0_1_9050);
+      __pyx_t_9 = __pyx_mstate_global->__pyx_kp_u_socks5h_127_0_0_1_9050;
+    } else {
+      __Pyx_INCREF(Py_None);
+      __pyx_t_9 = Py_None;
+    }
+    __Pyx_GOTREF(__pyx_cur_scope->__pyx_v_proxy);
+    __Pyx_DECREF_SET(__pyx_cur_scope->__pyx_v_proxy, __pyx_t_9);
+    __Pyx_GIVEREF(__pyx_t_9);
+    __pyx_t_9 = 0;
+
+    /* "zenscrape/cli.py":298
+ *         proxy = "socks5h://127.0.0.1:9050" if args.tor else None
+ * 
+ *         async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as audit_session:             # <<<<<<<<<<<<<<
+ *             for target in audit_targets:
+ *                 try:
+*/
+    /*with:*/ {
+      __pyx_t_37 = NULL;
+      __Pyx_INCREF(__pyx_cur_scope->__pyx_v_AsyncSession);
+      __pyx_t_20 = __pyx_cur_scope->__pyx_v_AsyncSession; 
+      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_args, __pyx_mstate_global->__pyx_n_u_profile); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 298, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_cur_scope->__pyx_v_proxy); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 298, __pyx_L1_error)
+      if (__pyx_t_30) {
+        __pyx_t_6 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 298, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        if (PyDict_SetItem(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_http, __pyx_cur_scope->__pyx_v_proxy) < (0)) __PYX_ERR(0, 298, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_https, __pyx_cur_scope->__pyx_v_proxy) < (0)) __PYX_ERR(0, 298, __pyx_L1_error)
+        __pyx_t_5 = __pyx_t_6;
+        __pyx_t_6 = 0;
+      } else {
+        __Pyx_INCREF(Py_None);
+        __pyx_t_5 = Py_None;
+      }
+      __pyx_t_7 = 1;
+      #if CYTHON_UNPACK_METHODS
+      if (unlikely(PyMethod_Check(__pyx_t_20))) {
+        __pyx_t_37 = PyMethod_GET_SELF(__pyx_t_20);
+        assert(__pyx_t_37);
+        PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_20);
+        __Pyx_INCREF(__pyx_t_37);
+        __Pyx_INCREF(__pyx__function);
+        __Pyx_DECREF_SET(__pyx_t_20, __pyx__function);
+        __pyx_t_7 = 0;
+      }
+      #endif
+      {
+        PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_37, NULL};
+        __pyx_t_6 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 298, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_impersonate, __pyx_t_8, __pyx_t_6, __pyx_callargs+1, 0) < (0)) __PYX_ERR(0, 298, __pyx_L1_error)
+        if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_proxies, __pyx_t_5, __pyx_t_6, __pyx_callargs+1, 1) < (0)) __PYX_ERR(0, 298, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_20, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_6);
+        __Pyx_XDECREF(__pyx_t_37); __pyx_t_37 = 0;
+        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 298, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+      }
+      __pyx_t_3 = __Pyx_PyObject_LookupSpecial(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_aexit); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 298, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_6 = NULL;
+      __pyx_t_5 = __Pyx_PyObject_LookupSpecial(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_aenter); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 298, __pyx_L78_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_7 = 1;
+      #if CYTHON_UNPACK_METHODS
+      if (likely(PyMethod_Check(__pyx_t_5))) {
+        __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
+        assert(__pyx_t_6);
+        PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_5);
+        __Pyx_INCREF(__pyx_t_6);
+        __Pyx_INCREF(__pyx__function);
+        __Pyx_DECREF_SET(__pyx_t_5, __pyx__function);
+        __pyx_t_7 = 0;
+      }
+      #endif
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_6, NULL};
+        __pyx_t_20 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_5, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 298, __pyx_L78_error)
+        __Pyx_GOTREF(__pyx_t_20);
+      }
+      __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_20, &__pyx_r);
+      __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (likely(__pyx_t_12 == PYGEN_NEXT)) {
+        __Pyx_GOTREF(__pyx_r);
+        __Pyx_XGIVEREF(__pyx_t_3);
+        __pyx_cur_scope->__pyx_t_0 = __pyx_t_3;
+        __Pyx_XGIVEREF(__pyx_t_9);
+        __pyx_cur_scope->__pyx_t_1 = __pyx_t_9;
+        __Pyx_XGIVEREF(__pyx_r);
+        __Pyx_RefNannyFinishContext();
+        __Pyx_Coroutine_ResetAndClearException(__pyx_generator);
+        /* return from generator, awaiting value */
+        __pyx_generator->resume_label = 6;
+        return __pyx_r;
+        __pyx_L79_resume_from_await:;
+        __pyx_t_3 = __pyx_cur_scope->__pyx_t_0;
+        __pyx_cur_scope->__pyx_t_0 = 0;
+        __Pyx_XGOTREF(__pyx_t_3);
+        __pyx_t_9 = __pyx_cur_scope->__pyx_t_1;
+        __pyx_cur_scope->__pyx_t_1 = 0;
+        __Pyx_XGOTREF(__pyx_t_9);
+        if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 298, __pyx_L78_error)
+        __pyx_t_20 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_20);
+      } else if (likely(__pyx_t_12 == PYGEN_RETURN)) {
+        __Pyx_GOTREF(__pyx_r);
+        __pyx_t_20 = __pyx_r; __pyx_r = NULL;
+      } else {
+        __Pyx_XGOTREF(__pyx_r);
+        __PYX_ERR(0, 298, __pyx_L78_error)
+      }
+      __pyx_t_5 = __pyx_t_20;
+      __pyx_t_20 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      /*try:*/ {
+        {
+          __Pyx_ExceptionSave(&__pyx_t_15, &__pyx_t_14, &__pyx_t_13);
+          __Pyx_XGOTREF(__pyx_t_15);
+          __Pyx_XGOTREF(__pyx_t_14);
+          __Pyx_XGOTREF(__pyx_t_13);
+          /*try:*/ {
+            __Pyx_GIVEREF(__pyx_t_5);
+            __pyx_cur_scope->__pyx_v_audit_session = __pyx_t_5;
+            __pyx_t_5 = 0;
+
+            /* "zenscrape/cli.py":299
+ * 
+ *         async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as audit_session:
+ *             for target in audit_targets:             # <<<<<<<<<<<<<<
+ *                 try:
+ *                     audit_res = await audit_session.get(target["url"], timeout=10)
+*/
+            if (likely(PyList_CheckExact(__pyx_cur_scope->__pyx_v_audit_targets)) || PyTuple_CheckExact(__pyx_cur_scope->__pyx_v_audit_targets)) {
+              __pyx_t_5 = __pyx_cur_scope->__pyx_v_audit_targets; __Pyx_INCREF(__pyx_t_5);
+              __pyx_t_4 = 0;
+              __pyx_t_32 = NULL;
+            } else {
+              __pyx_t_4 = -1; __pyx_t_5 = PyObject_GetIter(__pyx_cur_scope->__pyx_v_audit_targets); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 299, __pyx_L83_error)
+              __Pyx_GOTREF(__pyx_t_5);
+              __pyx_t_32 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_5); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 299, __pyx_L83_error)
+            }
+            for (;;) {
+              if (likely(!__pyx_t_32)) {
+                if (likely(PyList_CheckExact(__pyx_t_5))) {
+                  {
+                    Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_5);
+                    #if !CYTHON_ASSUME_SAFE_SIZE
+                    if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 299, __pyx_L83_error)
+                    #endif
+                    if (__pyx_t_4 >= __pyx_temp) break;
+                  }
+                  __pyx_t_9 = __Pyx_PyList_GetItemRefFast(__pyx_t_5, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
+                  ++__pyx_t_4;
+                } else {
+                  {
+                    Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_5);
+                    #if !CYTHON_ASSUME_SAFE_SIZE
+                    if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 299, __pyx_L83_error)
+                    #endif
+                    if (__pyx_t_4 >= __pyx_temp) break;
+                  }
+                  #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+                  __pyx_t_9 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_5, __pyx_t_4));
+                  #else
+                  __pyx_t_9 = __Pyx_PySequence_ITEM(__pyx_t_5, __pyx_t_4);
+                  #endif
+                  ++__pyx_t_4;
+                }
+                if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 299, __pyx_L83_error)
+              } else {
+                __pyx_t_9 = __pyx_t_32(__pyx_t_5);
+                if (unlikely(!__pyx_t_9)) {
+                  PyObject* exc_type = PyErr_Occurred();
+                  if (exc_type) {
+                    if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 299, __pyx_L83_error)
+                    PyErr_Clear();
+                  }
+                  break;
+                }
+              }
+              __Pyx_GOTREF(__pyx_t_9);
+              __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_target);
+              __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_target, __pyx_t_9);
+              __Pyx_GIVEREF(__pyx_t_9);
+              __pyx_t_9 = 0;
+
+              /* "zenscrape/cli.py":300
+ *         async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as audit_session:
+ *             for target in audit_targets:
+ *                 try:             # <<<<<<<<<<<<<<
+ *                     audit_res = await audit_session.get(target["url"], timeout=10)
+ *                     signature_match = target["signature"] in audit_res.text if audit_res.text else False
+*/
+              {
+                __Pyx_ExceptionSave(&__pyx_t_18, &__pyx_t_17, &__pyx_t_16);
+                __Pyx_XGOTREF(__pyx_t_18);
+                __Pyx_XGOTREF(__pyx_t_17);
+                __Pyx_XGOTREF(__pyx_t_16);
+                /*try:*/ {
+
+                  /* "zenscrape/cli.py":301
+ *             for target in audit_targets:
+ *                 try:
+ *                     audit_res = await audit_session.get(target["url"], timeout=10)             # <<<<<<<<<<<<<<
+ *                     signature_match = target["signature"] in audit_res.text if audit_res.text else False
+ * 
+*/
+                  __pyx_t_20 = __pyx_cur_scope->__pyx_v_audit_session;
+                  __Pyx_INCREF(__pyx_t_20);
+                  __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_target, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 301, __pyx_L91_error)
+                  __Pyx_GOTREF(__pyx_t_6);
+                  __pyx_t_7 = 0;
+                  {
+                    PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_20, __pyx_t_6};
+                    __pyx_t_8 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 301, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_8);
+                    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_timeout, __pyx_mstate_global->__pyx_int_10, __pyx_t_8, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 301, __pyx_L91_error)
+                    __pyx_t_9 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_get, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_8);
+                    __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+                    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+                    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+                    if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 301, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_9);
+                  }
+                  __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_9, &__pyx_r);
+                  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+                  if (likely(__pyx_t_12 == PYGEN_NEXT)) {
+                    __Pyx_GOTREF(__pyx_r);
+                    __Pyx_XGIVEREF(__pyx_t_3);
+                    __pyx_cur_scope->__pyx_t_0 = __pyx_t_3;
+                    __pyx_cur_scope->__pyx_t_8 = __pyx_t_4;
+                    __Pyx_XGIVEREF(__pyx_t_5);
+                    __pyx_cur_scope->__pyx_t_1 = __pyx_t_5;
+                    __Pyx_XGIVEREF(__pyx_t_13);
+                    __pyx_cur_scope->__pyx_t_2 = __pyx_t_13;
+                    __Pyx_XGIVEREF(__pyx_t_14);
+                    __pyx_cur_scope->__pyx_t_3 = __pyx_t_14;
+                    __Pyx_XGIVEREF(__pyx_t_15);
+                    __pyx_cur_scope->__pyx_t_4 = __pyx_t_15;
+                    __Pyx_XGIVEREF(__pyx_t_16);
+                    __pyx_cur_scope->__pyx_t_5 = __pyx_t_16;
+                    __Pyx_XGIVEREF(__pyx_t_17);
+                    __pyx_cur_scope->__pyx_t_6 = __pyx_t_17;
+                    __Pyx_XGIVEREF(__pyx_t_18);
+                    __pyx_cur_scope->__pyx_t_7 = __pyx_t_18;
+                    __pyx_cur_scope->__pyx_t_9 = __pyx_t_32;
+                    __Pyx_XGIVEREF(__pyx_r);
+                    __Pyx_RefNannyFinishContext();
+                    __Pyx_Coroutine_ResetAndClearException(__pyx_generator);
+                    /* return from generator, awaiting value */
+                    __pyx_generator->resume_label = 7;
+                    return __pyx_r;
+                    __pyx_L99_resume_from_await:;
+                    __pyx_t_3 = __pyx_cur_scope->__pyx_t_0;
+                    __pyx_cur_scope->__pyx_t_0 = 0;
+                    __Pyx_XGOTREF(__pyx_t_3);
+                    __pyx_t_4 = __pyx_cur_scope->__pyx_t_8;
+                    __pyx_t_5 = __pyx_cur_scope->__pyx_t_1;
+                    __pyx_cur_scope->__pyx_t_1 = 0;
+                    __Pyx_XGOTREF(__pyx_t_5);
+                    __pyx_t_13 = __pyx_cur_scope->__pyx_t_2;
+                    __pyx_cur_scope->__pyx_t_2 = 0;
+                    __Pyx_XGOTREF(__pyx_t_13);
+                    __pyx_t_14 = __pyx_cur_scope->__pyx_t_3;
+                    __pyx_cur_scope->__pyx_t_3 = 0;
+                    __Pyx_XGOTREF(__pyx_t_14);
+                    __pyx_t_15 = __pyx_cur_scope->__pyx_t_4;
+                    __pyx_cur_scope->__pyx_t_4 = 0;
+                    __Pyx_XGOTREF(__pyx_t_15);
+                    __pyx_t_16 = __pyx_cur_scope->__pyx_t_5;
+                    __pyx_cur_scope->__pyx_t_5 = 0;
+                    __Pyx_XGOTREF(__pyx_t_16);
+                    __pyx_t_17 = __pyx_cur_scope->__pyx_t_6;
+                    __pyx_cur_scope->__pyx_t_6 = 0;
+                    __Pyx_XGOTREF(__pyx_t_17);
+                    __pyx_t_18 = __pyx_cur_scope->__pyx_t_7;
+                    __pyx_cur_scope->__pyx_t_7 = 0;
+                    __Pyx_XGOTREF(__pyx_t_18);
+                    __pyx_t_32 = __pyx_cur_scope->__pyx_t_9;
+                    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 301, __pyx_L91_error)
+                    __pyx_t_9 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_9);
+                  } else if (likely(__pyx_t_12 == PYGEN_RETURN)) {
+                    __Pyx_GOTREF(__pyx_r);
+                    __pyx_t_9 = __pyx_r; __pyx_r = NULL;
+                  } else {
+                    __Pyx_XGOTREF(__pyx_r);
+                    __PYX_ERR(0, 301, __pyx_L91_error)
+                  }
+                  __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_audit_res);
+                  __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_audit_res, __pyx_t_9);
+                  __Pyx_GIVEREF(__pyx_t_9);
+                  __pyx_t_9 = 0;
+
+                  /* "zenscrape/cli.py":302
+ *                 try:
+ *                     audit_res = await audit_session.get(target["url"], timeout=10)
+ *                     signature_match = target["signature"] in audit_res.text if audit_res.text else False             # <<<<<<<<<<<<<<
+ * 
+ *                     if audit_res.status_code == 200 and signature_match:
+*/
+                  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_audit_res, __pyx_mstate_global->__pyx_n_u_text); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 302, __pyx_L91_error)
+                  __Pyx_GOTREF(__pyx_t_8);
+                  __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_8); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 302, __pyx_L91_error)
+                  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+                  if (__pyx_t_30) {
+                    __pyx_t_8 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_target, __pyx_mstate_global->__pyx_n_u_signature); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 302, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_8);
+                    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_audit_res, __pyx_mstate_global->__pyx_n_u_text); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 302, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_6);
+                    __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_t_8, __pyx_t_6, Py_EQ)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 302, __pyx_L91_error)
+                    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+                    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+                    __pyx_t_6 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 302, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_6);
+                    __pyx_t_9 = __pyx_t_6;
+                    __pyx_t_6 = 0;
+                  } else {
+                    __Pyx_INCREF(Py_False);
+                    __pyx_t_9 = Py_False;
+                  }
+                  __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_signature_match);
+                  __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_signature_match, __pyx_t_9);
+                  __Pyx_GIVEREF(__pyx_t_9);
+                  __pyx_t_9 = 0;
+
+                  /* "zenscrape/cli.py":304
+ *                     signature_match = target["signature"] in audit_res.text if audit_res.text else False
+ * 
+ *                     if audit_res.status_code == 200 and signature_match:             # <<<<<<<<<<<<<<
+ *                         print(f" VULNERABLE: {target['url']}")
+ *                         print(f"   Exposure: {target['desc']}")
+*/
+                  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_audit_res, __pyx_mstate_global->__pyx_n_u_status_code); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 304, __pyx_L91_error)
+                  __Pyx_GOTREF(__pyx_t_9);
+                  __pyx_t_2 = (__Pyx_PyLong_BoolEqObjC(__pyx_t_9, __pyx_mstate_global->__pyx_int_200, 0xC8, 0)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 304, __pyx_L91_error)
+                  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+                  if (__pyx_t_2) {
+                  } else {
+                    __pyx_t_30 = __pyx_t_2;
+                    goto __pyx_L101_bool_binop_done;
+                  }
+                  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_cur_scope->__pyx_v_signature_match); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 304, __pyx_L91_error)
+                  __pyx_t_30 = __pyx_t_2;
+                  __pyx_L101_bool_binop_done:;
+                  if (__pyx_t_30) {
+
+                    /* "zenscrape/cli.py":305
+ * 
+ *                     if audit_res.status_code == 200 and signature_match:
+ *                         print(f" VULNERABLE: {target['url']}")             # <<<<<<<<<<<<<<
+ *                         print(f"   Exposure: {target['desc']}")
+ *                         print(f"   Preview:  {audit_res.text[:100].strip()}...\n")
+*/
+                    __pyx_t_6 = NULL;
+                    __pyx_t_8 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_target, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 305, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_8);
+                    __pyx_t_20 = __Pyx_PyObject_FormatSimple(__pyx_t_8, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 305, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_20);
+                    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+                    __pyx_t_8 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_VULNERABLE, __pyx_t_20); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 305, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_8);
+                    __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+                    __pyx_t_7 = 1;
+                    {
+                      PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_8};
+                      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+                      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+                      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+                      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 305, __pyx_L91_error)
+                      __Pyx_GOTREF(__pyx_t_9);
+                    }
+                    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+                    /* "zenscrape/cli.py":306
+ *                     if audit_res.status_code == 200 and signature_match:
+ *                         print(f" VULNERABLE: {target['url']}")
+ *                         print(f"   Exposure: {target['desc']}")             # <<<<<<<<<<<<<<
+ *                         print(f"   Preview:  {audit_res.text[:100].strip()}...\n")
+ *                     else:
+*/
+                    __pyx_t_8 = NULL;
+                    __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_target, __pyx_mstate_global->__pyx_n_u_desc); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 306, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_6);
+                    __pyx_t_20 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 306, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_20);
+                    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+                    __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Exposure, __pyx_t_20); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 306, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_6);
+                    __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+                    __pyx_t_7 = 1;
+                    {
+                      PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_t_6};
+                      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+                      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+                      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+                      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 306, __pyx_L91_error)
+                      __Pyx_GOTREF(__pyx_t_9);
+                    }
+                    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+                    /* "zenscrape/cli.py":307
+ *                         print(f" VULNERABLE: {target['url']}")
+ *                         print(f"   Exposure: {target['desc']}")
+ *                         print(f"   Preview:  {audit_res.text[:100].strip()}...\n")             # <<<<<<<<<<<<<<
+ *                     else:
+ *                         print(f" SECURE: {target['url']} -> Not Exposed (HTTP {audit_res.status_code})")
+*/
+                    __pyx_t_6 = NULL;
+                    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_audit_res, __pyx_mstate_global->__pyx_n_u_text); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 307, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_8);
+                    __pyx_t_20 = __Pyx_PyObject_GetSlice(__pyx_t_8, 0, 0x64, NULL, NULL, &__pyx_mstate_global->__pyx_slice[0], 0, 1, 1); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 307, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_20);
+                    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+                    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_strip); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 307, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_8);
+                    __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+                    __pyx_t_20 = __Pyx_PyObject_CallNoArg(__pyx_t_8); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 307, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_20);
+                    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+                    __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_t_20, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 307, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_8);
+                    __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+                    __pyx_t_10[0] = __pyx_mstate_global->__pyx_kp_u_Preview;
+                    __pyx_t_10[1] = __pyx_t_8;
+                    __pyx_t_10[2] = __pyx_mstate_global->__pyx_kp_u__25;
+                    __pyx_t_20 = __Pyx_PyUnicode_Join(__pyx_t_10, 3, 13 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8) + 4, 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_8));
+                    if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 307, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_20);
+                    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+                    __pyx_t_7 = 1;
+                    {
+                      PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_20};
+                      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+                      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+                      __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
+                      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 307, __pyx_L91_error)
+                      __Pyx_GOTREF(__pyx_t_9);
+                    }
+                    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+                    /* "zenscrape/cli.py":304
+ *                     signature_match = target["signature"] in audit_res.text if audit_res.text else False
+ * 
+ *                     if audit_res.status_code == 200 and signature_match:             # <<<<<<<<<<<<<<
+ *                         print(f" VULNERABLE: {target['url']}")
+ *                         print(f"   Exposure: {target['desc']}")
+*/
+                    goto __pyx_L100;
+                  }
+
+                  /* "zenscrape/cli.py":309
+ *                         print(f"   Preview:  {audit_res.text[:100].strip()}...\n")
+ *                     else:
+ *                         print(f" SECURE: {target['url']} -> Not Exposed (HTTP {audit_res.status_code})")             # <<<<<<<<<<<<<<
+ *                 except Exception:
+ *                     print(f" ERROR: Could not connect to {target['url']}")
+*/
+                  /*else*/ {
+                    __pyx_t_20 = NULL;
+                    __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_target, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 309, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_6);
+                    __pyx_t_8 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 309, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_8);
+                    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+                    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_audit_res, __pyx_mstate_global->__pyx_n_u_status_code); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 309, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_6);
+                    __pyx_t_37 = __Pyx_PyObject_FormatSimple(__pyx_t_6, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 309, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_37);
+                    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+                    __pyx_t_31[0] = __pyx_mstate_global->__pyx_kp_u_SECURE;
+                    __pyx_t_31[1] = __pyx_t_8;
+                    __pyx_t_31[2] = __pyx_mstate_global->__pyx_kp_u_Not_Exposed_HTTP;
+                    __pyx_t_31[3] = __pyx_t_37;
+                    __pyx_t_31[4] = __pyx_mstate_global->__pyx_kp_u__8;
+                    __pyx_t_6 = __Pyx_PyUnicode_Join(__pyx_t_31, 5, 10 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8) + 22 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_37) + 1, 1114111 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_8) | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_37));
+                    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 309, __pyx_L91_error)
+                    __Pyx_GOTREF(__pyx_t_6);
+                    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+                    __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+                    __pyx_t_7 = 1;
+                    {
+                      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_t_6};
+                      __pyx_t_9 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+                      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+                      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+                      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 309, __pyx_L91_error)
+                      __Pyx_GOTREF(__pyx_t_9);
+                    }
+                    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+                  }
+                  __pyx_L100:;
+
+                  /* "zenscrape/cli.py":300
+ *         async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as audit_session:
+ *             for target in audit_targets:
+ *                 try:             # <<<<<<<<<<<<<<
+ *                     audit_res = await audit_session.get(target["url"], timeout=10)
+ *                     signature_match = target["signature"] in audit_res.text if audit_res.text else False
+*/
+                }
+                __Pyx_XDECREF(__pyx_t_18); __pyx_t_18 = 0;
+                __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
+                __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
+                goto __pyx_L98_try_end;
+                __pyx_L91_error:;
+                __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+                __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+                __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+                __Pyx_XDECREF(__pyx_t_21); __pyx_t_21 = 0;
+                __Pyx_XDECREF(__pyx_t_37); __pyx_t_37 = 0;
+                __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+                __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+                __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+
+                /* "zenscrape/cli.py":310
+ *                     else:
+ *                         print(f" SECURE: {target['url']} -> Not Exposed (HTTP {audit_res.status_code})")
+ *                 except Exception:             # <<<<<<<<<<<<<<
+ *                     print(f" ERROR: Could not connect to {target['url']}")
+ * 
+*/
+                __pyx_t_22 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_Exception))));
+                if (__pyx_t_22) {
+                  __Pyx_AddTraceback("zenscrape.cli.run_inspector", __pyx_clineno, __pyx_lineno, __pyx_filename);
+                  if (__Pyx_GetException(&__pyx_t_9, &__pyx_t_6, &__pyx_t_20) < 0) __PYX_ERR(0, 310, __pyx_L93_except_error)
+                  __Pyx_XGOTREF(__pyx_t_9);
+                  __Pyx_XGOTREF(__pyx_t_6);
+                  __Pyx_XGOTREF(__pyx_t_20);
+
+                  /* "zenscrape/cli.py":311
+ *                         print(f" SECURE: {target['url']} -> Not Exposed (HTTP {audit_res.status_code})")
+ *                 except Exception:
+ *                     print(f" ERROR: Could not connect to {target['url']}")             # <<<<<<<<<<<<<<
+ * 
+ *         print(""*60 + "\n")
+*/
+                  __pyx_t_8 = NULL;
+                  __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_target, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L93_except_error)
+                  __Pyx_GOTREF(__pyx_t_1);
+                  __pyx_t_21 = __Pyx_PyObject_FormatSimple(__pyx_t_1, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 311, __pyx_L93_except_error)
+                  __Pyx_GOTREF(__pyx_t_21);
+                  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+                  __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_ERROR_Could_not_connect_to, __pyx_t_21); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L93_except_error)
+                  __Pyx_GOTREF(__pyx_t_1);
+                  __Pyx_DECREF(__pyx_t_21); __pyx_t_21 = 0;
+                  __pyx_t_7 = 1;
+                  {
+                    PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_t_1};
+                    __pyx_t_37 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+                    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+                    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+                    if (unlikely(!__pyx_t_37)) __PYX_ERR(0, 311, __pyx_L93_except_error)
+                    __Pyx_GOTREF(__pyx_t_37);
+                  }
+                  __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
+                  __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+                  __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+                  __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+                  goto __pyx_L92_exception_handled;
+                }
+                goto __pyx_L93_except_error;
+
+                /* "zenscrape/cli.py":300
+ *         async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as audit_session:
+ *             for target in audit_targets:
+ *                 try:             # <<<<<<<<<<<<<<
+ *                     audit_res = await audit_session.get(target["url"], timeout=10)
+ *                     signature_match = target["signature"] in audit_res.text if audit_res.text else False
+*/
+                __pyx_L93_except_error:;
+                __Pyx_XGIVEREF(__pyx_t_18);
+                __Pyx_XGIVEREF(__pyx_t_17);
+                __Pyx_XGIVEREF(__pyx_t_16);
+                __Pyx_ExceptionReset(__pyx_t_18, __pyx_t_17, __pyx_t_16);
+                goto __pyx_L83_error;
+                __pyx_L92_exception_handled:;
+                __Pyx_XGIVEREF(__pyx_t_18);
+                __Pyx_XGIVEREF(__pyx_t_17);
+                __Pyx_XGIVEREF(__pyx_t_16);
+                __Pyx_ExceptionReset(__pyx_t_18, __pyx_t_17, __pyx_t_16);
+                __pyx_L98_try_end:;
+              }
+
+              /* "zenscrape/cli.py":299
+ * 
+ *         async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as audit_session:
+ *             for target in audit_targets:             # <<<<<<<<<<<<<<
+ *                 try:
+ *                     audit_res = await audit_session.get(target["url"], timeout=10)
+*/
+            }
+            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+            /* "zenscrape/cli.py":298
+ *         proxy = "socks5h://127.0.0.1:9050" if args.tor else None
+ * 
+ *         async with AsyncSession(impersonate=args.profile, proxies={"http": proxy, "https": proxy} if proxy else None) as audit_session:             # <<<<<<<<<<<<<<
+ *             for target in audit_targets:
+ *                 try:
+*/
+          }
+          __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
+          __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
+          __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
+          goto __pyx_L88_try_end;
+          __pyx_L83_error:;
+          __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+          __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+          __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+          __Pyx_XDECREF(__pyx_t_21); __pyx_t_21 = 0;
+          __Pyx_XDECREF(__pyx_t_37); __pyx_t_37 = 0;
+          __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+          __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+          __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+          __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+          /*except:*/ {
+            __Pyx_AddTraceback("zenscrape.cli.run_inspector", __pyx_clineno, __pyx_lineno, __pyx_filename);
+            if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_20, &__pyx_t_6) < 0) __PYX_ERR(0, 298, __pyx_L85_except_error)
+            __Pyx_XGOTREF(__pyx_t_5);
+            __Pyx_XGOTREF(__pyx_t_20);
+            __Pyx_XGOTREF(__pyx_t_6);
+            __pyx_t_9 = PyTuple_Pack(3, __pyx_t_5, __pyx_t_20, __pyx_t_6); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 298, __pyx_L85_except_error)
+            __Pyx_GOTREF(__pyx_t_9);
+            __pyx_t_16 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_9, NULL);
+            __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+            __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+            if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 298, __pyx_L85_except_error)
+            __Pyx_GOTREF(__pyx_t_16);
+            __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_16, &__pyx_r);
+            __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+            if (likely(__pyx_t_12 == PYGEN_NEXT)) {
+              __Pyx_GOTREF(__pyx_r);
+              __Pyx_XGIVEREF(__pyx_t_3);
+              __pyx_cur_scope->__pyx_t_0 = __pyx_t_3;
+              __Pyx_XGIVEREF(__pyx_t_5);
+              __pyx_cur_scope->__pyx_t_1 = __pyx_t_5;
+              __Pyx_XGIVEREF(__pyx_t_6);
+              __pyx_cur_scope->__pyx_t_2 = __pyx_t_6;
+              __Pyx_XGIVEREF(__pyx_t_13);
+              __pyx_cur_scope->__pyx_t_3 = __pyx_t_13;
+              __Pyx_XGIVEREF(__pyx_t_14);
+              __pyx_cur_scope->__pyx_t_4 = __pyx_t_14;
+              __Pyx_XGIVEREF(__pyx_t_15);
+              __pyx_cur_scope->__pyx_t_5 = __pyx_t_15;
+              __Pyx_XGIVEREF(__pyx_t_16);
+              __pyx_cur_scope->__pyx_t_6 = __pyx_t_16;
+              __Pyx_XGIVEREF(__pyx_t_20);
+              __pyx_cur_scope->__pyx_t_7 = __pyx_t_20;
+              __Pyx_XGIVEREF(__pyx_r);
+              __Pyx_RefNannyFinishContext();
+              __Pyx_Coroutine_SwapException(__pyx_generator);
+              /* return from generator, awaiting value */
+              __pyx_generator->resume_label = 8;
+              return __pyx_r;
+              __pyx_L109_resume_from_await:;
+              __pyx_t_3 = __pyx_cur_scope->__pyx_t_0;
+              __pyx_cur_scope->__pyx_t_0 = 0;
+              __Pyx_XGOTREF(__pyx_t_3);
+              __pyx_t_5 = __pyx_cur_scope->__pyx_t_1;
+              __pyx_cur_scope->__pyx_t_1 = 0;
+              __Pyx_XGOTREF(__pyx_t_5);
+              __pyx_t_6 = __pyx_cur_scope->__pyx_t_2;
+              __pyx_cur_scope->__pyx_t_2 = 0;
+              __Pyx_XGOTREF(__pyx_t_6);
+              __pyx_t_13 = __pyx_cur_scope->__pyx_t_3;
+              __pyx_cur_scope->__pyx_t_3 = 0;
+              __Pyx_XGOTREF(__pyx_t_13);
+              __pyx_t_14 = __pyx_cur_scope->__pyx_t_4;
+              __pyx_cur_scope->__pyx_t_4 = 0;
+              __Pyx_XGOTREF(__pyx_t_14);
+              __pyx_t_15 = __pyx_cur_scope->__pyx_t_5;
+              __pyx_cur_scope->__pyx_t_5 = 0;
+              __Pyx_XGOTREF(__pyx_t_15);
+              __pyx_t_16 = __pyx_cur_scope->__pyx_t_6;
+              __pyx_cur_scope->__pyx_t_6 = 0;
+              __Pyx_XGOTREF(__pyx_t_16);
+              __pyx_t_20 = __pyx_cur_scope->__pyx_t_7;
+              __pyx_cur_scope->__pyx_t_7 = 0;
+              __Pyx_XGOTREF(__pyx_t_20);
+              if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 298, __pyx_L85_except_error)
+              __pyx_t_9 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_9);
+            } else if (likely(__pyx_t_12 == PYGEN_RETURN)) {
+              __Pyx_GOTREF(__pyx_r);
+              __pyx_t_9 = __pyx_r; __pyx_r = NULL;
+            } else {
+              __Pyx_XGOTREF(__pyx_r);
+              __PYX_ERR(0, 298, __pyx_L85_except_error)
+            }
+            __pyx_t_16 = __pyx_t_9;
+            __pyx_t_9 = 0;
+            __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_t_16);
+            __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+            if (__pyx_t_30 < (0)) __PYX_ERR(0, 298, __pyx_L85_except_error)
+            __pyx_t_2 = (!__pyx_t_30);
+            if (unlikely(__pyx_t_2)) {
+              __Pyx_GIVEREF(__pyx_t_5);
+              __Pyx_GIVEREF(__pyx_t_20);
+              __Pyx_XGIVEREF(__pyx_t_6);
+              __Pyx_ErrRestoreWithState(__pyx_t_5, __pyx_t_20, __pyx_t_6);
+              __pyx_t_5 = 0;  __pyx_t_20 = 0;  __pyx_t_6 = 0; 
+              __PYX_ERR(0, 298, __pyx_L85_except_error)
+            }
+            __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+            __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+            __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+            goto __pyx_L84_exception_handled;
+          }
+          __pyx_L85_except_error:;
+          __Pyx_XGIVEREF(__pyx_t_15);
+          __Pyx_XGIVEREF(__pyx_t_14);
+          __Pyx_XGIVEREF(__pyx_t_13);
+          __Pyx_ExceptionReset(__pyx_t_15, __pyx_t_14, __pyx_t_13);
+          goto __pyx_L1_error;
+          __pyx_L84_exception_handled:;
+          __Pyx_XGIVEREF(__pyx_t_15);
+          __Pyx_XGIVEREF(__pyx_t_14);
+          __Pyx_XGIVEREF(__pyx_t_13);
+          __Pyx_ExceptionReset(__pyx_t_15, __pyx_t_14, __pyx_t_13);
+          __pyx_L88_try_end:;
+        }
+      }
+      /*finally:*/ {
+        /*normal exit:*/{
+          if (__pyx_t_3) {
+            __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_mstate_global->__pyx_tuple[0], NULL);
+            __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+            if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 298, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_13);
+            __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_13, &__pyx_r);
+            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+            if (likely(__pyx_t_12 == PYGEN_NEXT)) {
+              __Pyx_GOTREF(__pyx_r);
+              __Pyx_XGIVEREF(__pyx_t_3);
+              __pyx_cur_scope->__pyx_t_0 = __pyx_t_3;
+              __Pyx_XGIVEREF(__pyx_t_13);
+              __pyx_cur_scope->__pyx_t_1 = __pyx_t_13;
+              __Pyx_XGIVEREF(__pyx_r);
+              __Pyx_RefNannyFinishContext();
+              __Pyx_Coroutine_ResetAndClearException(__pyx_generator);
+              /* return from generator, awaiting value */
+              __pyx_generator->resume_label = 9;
+              return __pyx_r;
+              __pyx_L110_resume_from_await:;
+              __pyx_t_3 = __pyx_cur_scope->__pyx_t_0;
+              __pyx_cur_scope->__pyx_t_0 = 0;
+              __Pyx_XGOTREF(__pyx_t_3);
+              __pyx_t_13 = __pyx_cur_scope->__pyx_t_1;
+              __pyx_cur_scope->__pyx_t_1 = 0;
+              __Pyx_XGOTREF(__pyx_t_13);
+              if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 298, __pyx_L1_error)
+              __pyx_t_6 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_6);
+            } else if (likely(__pyx_t_12 == PYGEN_RETURN)) {
+              __Pyx_GOTREF(__pyx_r);
+              __pyx_t_6 = __pyx_r; __pyx_r = NULL;
+            } else {
+              __Pyx_XGOTREF(__pyx_r);
+              __PYX_ERR(0, 298, __pyx_L1_error)
+            }
+            __pyx_t_13 = __pyx_t_6;
+            __pyx_t_6 = 0;
+            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+          }
+          goto __pyx_L82;
+        }
+        __pyx_L82:;
+      }
+      goto __pyx_L111;
+      __pyx_L78_error:;
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      goto __pyx_L1_error;
+      __pyx_L111:;
+    }
+
+    /* "zenscrape/cli.py":313
+ *                     print(f" ERROR: Could not connect to {target['url']}")
+ * 
+ *         print(""*60 + "\n")             # <<<<<<<<<<<<<<
+ *         input("Press Enter to Exit Security Audit...")
+ *         sys.exit()
+*/
+    __pyx_t_20 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u__26};
+      __pyx_t_6 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 313, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+    }
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+
+    /* "zenscrape/cli.py":314
+ * 
+ *         print(""*60 + "\n")
+ *         input("Press Enter to Exit Security Audit...")             # <<<<<<<<<<<<<<
+ *         sys.exit()
+ *     elif choice == 'q': sys.exit()
+*/
+    __pyx_t_20 = NULL;
+    __pyx_t_7 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, __pyx_mstate_global->__pyx_kp_u_Press_Enter_to_Exit_Security_Aud};
+      __pyx_t_6 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_input, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 314, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+    }
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+
+    /* "zenscrape/cli.py":315
+ *         print(""*60 + "\n")
+ *         input("Press Enter to Exit Security Audit...")
+ *         sys.exit()             # <<<<<<<<<<<<<<
+ *     elif choice == 'q': sys.exit()
+ * 
+*/
+    __pyx_t_20 = NULL;
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_sys); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 315, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_exit_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 315, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_7 = 1;
+    #if CYTHON_UNPACK_METHODS
+    if (unlikely(PyMethod_Check(__pyx_t_9))) {
+      __pyx_t_20 = PyMethod_GET_SELF(__pyx_t_9);
+      assert(__pyx_t_20);
+      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_9);
+      __Pyx_INCREF(__pyx_t_20);
+      __Pyx_INCREF(__pyx__function);
+      __Pyx_DECREF_SET(__pyx_t_9, __pyx__function);
+      __pyx_t_7 = 0;
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_20, NULL};
+      __pyx_t_6 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_9, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 315, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+    }
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+
+    /* "zenscrape/cli.py":235
+ *         input("\nPress Enter to Exit Audit...")
+ *         sys.exit()
+ *     elif choice == '8':             # <<<<<<<<<<<<<<
+ *         from .auditor import ZenSecurityAuditor
+ *         from urllib.parse import urlparse
+*/
+    goto __pyx_L48;
+  }
+
+  /* "zenscrape/cli.py":316
+ *         input("Press Enter to Exit Security Audit...")
  *         sys.exit()
  *     elif choice == 'q': sys.exit()             # <<<<<<<<<<<<<<
  * 
  *     await start_scrape(args)
 */
-  __pyx_t_30 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_n_u_q, Py_EQ)); if (unlikely((__pyx_t_30 < 0))) __PYX_ERR(0, 228, __pyx_L1_error)
-  if (__pyx_t_30) {
-    __pyx_t_3 = NULL;
-    __Pyx_GetModuleGlobalName(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_sys); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 228, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_cur_scope->__pyx_v_choice, __pyx_mstate_global->__pyx_n_u_q, Py_EQ)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 316, __pyx_L1_error)
+  if (__pyx_t_2) {
+    __pyx_t_9 = NULL;
+    __Pyx_GetModuleGlobalName(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_sys); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 316, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_20);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_exit_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 228, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_20, __pyx_mstate_global->__pyx_n_u_exit_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 316, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
     __pyx_t_7 = 1;
     #if CYTHON_UNPACK_METHODS
-    if (unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-      assert(__pyx_t_3);
-      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
-      __Pyx_INCREF(__pyx_t_3);
+    if (unlikely(PyMethod_Check(__pyx_t_5))) {
+      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_5);
+      assert(__pyx_t_9);
+      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_5);
+      __Pyx_INCREF(__pyx_t_9);
       __Pyx_INCREF(__pyx__function);
-      __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
+      __Pyx_DECREF_SET(__pyx_t_5, __pyx__function);
       __pyx_t_7 = 0;
     }
     #endif
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-      __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 228, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      PyObject *__pyx_callargs[2] = {__pyx_t_9, NULL};
+      __pyx_t_6 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_5, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 316, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
-  __pyx_L47:;
+  __pyx_L48:;
 
-  /* "zenscrape/cli.py":230
+  /* "zenscrape/cli.py":318
  *     elif choice == 'q': sys.exit()
  * 
  *     await start_scrape(args)             # <<<<<<<<<<<<<<
  * 
  * def main():
 */
-  __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_start_scrape); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 230, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = NULL;
+  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_start_scrape); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
   __pyx_t_7 = 1;
   #if CYTHON_UNPACK_METHODS
-  if (unlikely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-    assert(__pyx_t_4);
-    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_3);
-    __Pyx_INCREF(__pyx_t_4);
+  if (unlikely(PyMethod_Check(__pyx_t_9))) {
+    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_9);
+    assert(__pyx_t_5);
+    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_9);
+    __Pyx_INCREF(__pyx_t_5);
     __Pyx_INCREF(__pyx__function);
-    __Pyx_DECREF_SET(__pyx_t_3, __pyx__function);
+    __Pyx_DECREF_SET(__pyx_t_9, __pyx__function);
     __pyx_t_7 = 0;
   }
   #endif
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_cur_scope->__pyx_v_args};
-    __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_3, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 230, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
+    PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_cur_scope->__pyx_v_args};
+    __pyx_t_6 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_9, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
   }
-  __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_5, &__pyx_r);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_12 = __Pyx_Coroutine_Yield_From(__pyx_generator, __pyx_t_6, &__pyx_r);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   if (likely(__pyx_t_12 == PYGEN_NEXT)) {
     __Pyx_GOTREF(__pyx_r);
     __Pyx_XGIVEREF(__pyx_r);
     __Pyx_RefNannyFinishContext();
     __Pyx_Coroutine_ResetAndClearException(__pyx_generator);
     /* return from generator, awaiting value */
-    __pyx_generator->resume_label = 6;
+    __pyx_generator->resume_label = 10;
     return __pyx_r;
-    __pyx_L70_resume_from_await:;
-    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 230, __pyx_L1_error)
+    __pyx_L112_resume_from_await:;
+    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 318, __pyx_L1_error)
   } else if (likely(__pyx_t_12 == PYGEN_RETURN)) {
     __Pyx_GOTREF(__pyx_r);
     __Pyx_DECREF(__pyx_r); __pyx_r = 0;
   } else {
     __Pyx_XGOTREF(__pyx_r);
-    __PYX_ERR(0, 230, __pyx_L1_error)
+    __PYX_ERR(0, 318, __pyx_L1_error)
   }
   CYTHON_MAYBE_UNUSED_VAR(__pyx_cur_scope);
 
@@ -10175,8 +12514,8 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
  *     return user_concurrency
  * 
  * async def run_inspector(args):             # <<<<<<<<<<<<<<
- *     logger.info(f" Scouting {args.url}...")
- *     from curl_cffi.requests import AsyncSession
+ *     if args.tor:
+ *         from .setup_env import ensure_tor_env
 */
 
   /* function exit code */
@@ -10184,13 +12523,14 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_8);
+  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_20);
   __Pyx_XDECREF(__pyx_t_21);
+  __Pyx_XDECREF(__pyx_t_37);
   if (__Pyx_PyErr_Occurred()) {
     __Pyx_Generator_Replace_StopIteration(0);
     __Pyx_AddTraceback("run_inspector", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -10206,7 +12546,7 @@ static PyObject *__pyx_gb_9zenscrape_3cli_9generator1(__pyx_CoroutineObject *__p
   return __pyx_r;
 }
 
-/* "zenscrape/cli.py":232
+/* "zenscrape/cli.py":320
  *     await start_scrape(args)
  * 
  * def main():             # <<<<<<<<<<<<<<
@@ -10249,7 +12589,7 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("main", 0);
 
-  /* "zenscrape/cli.py":233
+  /* "zenscrape/cli.py":321
  * 
  * def main():
  *     parser = argparse.ArgumentParser(description="ZenScrape Elite - Professional Web Intelligence")             # <<<<<<<<<<<<<<
@@ -10257,9 +12597,9 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
  *     parser.add_argument("--inspect", action="store_true", help="Interactive Mode")
 */
   __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_argparse); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 233, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_argparse); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 321, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_ArgumentParser); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 233, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_ArgumentParser); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 321, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_5 = 1;
@@ -10276,20 +12616,20 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, NULL};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 233, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 321, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_description, __pyx_mstate_global->__pyx_kp_u_ZenScrape_Elite_Professional_Web, __pyx_t_3, __pyx_callargs+1, 0) < (0)) __PYX_ERR(0, 233, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_description, __pyx_mstate_global->__pyx_kp_u_ZenScrape_Elite_Professional_Web, __pyx_t_3, __pyx_callargs+1, 0) < (0)) __PYX_ERR(0, 321, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 233, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 321, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __pyx_v_parser = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":234
+  /* "zenscrape/cli.py":322
  * def main():
  *     parser = argparse.ArgumentParser(description="ZenScrape Elite - Professional Web Intelligence")
  *     parser.add_argument("--url", help="Target URL")             # <<<<<<<<<<<<<<
@@ -10301,18 +12641,18 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_mstate_global->__pyx_kp_u_url_2};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 234, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_help, __pyx_mstate_global->__pyx_kp_u_Target_URL, __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 234, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_help, __pyx_mstate_global->__pyx_kp_u_Target_URL, __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 322, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 234, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":235
+  /* "zenscrape/cli.py":323
  *     parser = argparse.ArgumentParser(description="ZenScrape Elite - Professional Web Intelligence")
  *     parser.add_argument("--url", help="Target URL")
  *     parser.add_argument("--inspect", action="store_true", help="Interactive Mode")             # <<<<<<<<<<<<<<
@@ -10324,19 +12664,19 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_inspect};
-    __pyx_t_4 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 235, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 323, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_action, __pyx_mstate_global->__pyx_n_u_store_true, __pyx_t_4, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 235, __pyx_L1_error)
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_help, __pyx_mstate_global->__pyx_kp_u_Interactive_Mode, __pyx_t_4, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 235, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_action, __pyx_mstate_global->__pyx_n_u_store_true, __pyx_t_4, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 323, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_help, __pyx_mstate_global->__pyx_kp_u_Interactive_Mode, __pyx_t_4, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 323, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 235, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":236
+  /* "zenscrape/cli.py":324
  *     parser.add_argument("--url", help="Target URL")
  *     parser.add_argument("--inspect", action="store_true", help="Interactive Mode")
  *     parser.add_argument("--tor", action="store_true", help="Route through Tor")             # <<<<<<<<<<<<<<
@@ -10348,19 +12688,19 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_4, __pyx_mstate_global->__pyx_kp_u_tor_2};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 236, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_action, __pyx_mstate_global->__pyx_n_u_store_true, __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 236, __pyx_L1_error)
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_help, __pyx_mstate_global->__pyx_kp_u_Route_through_Tor, __pyx_t_3, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 236, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_action, __pyx_mstate_global->__pyx_n_u_store_true, __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 324, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_help, __pyx_mstate_global->__pyx_kp_u_Route_through_Tor, __pyx_t_3, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 324, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 236, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":237
+  /* "zenscrape/cli.py":325
  *     parser.add_argument("--inspect", action="store_true", help="Interactive Mode")
  *     parser.add_argument("--tor", action="store_true", help="Route through Tor")
  *     parser.add_argument("--profile", default="chrome110")             # <<<<<<<<<<<<<<
@@ -10372,18 +12712,18 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_profile_2};
-    __pyx_t_4 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 237, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 325, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_n_u_chrome110, __pyx_t_4, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 237, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_n_u_chrome110, __pyx_t_4, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 325, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 237, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 325, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":238
+  /* "zenscrape/cli.py":326
  *     parser.add_argument("--tor", action="store_true", help="Route through Tor")
  *     parser.add_argument("--profile", default="chrome110")
  *     parser.add_argument("--concurrency", type=int, default=0)             # <<<<<<<<<<<<<<
@@ -10395,19 +12735,19 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_4, __pyx_mstate_global->__pyx_kp_u_concurrency_2};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 238, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 326, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_type, ((PyObject *)(&PyLong_Type)), __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 238, __pyx_L1_error)
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_int_0, __pyx_t_3, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 238, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_type, ((PyObject *)(&PyLong_Type)), __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 326, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_int_0, __pyx_t_3, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 326, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 238, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 326, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":239
+  /* "zenscrape/cli.py":327
  *     parser.add_argument("--profile", default="chrome110")
  *     parser.add_argument("--concurrency", type=int, default=0)
  *     parser.add_argument("--depth", type=int, default=0)             # <<<<<<<<<<<<<<
@@ -10419,19 +12759,19 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_depth_2};
-    __pyx_t_4 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 239, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 327, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_type, ((PyObject *)(&PyLong_Type)), __pyx_t_4, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 239, __pyx_L1_error)
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_int_0, __pyx_t_4, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 239, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_type, ((PyObject *)(&PyLong_Type)), __pyx_t_4, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 327, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_int_0, __pyx_t_4, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 327, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 239, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 327, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":240
+  /* "zenscrape/cli.py":328
  *     parser.add_argument("--concurrency", type=int, default=0)
  *     parser.add_argument("--depth", type=int, default=0)
  *     parser.add_argument("--delay", type=float, default=0)             # <<<<<<<<<<<<<<
@@ -10443,19 +12783,19 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_4, __pyx_mstate_global->__pyx_kp_u_delay_2};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 240, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_type, ((PyObject *)(&PyFloat_Type)), __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 240, __pyx_L1_error)
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_int_0, __pyx_t_3, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 240, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_type, ((PyObject *)(&PyFloat_Type)), __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 328, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_int_0, __pyx_t_3, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 328, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 240, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 328, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":241
+  /* "zenscrape/cli.py":329
  *     parser.add_argument("--depth", type=int, default=0)
  *     parser.add_argument("--delay", type=float, default=0)
  *     parser.add_argument("--no-cache", action="store_true")             # <<<<<<<<<<<<<<
@@ -10467,18 +12807,18 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_no_cache_2};
-    __pyx_t_4 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 241, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 329, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_action, __pyx_mstate_global->__pyx_n_u_store_true, __pyx_t_4, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 241, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_action, __pyx_mstate_global->__pyx_n_u_store_true, __pyx_t_4, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 329, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 241, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":242
+  /* "zenscrape/cli.py":330
  *     parser.add_argument("--delay", type=float, default=0)
  *     parser.add_argument("--no-cache", action="store_true")
  *     parser.add_argument("--method", default="GET", choices=["GET", "POST", "PUT"])             # <<<<<<<<<<<<<<
@@ -10487,34 +12827,34 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
 */
   __pyx_t_4 = __pyx_v_parser;
   __Pyx_INCREF(__pyx_t_4);
-  __pyx_t_3 = PyList_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_3 = PyList_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 330, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_GET);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_GET);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 0, __pyx_mstate_global->__pyx_n_u_GET) != (0)) __PYX_ERR(0, 242, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 0, __pyx_mstate_global->__pyx_n_u_GET) != (0)) __PYX_ERR(0, 330, __pyx_L1_error);
   __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_POST);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_POST);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 1, __pyx_mstate_global->__pyx_n_u_POST) != (0)) __PYX_ERR(0, 242, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 1, __pyx_mstate_global->__pyx_n_u_POST) != (0)) __PYX_ERR(0, 330, __pyx_L1_error);
   __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_PUT);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_u_PUT);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 2, __pyx_mstate_global->__pyx_n_u_PUT) != (0)) __PYX_ERR(0, 242, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 2, __pyx_mstate_global->__pyx_n_u_PUT) != (0)) __PYX_ERR(0, 330, __pyx_L1_error);
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_4, __pyx_mstate_global->__pyx_kp_u_method_2};
-    __pyx_t_2 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 242, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 330, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_n_u_GET, __pyx_t_2, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 242, __pyx_L1_error)
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_choices, __pyx_t_3, __pyx_t_2, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 242, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_n_u_GET, __pyx_t_2, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 330, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_choices, __pyx_t_3, __pyx_t_2, __pyx_callargs+2, 1) < (0)) __PYX_ERR(0, 330, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_2);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 330, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":243
+  /* "zenscrape/cli.py":331
  *     parser.add_argument("--no-cache", action="store_true")
  *     parser.add_argument("--method", default="GET", choices=["GET", "POST", "PUT"])
  *     parser.add_argument("--data", default="{}")             # <<<<<<<<<<<<<<
@@ -10526,18 +12866,18 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_data_2};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 243, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 331, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_kp_u__18, __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 243, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_kp_u__18, __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 331, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 243, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 331, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":244
+  /* "zenscrape/cli.py":332
  *     parser.add_argument("--method", default="GET", choices=["GET", "POST", "PUT"])
  *     parser.add_argument("--data", default="{}")
  *     parser.add_argument("--params", default="{}")             # <<<<<<<<<<<<<<
@@ -10549,18 +12889,18 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_params_2};
-    __pyx_t_2 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 244, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_kp_u__18, __pyx_t_2, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 244, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_kp_u__18, __pyx_t_2, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 332, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_2);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 244, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":245
+  /* "zenscrape/cli.py":333
  *     parser.add_argument("--data", default="{}")
  *     parser.add_argument("--params", default="{}")
  *     parser.add_argument("--headers", default="{}")             # <<<<<<<<<<<<<<
@@ -10572,18 +12912,18 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_headers_2};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 245, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 333, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_kp_u__18, __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 245, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_kp_u__18, __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 333, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 245, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 333, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":246
+  /* "zenscrape/cli.py":334
  *     parser.add_argument("--params", default="{}")
  *     parser.add_argument("--headers", default="{}")
  *     parser.add_argument("--cookies", default="{}")             # <<<<<<<<<<<<<<
@@ -10595,18 +12935,18 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_cookies_2};
-    __pyx_t_2 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 246, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 334, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_kp_u__18, __pyx_t_2, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 246, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_kp_u__18, __pyx_t_2, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 334, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_2);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 246, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 334, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":247
+  /* "zenscrape/cli.py":335
  *     parser.add_argument("--headers", default="{}")
  *     parser.add_argument("--cookies", default="{}")
  *     parser.add_argument("--css")             # <<<<<<<<<<<<<<
@@ -10620,12 +12960,12 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
     PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_css_2};
     __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 247, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 335, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":248
+  /* "zenscrape/cli.py":336
  *     parser.add_argument("--cookies", default="{}")
  *     parser.add_argument("--css")
  *     parser.add_argument("--output", default="zenscrape_results.db")             # <<<<<<<<<<<<<<
@@ -10637,18 +12977,18 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_output_2};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 248, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 336, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_kp_u_zenscrape_results_db, __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 248, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_default, __pyx_mstate_global->__pyx_kp_u_zenscrape_results_db, __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 336, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 248, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 336, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":249
+  /* "zenscrape/cli.py":337
  *     parser.add_argument("--css")
  *     parser.add_argument("--output", default="zenscrape_results.db")
  *     parser.add_argument("--json", action="store_true")             # <<<<<<<<<<<<<<
@@ -10660,18 +13000,18 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_json_2};
-    __pyx_t_2 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 249, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 337, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_action, __pyx_mstate_global->__pyx_n_u_store_true, __pyx_t_2, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 249, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_action, __pyx_mstate_global->__pyx_n_u_store_true, __pyx_t_2, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 337, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_2);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 249, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 337, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":250
+  /* "zenscrape/cli.py":338
  *     parser.add_argument("--output", default="zenscrape_results.db")
  *     parser.add_argument("--json", action="store_true")
  *     parser.add_argument("--csv", action="store_true")             # <<<<<<<<<<<<<<
@@ -10683,18 +13023,18 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_csv_2};
-    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 250, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 338, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_action, __pyx_mstate_global->__pyx_n_u_store_true, __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 250, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_action, __pyx_mstate_global->__pyx_n_u_store_true, __pyx_t_3, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 338, __pyx_L1_error)
     __pyx_t_1 = __Pyx_Object_VectorcallMethod_CallFromBuilder((PyObject*)__pyx_mstate_global->__pyx_n_u_add_argument, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 250, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 338, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":252
+  /* "zenscrape/cli.py":340
  *     parser.add_argument("--csv", action="store_true")
  * 
  *     args = parser.parse_args()             # <<<<<<<<<<<<<<
@@ -10708,13 +13048,13 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
     PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
     __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_parse_args, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 252, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __pyx_v_args = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "zenscrape/cli.py":254
+  /* "zenscrape/cli.py":342
  *     args = parser.parse_args()
  * 
  *     action_performed = False             # <<<<<<<<<<<<<<
@@ -10723,20 +13063,20 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
 */
   __pyx_v_action_performed = 0;
 
-  /* "zenscrape/cli.py":256
+  /* "zenscrape/cli.py":344
  *     action_performed = False
  * 
  *     if args.url:             # <<<<<<<<<<<<<<
  *         action_performed = True
  *         if args.inspect: asyncio.run(run_inspector(args))
 */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_args, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 256, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_args, __pyx_mstate_global->__pyx_n_u_url); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 256, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 344, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_6) {
 
-    /* "zenscrape/cli.py":257
+    /* "zenscrape/cli.py":345
  * 
  *     if args.url:
  *         action_performed = True             # <<<<<<<<<<<<<<
@@ -10745,26 +13085,26 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
 */
     __pyx_v_action_performed = 1;
 
-    /* "zenscrape/cli.py":258
+    /* "zenscrape/cli.py":346
  *     if args.url:
  *         action_performed = True
  *         if args.inspect: asyncio.run(run_inspector(args))             # <<<<<<<<<<<<<<
  *         else: asyncio.run(start_scrape(args))
  * 
 */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_args, __pyx_mstate_global->__pyx_n_u_inspect_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_args, __pyx_mstate_global->__pyx_n_u_inspect_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 346, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 258, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 346, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_6) {
       __pyx_t_3 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_asyncio); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 258, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_asyncio); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 346, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_run); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 258, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_run); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 346, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_t_7 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_run_inspector); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 258, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_run_inspector); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 346, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __pyx_t_5 = 1;
       #if CYTHON_UNPACK_METHODS
@@ -10783,7 +13123,7 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
         __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_8, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 258, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 346, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
       }
       __pyx_t_5 = 1;
@@ -10804,14 +13144,14 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 346, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
       }
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       goto __pyx_L4;
     }
 
-    /* "zenscrape/cli.py":259
+    /* "zenscrape/cli.py":347
  *         action_performed = True
  *         if args.inspect: asyncio.run(run_inspector(args))
  *         else: asyncio.run(start_scrape(args))             # <<<<<<<<<<<<<<
@@ -10820,13 +13160,13 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
 */
     /*else*/ {
       __pyx_t_4 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_asyncio); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_asyncio); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 347, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_run); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 259, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_run); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 347, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_t_8 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_start_scrape); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 259, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_start_scrape); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 347, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __pyx_t_5 = 1;
       #if CYTHON_UNPACK_METHODS
@@ -10845,7 +13185,7 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
         __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_7, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 347, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
       }
       __pyx_t_5 = 1;
@@ -10866,14 +13206,14 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 259, __pyx_L1_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 347, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
       }
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     }
     __pyx_L4:;
 
-    /* "zenscrape/cli.py":256
+    /* "zenscrape/cli.py":344
  *     action_performed = False
  * 
  *     if args.url:             # <<<<<<<<<<<<<<
@@ -10882,20 +13222,20 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
 */
   }
 
-  /* "zenscrape/cli.py":261
+  /* "zenscrape/cli.py":349
  *         else: asyncio.run(start_scrape(args))
  * 
  *     if args.json:             # <<<<<<<<<<<<<<
  *         export_data(args.output, "json")
  *         action_performed = True
 */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_args, __pyx_mstate_global->__pyx_n_u_json); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 261, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_args, __pyx_mstate_global->__pyx_n_u_json); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 349, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 261, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 349, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_6) {
 
-    /* "zenscrape/cli.py":262
+    /* "zenscrape/cli.py":350
  * 
  *     if args.json:
  *         export_data(args.output, "json")             # <<<<<<<<<<<<<<
@@ -10903,9 +13243,9 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
  * 
 */
     __pyx_t_3 = NULL;
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_export_data); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 262, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_export_data); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 350, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_args, __pyx_mstate_global->__pyx_n_u_output); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 262, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_args, __pyx_mstate_global->__pyx_n_u_output); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 350, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = 1;
     #if CYTHON_UNPACK_METHODS
@@ -10925,12 +13265,12 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 262, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 350, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "zenscrape/cli.py":263
+    /* "zenscrape/cli.py":351
  *     if args.json:
  *         export_data(args.output, "json")
  *         action_performed = True             # <<<<<<<<<<<<<<
@@ -10939,7 +13279,7 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
 */
     __pyx_v_action_performed = 1;
 
-    /* "zenscrape/cli.py":261
+    /* "zenscrape/cli.py":349
  *         else: asyncio.run(start_scrape(args))
  * 
  *     if args.json:             # <<<<<<<<<<<<<<
@@ -10948,20 +13288,20 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
 */
   }
 
-  /* "zenscrape/cli.py":265
+  /* "zenscrape/cli.py":353
  *         action_performed = True
  * 
  *     if args.csv:             # <<<<<<<<<<<<<<
  *         export_data(args.output, "csv")
  *         action_performed = True
 */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_args, __pyx_mstate_global->__pyx_n_u_csv); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 265, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_args, __pyx_mstate_global->__pyx_n_u_csv); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 265, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 353, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_6) {
 
-    /* "zenscrape/cli.py":266
+    /* "zenscrape/cli.py":354
  * 
  *     if args.csv:
  *         export_data(args.output, "csv")             # <<<<<<<<<<<<<<
@@ -10969,9 +13309,9 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
  * 
 */
     __pyx_t_2 = NULL;
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_export_data); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 266, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_export_data); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 354, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_args, __pyx_mstate_global->__pyx_n_u_output); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 266, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_args, __pyx_mstate_global->__pyx_n_u_output); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 354, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_5 = 1;
     #if CYTHON_UNPACK_METHODS
@@ -10991,12 +13331,12 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 266, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 354, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "zenscrape/cli.py":267
+    /* "zenscrape/cli.py":355
  *     if args.csv:
  *         export_data(args.output, "csv")
  *         action_performed = True             # <<<<<<<<<<<<<<
@@ -11005,7 +13345,7 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
 */
     __pyx_v_action_performed = 1;
 
-    /* "zenscrape/cli.py":265
+    /* "zenscrape/cli.py":353
  *         action_performed = True
  * 
  *     if args.csv:             # <<<<<<<<<<<<<<
@@ -11014,7 +13354,7 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
 */
   }
 
-  /* "zenscrape/cli.py":269
+  /* "zenscrape/cli.py":357
  *         action_performed = True
  * 
  *     if not action_performed:             # <<<<<<<<<<<<<<
@@ -11024,7 +13364,7 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_6 = (!__pyx_v_action_performed);
   if (__pyx_t_6) {
 
-    /* "zenscrape/cli.py":270
+    /* "zenscrape/cli.py":358
  * 
  *     if not action_performed:
  *         parser.print_help()             # <<<<<<<<<<<<<<
@@ -11038,12 +13378,12 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
       PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
       __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_print_help, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 270, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 358, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "zenscrape/cli.py":269
+    /* "zenscrape/cli.py":357
  *         action_performed = True
  * 
  *     if not action_performed:             # <<<<<<<<<<<<<<
@@ -11052,7 +13392,7 @@ static PyObject *__pyx_pf_9zenscrape_3cli_10main(CYTHON_UNUSED PyObject *__pyx_s
 */
   }
 
-  /* "zenscrape/cli.py":232
+  /* "zenscrape/cli.py":320
  *     await start_scrape(args)
  * 
  * def main():             # <<<<<<<<<<<<<<
@@ -11523,27 +13863,45 @@ static void __pyx_tp_dealloc_9zenscrape_3cli___pyx_scope_struct_2_run_inspector(
   #endif
   PyObject_GC_UnTrack(o);
   Py_CLEAR(p->__pyx_v_AsyncSession);
+  Py_CLEAR(p->__pyx_v_ZenSecurityAuditor);
   Py_CLEAR(p->__pyx_v_args);
+  Py_CLEAR(p->__pyx_v_audit_res);
+  Py_CLEAR(p->__pyx_v_audit_session);
+  Py_CLEAR(p->__pyx_v_audit_targets);
   Py_CLEAR(p->__pyx_v_choice);
+  Py_CLEAR(p->__pyx_v_detail);
+  Py_CLEAR(p->__pyx_v_details);
+  Py_CLEAR(p->__pyx_v_dns_report);
+  Py_CLEAR(p->__pyx_v_domain);
   Py_CLEAR(p->__pyx_v_e);
+  Py_CLEAR(p->__pyx_v_ensure_tor_env);
   Py_CLEAR(p->__pyx_v_f);
   Py_CLEAR(p->__pyx_v_field);
   Py_CLEAR(p->__pyx_v_fields);
   Py_CLEAR(p->__pyx_v_fillable_types);
   Py_CLEAR(p->__pyx_v_h);
+  Py_CLEAR(p->__pyx_v_h_name);
+  Py_CLEAR(p->__pyx_v_headers_report);
   Py_CLEAR(p->__pyx_v_i);
   Py_CLEAR(p->__pyx_v_important_meta);
   Py_CLEAR(p->__pyx_v_indent);
   Py_CLEAR(p->__pyx_8genexpr2__pyx_v_inp);
   Py_CLEAR(p->__pyx_v_insp);
+  Py_CLEAR(p->__pyx_v_is_virtual);
   Py_CLEAR(p->__pyx_v_key);
+  Py_CLEAR(p->__pyx_v_parsed_url);
   Py_CLEAR(p->__pyx_v_payload);
   Py_CLEAR(p->__pyx_v_proxy);
+  Py_CLEAR(p->__pyx_v_record_type);
   Py_CLEAR(p->__pyx_v_res);
   Py_CLEAR(p->__pyx_v_s);
   Py_CLEAR(p->__pyx_v_selected_form);
+  Py_CLEAR(p->__pyx_v_signature_match);
   Py_CLEAR(p->__pyx_v_summary);
   Py_CLEAR(p->__pyx_v_t);
+  Py_CLEAR(p->__pyx_v_target);
+  Py_CLEAR(p->__pyx_v_tls_report);
+  Py_CLEAR(p->__pyx_v_urlparse);
   Py_CLEAR(p->__pyx_v_val);
   Py_CLEAR(p->__pyx_t_0);
   Py_CLEAR(p->__pyx_t_1);
@@ -11585,14 +13943,41 @@ static int __pyx_tp_traverse_9zenscrape_3cli___pyx_scope_struct_2_run_inspector(
   if (p->__pyx_v_AsyncSession) {
     e = (*v)(p->__pyx_v_AsyncSession, a); if (e) return e;
   }
+  if (p->__pyx_v_ZenSecurityAuditor) {
+    e = (*v)(p->__pyx_v_ZenSecurityAuditor, a); if (e) return e;
+  }
   if (p->__pyx_v_args) {
     e = (*v)(p->__pyx_v_args, a); if (e) return e;
+  }
+  if (p->__pyx_v_audit_res) {
+    e = (*v)(p->__pyx_v_audit_res, a); if (e) return e;
+  }
+  if (p->__pyx_v_audit_session) {
+    e = (*v)(p->__pyx_v_audit_session, a); if (e) return e;
+  }
+  if (p->__pyx_v_audit_targets) {
+    e = (*v)(p->__pyx_v_audit_targets, a); if (e) return e;
   }
   if (p->__pyx_v_choice) {
     e = (*v)(p->__pyx_v_choice, a); if (e) return e;
   }
+  if (p->__pyx_v_detail) {
+    e = (*v)(p->__pyx_v_detail, a); if (e) return e;
+  }
+  if (p->__pyx_v_details) {
+    e = (*v)(p->__pyx_v_details, a); if (e) return e;
+  }
+  if (p->__pyx_v_dns_report) {
+    e = (*v)(p->__pyx_v_dns_report, a); if (e) return e;
+  }
+  if (p->__pyx_v_domain) {
+    e = (*v)(p->__pyx_v_domain, a); if (e) return e;
+  }
   if (p->__pyx_v_e) {
     e = (*v)(p->__pyx_v_e, a); if (e) return e;
+  }
+  if (p->__pyx_v_ensure_tor_env) {
+    e = (*v)(p->__pyx_v_ensure_tor_env, a); if (e) return e;
   }
   if (p->__pyx_v_f) {
     e = (*v)(p->__pyx_v_f, a); if (e) return e;
@@ -11609,6 +13994,12 @@ static int __pyx_tp_traverse_9zenscrape_3cli___pyx_scope_struct_2_run_inspector(
   if (p->__pyx_v_h) {
     e = (*v)(p->__pyx_v_h, a); if (e) return e;
   }
+  if (p->__pyx_v_h_name) {
+    e = (*v)(p->__pyx_v_h_name, a); if (e) return e;
+  }
+  if (p->__pyx_v_headers_report) {
+    e = (*v)(p->__pyx_v_headers_report, a); if (e) return e;
+  }
   if (p->__pyx_v_i) {
     e = (*v)(p->__pyx_v_i, a); if (e) return e;
   }
@@ -11624,11 +14015,17 @@ static int __pyx_tp_traverse_9zenscrape_3cli___pyx_scope_struct_2_run_inspector(
   if (p->__pyx_v_key) {
     e = (*v)(p->__pyx_v_key, a); if (e) return e;
   }
+  if (p->__pyx_v_parsed_url) {
+    e = (*v)(p->__pyx_v_parsed_url, a); if (e) return e;
+  }
   if (p->__pyx_v_payload) {
     e = (*v)(p->__pyx_v_payload, a); if (e) return e;
   }
   if (p->__pyx_v_proxy) {
     e = (*v)(p->__pyx_v_proxy, a); if (e) return e;
+  }
+  if (p->__pyx_v_record_type) {
+    e = (*v)(p->__pyx_v_record_type, a); if (e) return e;
   }
   if (p->__pyx_v_res) {
     e = (*v)(p->__pyx_v_res, a); if (e) return e;
@@ -11639,11 +14036,23 @@ static int __pyx_tp_traverse_9zenscrape_3cli___pyx_scope_struct_2_run_inspector(
   if (p->__pyx_v_selected_form) {
     e = (*v)(p->__pyx_v_selected_form, a); if (e) return e;
   }
+  if (p->__pyx_v_signature_match) {
+    e = (*v)(p->__pyx_v_signature_match, a); if (e) return e;
+  }
   if (p->__pyx_v_summary) {
     e = (*v)(p->__pyx_v_summary, a); if (e) return e;
   }
   if (p->__pyx_v_t) {
     e = (*v)(p->__pyx_v_t, a); if (e) return e;
+  }
+  if (p->__pyx_v_target) {
+    e = (*v)(p->__pyx_v_target, a); if (e) return e;
+  }
+  if (p->__pyx_v_tls_report) {
+    e = (*v)(p->__pyx_v_tls_report, a); if (e) return e;
+  }
+  if (p->__pyx_v_urlparse) {
+    e = (*v)(p->__pyx_v_urlparse, a); if (e) return e;
   }
   if (p->__pyx_v_val) {
     e = (*v)(p->__pyx_v_val, a); if (e) return e;
@@ -12490,8 +14899,8 @@ __Pyx_RefNannySetupContext("PyInit_cli", 0);
  *     return user_concurrency
  * 
  * async def run_inspector(args):             # <<<<<<<<<<<<<<
- *     logger.info(f" Scouting {args.url}...")
- *     from curl_cffi.requests import AsyncSession
+ *     if args.tor:
+ *         from .setup_env import ensure_tor_env
 */
   __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_9zenscrape_3cli_8run_inspector, __Pyx_CYFUNCTION_COROUTINE, __pyx_mstate_global->__pyx_n_u_run_inspector, NULL, __pyx_mstate_global->__pyx_n_u_zenscrape_cli, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
@@ -12501,40 +14910,40 @@ __Pyx_RefNannySetupContext("PyInit_cli", 0);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_run_inspector, __pyx_t_4) < (0)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "zenscrape/cli.py":232
+  /* "zenscrape/cli.py":320
  *     await start_scrape(args)
  * 
  * def main():             # <<<<<<<<<<<<<<
  *     parser = argparse.ArgumentParser(description="ZenScrape Elite - Professional Web Intelligence")
  *     parser.add_argument("--url", help="Target URL")
 */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_9zenscrape_3cli_11main, 0, __pyx_mstate_global->__pyx_n_u_main_2, NULL, __pyx_mstate_global->__pyx_n_u_zenscrape_cli, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[5])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 232, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_9zenscrape_3cli_11main, 0, __pyx_mstate_global->__pyx_n_u_main_2, NULL, __pyx_mstate_global->__pyx_n_u_zenscrape_cli, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[5])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_4);
   #endif
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_main_2, __pyx_t_4) < (0)) __PYX_ERR(0, 232, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_main_2, __pyx_t_4) < (0)) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "zenscrape/cli.py":272
+  /* "zenscrape/cli.py":360
  *         parser.print_help()
  * 
  * if __name__ == "__main__":             # <<<<<<<<<<<<<<
  *     main()
 */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_name_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 272, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_name_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 360, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = (__Pyx_PyUnicode_Equals(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_main, Py_EQ)); if (unlikely((__pyx_t_5 < 0))) __PYX_ERR(0, 272, __pyx_L1_error)
+  __pyx_t_5 = (__Pyx_PyUnicode_Equals(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_main, Py_EQ)); if (unlikely((__pyx_t_5 < 0))) __PYX_ERR(0, 360, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_5) {
 
-    /* "zenscrape/cli.py":273
+    /* "zenscrape/cli.py":361
  * 
  * if __name__ == "__main__":
  *     main()             # <<<<<<<<<<<<<<
 */
     __pyx_t_2 = NULL;
-    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_main_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 273, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_main_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 361, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_7 = 1;
     {
@@ -12542,12 +14951,12 @@ __Pyx_RefNannySetupContext("PyInit_cli", 0);
       __pyx_t_4 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_6, __pyx_callargs+__pyx_t_7, (1-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 273, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 361, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "zenscrape/cli.py":272
+    /* "zenscrape/cli.py":360
  *         parser.print_help()
  * 
  * if __name__ == "__main__":             # <<<<<<<<<<<<<<
@@ -12605,8 +15014,8 @@ static int __Pyx_InitCachedBuiltins(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   __pyx_builtin_open = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_open); if (!__pyx_builtin_open) __PYX_ERR(0, 40, __pyx_L1_error)
   __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_print); if (!__pyx_builtin_print) __PYX_ERR(0, 79, __pyx_L1_error)
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 160, __pyx_L1_error)
-  __pyx_builtin_input = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_input); if (!__pyx_builtin_input) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 164, __pyx_L1_error)
+  __pyx_builtin_input = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_input); if (!__pyx_builtin_input) __PYX_ERR(0, 183, __pyx_L1_error)
 
   /* Cached unbound methods */
   __pyx_mstate->__pyx_umethod_PyDict_Type_get.type = (PyObject*)&PyDict_Type;
@@ -12661,36 +15070,36 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[1]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[1]);
 
-  /* "zenscrape/cli.py":152
+  /* "zenscrape/cli.py":156
  * 
  *     print("\n" + ""*60)
  *     print(f" SITE INTELLIGENCE: {summary['title'][:50]}")             # <<<<<<<<<<<<<<
  *     print(""*60)
  *     print(f" Links:  {len(summary['links']['internal'])} Internal | {len(summary['links']['external'])} External")
 */
-  __pyx_mstate_global->__pyx_slice[1] = PySlice_New(Py_None, __pyx_mstate_global->__pyx_int_50, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_slice[1])) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_mstate_global->__pyx_slice[1] = PySlice_New(Py_None, __pyx_mstate_global->__pyx_int_50, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_slice[1])) __PYX_ERR(0, 156, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_slice[1]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_slice[1]);
 
-  /* "zenscrape/cli.py":215
+  /* "zenscrape/cli.py":222
  *         for key in important_meta:
  *             if key in summary["metadata"]:
  *                 print(f"   {key}: {summary['metadata'][key][:80]}...")             # <<<<<<<<<<<<<<
  *         if summary["structure"]["headings"]:
  *             print("\n HEADING HIERARCHY TREE:")
 */
-  __pyx_mstate_global->__pyx_slice[2] = PySlice_New(Py_None, __pyx_mstate_global->__pyx_int_80, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_slice[2])) __PYX_ERR(0, 215, __pyx_L1_error)
+  __pyx_mstate_global->__pyx_slice[2] = PySlice_New(Py_None, __pyx_mstate_global->__pyx_int_80, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_slice[2])) __PYX_ERR(0, 222, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_slice[2]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_slice[2]);
 
-  /* "zenscrape/cli.py":224
+  /* "zenscrape/cli.py":231
  *             print("\n TABLE SCHEMAS DETECTED:")
  *             for t in summary["structure"]["detailed_tables"]:
  *                 print(f"   Table #{t['id']} Columns: {', '.join(t['columns'][:5])}")             # <<<<<<<<<<<<<<
  *         print("\n" + ""*60)
  *         input("\nPress Enter to Exit Audit...")
 */
-  __pyx_mstate_global->__pyx_slice[3] = PySlice_New(Py_None, __pyx_mstate_global->__pyx_int_5, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_slice[3])) __PYX_ERR(0, 224, __pyx_L1_error)
+  __pyx_mstate_global->__pyx_slice[3] = PySlice_New(Py_None, __pyx_mstate_global->__pyx_int_5, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_slice[3])) __PYX_ERR(0, 231, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_slice[3]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_slice[3]);
 
@@ -12761,34 +15170,42 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   {
-    const struct { const unsigned int length: 9; } index[] = {{1},{1},{33},{1},{40},{1},{34},{1},{36},{1},{45},{1},{43},{1},{35},{15},{8},{10},{9},{26},{20},{51},{14},{9},{24},{25},{12},{8},{17},{29},{22},{7},{16},{12},{13},{17},{50},{3},{7},{24},{28},{4},{9},{179},{29},{17},{37},{40},{32},{24},{14},{29},{13},{10},{14},{34},{47},{181},{180},{2},{2},{4},{2},{3},{3},{2},{6},{0},{2},{2},{4},{5},{1},{151},{150},{5},{151},{1},{1},{3},{8},{27},{13},{9},{5},{5},{6},{21},{7},{7},{9},{7},{6},{2},{13},{9},{9},{9},{10},{6},{8},{10},{14},{8},{8},{53},{8},{8},{9},{9},{24},{5},{5},{13},{16},{16},{16},{19},{16},{20},{17},{14},{12},{4},{3},{2},{2},{4},{3},{20},{9},{3},{10},{11},{15},{12},{10},{17},{1},{6},{16},{12},{11},{10},{9},{12},{8},{4},{7},{18},{10},{9},{14},{29},{8},{6},{7},{9},{17},{3},{18},{5},{7},{11},{6},{4},{7},{7},{5},{9},{9},{7},{3},{9},{3},{18},{6},{4},{2},{7},{7},{5},{5},{11},{15},{4},{5},{1},{5},{5},{6},{9},{9},{5},{7},{6},{8},{4},{7},{11},{8},{9},{1},{8},{5},{6},{8},{14},{17},{4},{6},{5},{8},{8},{3},{11},{1},{7},{8},{4},{4},{4},{5},{1},{2},{3},{11},{14},{6},{4},{3},{5},{6},{4},{7},{9},{3},{8},{10},{13},{5},{4},{3},{8},{4},{5},{5},{6},{6},{5},{8},{4},{9},{5},{4},{8},{6},{6},{10},{4},{8},{9},{7},{4},{8},{4},{7},{2},{6},{6},{10},{6},{8},{4},{7},{11},{3},{9},{5},{10},{7},{7},{5},{1},{12},{1},{3},{3},{8},{6},{4},{3},{13},{1},{11},{6},{13},{4},{12},{10},{5},{7},{12},{30},{10},{7},{10},{5},{9},{6},{7},{7},{3},{1},{3},{3},{8},{4},{5},{4},{7},{5},{3},{4},{3},{7},{12},{7},{16},{3},{5},{6},{1},{7},{6},{8},{9},{13},{165},{381},{2},{2},{287}};
-    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (2738 bytes) */
-const char* const cstring = "BZh91AY&SY\006\363\305\353\000\0015\177\377\376\377\373\350o\377\377\367\277\377\377\377\277\377\377\376@v\377\322\362@pM@@@@P\000\300\000`\t\235\364\305\354\033\315LaR)H\010zh\240;\247\327\2704)\220\232\236CAO\004\311\206SCL\251\372\247\224\361\rCh\324\330\206\246\217\324\200h\323\324=\r4\006\232j?T\365\036\243\304\217SL4d\236\324\020i\244\000@\010\004\233P\311=\024\365\036\246\322\017Bh\323#\324\r\014&\231\000\000\032\003M4\003F\215\001\240\000\310cT\361#\324\364\020\003&&#&FF\214&\002\014\236\220\321\241\246\231\032d\031\006!\200\231\0004\320\323&\t\241\240\032h \211\240\0025\031\251\250=@\3044\323jh\006M\000\003C@\000\000\000\000\000\000\310\003@e?T\3014\311\204db4\304i\246#\3220LFL\020\003\021\246\023M\014FF\004\323@\014C\023\000\2151\032`JD\247\205=&\211\3520L\230OD\323\000\023\0020\020\301120\000\000\003@\322`\00414\030\010\323G\3644\216@#\353\037\177$\177,\307\366\370UZ?I\3752_\357\226\200\242 $\002A\234K\025\312\001\301\205\266\203jA\035e\010\224r\017\241\301\001\223/\331\016V\301i\321H\331\014\003\322\354\214\316\030\005p\213}C\215\227\324\033\000`1\214\231\271n\326\023)\005\250\r`P\371\202\355Q\347\002\332\010\201\020\233.\364\322lJdD\364\210L\244'\230\024\202S\347@\232\252/\354\030\333YP\351\374)w/a\277\006\324{\215\376\214\353\360I\272\346\036\030\220\034c{P;\304\245\330W\25215\373\270\2657A\023R\366\233\\:o\310W\352\217\237\006\243\327\226\325\314\010\377N\242E\275\277{[[\002\204\375\375\230$C\025%\332\234\315\000\024`i\331l3\325\305\3347]\205\270\370AR\031\264\333k=\267\2429mx\ni7\222\357$\310KL\354\275!++\016\266\205v\252\006\024\3707\006>o6\260\345p\0341\034\225\301\312\334\3533\302'5\240\005\031\310\342h\nH\002\324\034\240\340\271\000\317H\0200\313\n!\227\360\342r\024~\000\202\267\264\340#\016\377\232\312\313Kc\006\250\361\371X\220\246`\206\3355\367p\262\246\304\261\360\000F\014\205\371\000\036t9C\275\344\343dM\357\305\225'\032X\276\2278\343\262\261\321`\245>\205\234\177\350;v\365\364T\361LtlI\202\216\023\001m\270\224k\210qm1i\002\211`\261\220/.""\234\327\271\315\254VZ\243l@\252\355\375sj\254E\367\003\365\360bk\337W\225U}\330\356\014\2509\361\345\324A\320\205\037\3513\310f\302\355\243N`S\304\210Wk\313\243=\315\356Y;\232\233\207\212\201\2039\"cY\211\306\343\240\026\004\"0;B\311\241\252V\350R\246\1774\234}%\023j\213\227\214\307 \342\206\222\373\276B\032\241tGCW\026d\033s\360\257|\275#8\352\210\311\272\031ZQ\340=X\347\263b\313h\312\005\322\374\210\031\021\347ks\007\210G\234C\nsp\277xo'.\233;n\324H6\361\003\177\315\341\267\t\354\220\341\271\212\325g\250\344\334z\304w~\001<\272\375.\235n^w\310\034F\374^\256\220\234\030K6\221\222\3563\217gg\023\036\244I\357\013\347\266\3522\036\214\264\345\320\202cKgB\332K\026`\221X\312\2046k[(\364\303 \326\335\324\337\027\t<w\017X\354m\0308\263Y\014\240\376\035\226\rYZ\310-j\030\013\023\222\343\313e\263\225\004E\223\013\350\230\264\363b\234P\222\331\246f\032B\243\212\372\220\250\325u\377z\034\244\310\246\360!ct\303\276\031\362eJ\006\021\306\221\257\020\325\303\017\\Bd\304e\007\361\223C\232\245\2568{o\316D\223\273<\003:[\"\360\243\213%\004W\277\231\240\301\371\314\006\212\260V\262\364@r\204\253\361\342\"!\025\201\005\2243\220m\325-\202x*\234s\274)\236t\270\276'\312\230\021\220G\ro\314a\340\253&a\217\210\373\315z\220[\204\0131S\241\256\001\216\0023\205\035\335\316d\277w\226\221AM\244PN\202\353\276K\336\002\037\2242\335\005#\367\344\341\231\020G\234\206\324\233\267!\327\277\r\310=\340$\2018GCI\207R}\301\271m\306I!A>#\255\350\252\367\306[\360\213\017M8q\016~\260\340\215G5\332\013\376\021\307\340\365i)\306\224'I\363mrz\270[\262a\302\303-\302\2763\026\361J:\374aa\030\306\373_{\303\240\275\246\261J \223\024H\342V\302\005\3302*#2\364\314\n\251\010\343:\355\340\010\266\225\t\271\247K\207\256\2630 )\n\233\226\305\n0\032\306\013\216s;WQH\327\247\252fm\026\267m\006\223\022\361'P-\221\030\246\370\264\013\261DV\241\336\006}Y\273\235\232a\313\246x\027`Y<%f!\203M\021H\332\2073\302\031\226P\003\263\331:F\032\030F\022]\273\203\322\262\002\205\205\010\036\257\037q\332x\200\330T\003r\217\025iWt<K1l_""s\344\345x\334\223\253\033\210P\241\246E\277\311\021\257v\222\010\331\267\216\177\315\000\270p\345\270\333R\353'\224\000[r)\200\275\252;,Yu\\\333\354x\001\223\257@P\367\007Ztl\254\2343\325\007LB85\304m\350)\262-\307[\235(\001[\340\305\304U\3578\021\010n\212Uk|>,\371\3070pq\236\024n\201\236\353\332s\370\265E\323=Me\033 1\200z\334\333\364\307\241\216\301D\031\331\036\313\031\240\252o\026\035\020\235\244[e\0046B\371\244\0011!\354w^S\007L\007\232\254@{<\271\274\341\224\203f`\030cQ\260\312\t\327m\t\277\322\372B\214\331\205\033S\276i\360\216\241\317*S\210\270\363\016\010\302DOK\265r\013\310\341\251b6E\\,q*G@\327\3132\377v\014t|x/I\226v3\332\322#\310\030\322\204\243R\334)d\332\375\212z\201V\342\3617\307:#\372\360:SlQ\205\\\032\034Q\200Le\332\306\0249\0066\256\303` \232\223iP\3035\023L\203\210\265\223w\250b\024\243\301\204!T\013D\234\322\2643U2\273T\270\275<\206\007\027\256*\215j\343\263\3611H\244\302\222V\204\006L\"K\n\214W\237\221]\320a\240F}4\250\017\266\266\212\022\265:\345\244t!\022\002\273\275\232\322$\r/\272\251\005V\362\220\320\245T\204Xe,\014\022\030\211\rc\021\226l\243\003\204`\225\020\213WuR\"\362\2450M\244\001\t\235\202\213\301\325\001\025\030u\332VZ-\242V\364\361\212 \013\t\220\200\306\362\310=\314\025!H&\366\364\202I\002\361\014B\340\031\354\352\315|2s\202\336\270\252VfA\341\274{\334\203{\273\303\356m.b\002\340\213\204\003\003Hh\275F\026\263U\372\305\365\200\023\345\013Z\\\306\216\361\"\001!\301\265@S\251\230f\026\241;\351!9\216\365\241o\273\032\270&\266j}\360\357\017KIj\345\333^TA\024J\275\271\007\033\254\\\3438\2559\322g]iJ\334\3541\244\341\307\203\220P\005\032\007`M\037\214\325\362\202x\002l\237Z\\-f\005\002\342\006\305(R\201\350\212Y\032\372(|\2022?\025\214x\033\363\336\273\3211\032<g\327\360m\214\005 j\007\200p\034\034V\361\316\223p(\"B\204\n\022\001\220\241\031a\201\210\337&\027\202\"\022\325\002h\013\t\206MT \202\r\364z\343y\211\005\337hZJ\273\024\016\352\327\302\262\2639\337[\277X\304\355\033DAf&\017U\314r\300\214\025\000*\032\325\303\t\021k\034\267c""\225\366\227B\305\250\331h\243p\272L\276\353a17\3022\300\370}\207\223\214,\270\001!a\330n\332\014\225C\022\345T\231\037\016\350rjv&\272\224s5\027B\232\255\2705[\311x\216\033y\252\034g\221\302j\030U\364\230\315\267~p\244\030&\004\341\202\325\000\302\253\007\013\"\316K\270\311xEh\032\313h\373\024H1\310'$F\274\354\232\305\034\3005\021p-Kcs\014i\240\3201T\020\301\233[\030[\001\007f\301\205\005H\271H\241p\"=\364\252\321P.h\002`\215\235\017\321\010\236+\t\332T6h\031\001\250\266\370\226!\020\263\026\3417m\014\262@\306\372L\370A6f9\255\027\224\343\021\300b\360\302\024G\267t=\2140\232\036A\255\202b\001\360\232)\032\322x\342\261\236{ \340\005\226\272\231U\367\2523\020T\023\307\030\333\310\315iQ\316\365\351I\354F\2543\017\272\370\243\316\336<%J<\366\310BI\004\002\027\271\247\202\3731k5\365\330\030]&\\\230\300\016\233\037\330\214e\263Uc\206\220\236\355\217\"7k?\323\313\361\375\020\007\376OS\346\004\007\206i\0033\003gk\246u\266\201\177E\245\257\303\352\377\206a'\210q> :Y\332\253\3733\357\374cK9fc\303\360\014I\324\017\317\274\002\213?\326\235uh\004\002\234\201\026\010\200\0222\000\223B\021\000\001\245\325\344\236w\017{\251\317\352\005\221\026\217\345\333\337\256cI\212\365@\357\324\363y\313\202\262$\006.\017\342\036\014\301\242)\344\373H\212\214\341J\226G\010\232e\322\233\316\346\204\370\207\325\347\310\325\235\236;G\236\005\370\334\277\320\375\224\355\351\007\376i\235\360\014\245\010\002\2662C6\213\232\321p\221\000\300\014-n\000\230\027,\035/\002\210|A\324}@R\370\324p\307\371`\370\376\372\327\262spu\266\304ZT\364}\245\353\366\037\024\371\323sn\356\342Fw\037N\0368\210\251\204\303\2657 \020>\270\316\334\200\342\265\200\361%\260\304I\245\306\2244\246gH\017\013\275u0\250\242P\245{\3360\313JqB\306\035mP\216\344\226\277!\000E\250D\002\274R \t\352\352\377m2\323J\026A\253a\030Q\377\027rE8P\220\006\363\305\353";
-    PyObject *data = __Pyx_DecompressString(cstring, 2738, 2);
+    const struct { const unsigned int length: 9; } index[] = {{1},{1},{33},{1},{40},{1},{34},{1},{36},{1},{45},{1},{43},{1},{35},{1},{49},{15},{41},{8},{49},{16},{10},{9},{26},{25},{20},{51},{32},{17},{16},{14},{13},{9},{24},{25},{12},{8},{17},{29},{32},{22},{7},{43},{16},{12},{16},{13},{17},{50},{3},{7},{24},{28},{4},{22},{9},{179},{29},{37},{13},{16},{11},{33},{10},{17},{37},{13},{40},{32},{24},{30},{59},{14},{11},{18},{29},{13},{10},{9},{17},{17},{14},{19},{34},{47},{181},{180},{2},{2},{4},{2},{3},{3},{2},{6},{0},{2},{2},{4},{5},{4},{4},{181},{1},{151},{150},{5},{151},{1},{1},{3},{8},{27},{6},{13},{9},{5},{5},{6},{21},{5},{7},{7},{9},{7},{6},{2},{13},{9},{9},{9},{10},{6},{8},{10},{14},{8},{8},{53},{8},{8},{9},{9},{24},{5},{5},{17},{13},{16},{16},{16},{19},{16},{20},{19},{17},{14},{12},{4},{3},{2},{2},{4},{3},{20},{9},{3},{10},{11},{15},{12},{10},{18},{17},{1},{6},{16},{12},{11},{10},{9},{12},{8},{4},{7},{18},{10},{17},{9},{22},{13},{13},{20},{7},{9},{4},{14},{29},{8},{6},{7},{9},{6},{17},{3},{18},{5},{7},{11},{6},{4},{7},{7},{5},{9},{9},{7},{3},{9},{3},{18},{6},{4},{9},{2},{7},{7},{5},{5},{4},{11},{6},{15},{7},{10},{6},{4},{5},{1},{5},{5},{6},{14},{9},{9},{5},{7},{6},{8},{4},{7},{7},{11},{8},{9},{1},{8},{5},{6},{8},{14},{17},{4},{6},{5},{8},{8},{3},{19},{11},{1},{6},{7},{14},{8},{4},{4},{4},{5},{1},{2},{3},{11},{14},{6},{4},{3},{5},{6},{4},{7},{9},{3},{8},{10},{13},{10},{6},{5},{4},{3},{8},{4},{5},{5},{6},{6},{5},{8},{4},{9},{5},{4},{8},{6},{6},{10},{4},{8},{6},{9},{7},{4},{8},{4},{7},{2},{6},{6},{10},{10},{6},{8},{4},{7},{11},{3},{9},{5},{10},{7},{7},{5},{7},{1},{12},{1},{6},{11},{3},{3},{8},{6},{4},{3},{13},{1},{11},{6},{13},{4},{12},{10},{5},{9},{9},{15},{7},{12},{30},{10},{6},{11},{7},{10},{5},{9},{6},{7},{7},{3},{1},{3},{6},{3},{8},{4},{5},{4},{7},{5},{10},{3},{4},{3},{7},{12},{8},{7},{16},{3},{5},{6},{7},{7},{1},{7},{6},{8},{9},{13},{165},{381},{2},{2},{287}};
+    #if (CYTHON_COMPRESS_STRINGS) == 3 && __PYX_LIMITED_VERSION_HEX >= 0x030e0000 /* compression: zstd (3121 bytes) */
+const char* const cstring = "(\265/\375`\277\027=a\000\312\202\344\032F\260\032q\016\274\261\323\372C\376-\352;\352\013\016<\317/\244\256\202\364\031\035\375{&,\335x\264\245H\333\"W$B\215\222Dq\300de\353\342\355\266\242\262ur\326J\215\260\340J\030\324)\205\225\023\031*i\032\236\001\213\001q\001*\227\024{\305\327\261r\204\204\344\344\034\205\343E\255\263\277\333\360\216\267\357/\325V\352\263I\265Z(N2y\255\217g\245BU&D>\326\316\212\345\r)\342y\254\257\2768\225X\035\313C\235j\216\ne\352\274S\235\362\243I\227\230\212$H\014\021\277Xw\277\334\344\371\342\220~\237u_\271\370\332\255\367\316Y\207\">I\254\035\026\313\253Q\222l\251$\335k\317\3261\033\267\274\335\324\234\356\"\261\232\272\367\360*C\304|\352\261v\235\353s\353\262\335\232Z&\326N\311c\325\027\037\212\305S[*SuRS_\211\207\365y@\212\360\337\272D\303sy\342J\332O\232\267TkM\311\373<SU\321y)\232\252\352J\255\352\261xZ;+\027^U\355\240\276\216\305\223\203\302Q\355\224\352\016\"M\272\220Z^\t\265s*\211D\".\353\267UW\337w\252\257|\203\004qq\242\244I\227J\252\t\301\215hjL\266a\253\356\027\355\237\352\205\372\272c\326%\256\315\031`\311\023!\242_\361\354\366\331\303s\233o\342\351B\204\020\277\207\337\337T\373-]g\253\212\331^\234\017\245\203\202\247\005\002D\315\250\222\335|\023M\3051\273K\365}.\337g\370\254\332\267\355-\3173\335\334\360\024\213\247\314\351tP\037>\360\254o\017\273Zn\215\243\303\332\301\361\340\201\367\344\233\252\330\346\375=\243*\306v\325\351t\350\300\037\367\373\325\177\331U\355\241\335\375\307\253\265\316hy\251\017\365\305\250\242\321H\024;\344/\222^\372\311\320\206\234\316\034'j\262\177\311qY\363\032\034\307\313\357\267\212\374\222\034\367\270o\350@\206\257\374\374\2122\213\237\313\254X\177\316r\177\027\225:\264\3418\037\316\377\366h\216\253\341\375\272\252\255\036\310*j\023\354\341)\352m\212\036\207\267o\373]gP\024m\r\205\332CH\223.'bb\344\270\261\241\316\240\251\250\221-1\377\272\030\273\276\205\276\234\377\330/\366\352\233v\207\255\3740h\252,\314\277\357)o\333\"M\262\245\246'\264.\214\355\331\367eAS1\234}\374\224x\261e\301\362T)\036""\026\225J\221&]L\250T\307\242\362X\262\245\377k\333\217B}\354\262_\247\343\235R(\272\257\372\340\247\216^\337\306\356\316o\276\245\330e\357\353J(\034\324\307\362J*/\007\225Jy\237\367\241Z\244\356\353L\335\347\351\324SNUy\253\235\035!Ex\307\247Y\332\316\277n\330\200\367YS$\357I\223V\253\352\354\260pR<-\223\267\352XP\266\376*\371:\365>5\253\222*\027\267\226\255\330'\326\241\356\272\222b\177}\372\365~\257bD\317\261\305\371}\305\212\001\314\026C\355\317k~n\315\317\365\324\262:\242\252\210\277)\3535\337\216\357\351\252\243\256\3749\2678\3445~\177\020\361\201[y\253\232\367\335\235W\031\336\357\272\370\222]V\252\335\222\275>\016M\327\252j\202\253\237\265j\206\217\242\257Z\325\331\004\374\357\017hrm\232Z\304\232\304\246\314\232[\344:\277\t\352\234c\237C\215\373\227\340\217-c\032\237\373\334\377z\211Vc\336\023\223}\317\365\001\305\253\267\310\357\345\3754\307|\373\227`\317\366\273Y\336Wy\305{\271\331;9\376&M\014\222\244l\333\262<9\357\371jS\314\017\202a>G\020\304\370\034y\267\371\361\227v\344#\031\366\037G\273\037\374\373\363\363\017\202\340\357\263|^>\376\347fy\212\371\332R\213\234wP|\261\343\323\216/\222\335\232\240Kt\211}|\014n\315Ew\034;\337w\004\371\357\323\014{>5~0_\360\363\005C\016\243\321\227z\223!\377\360j2\014Al\361\031b\033\263\032\344\230w\220\357\r\362,\202\375t\335\335\273\345\277\365\265\374\265\255\t>\010\356\267 \270\255\370\373M0\264\266\363?a\317By\373W:\335\327\362tP\337\370\254\376\363\252k\372\221\255@\360\363p\352p\372\274\234V\230e\274\333\317\267]\365\374\345\371\332\235O~\320<\373s\227(\002\271.?\337W~\231)\262\2718\264\"\236\337\006\336'\307m\3359\216\303\r\207\021\244\021\007Q\210\016#\033\033\022y\303{B\315]x0^\332mM\216\353\247\311q\242|\355\026\253\254[W\225\371\324\255+\177\222\327\347\247\r\253\314\226e\315\272\326\\\363\006\266\006\302\202\255K\033\244/i\tt\006\245\311\320b\326\315F\263\232\026\352@\346\366R\203@\213\220zZl\032\033\321\025\350\000t\201\314\255KO!4\204\340\006\313b!\213\210\245\002\226\020\226\027,\005\202n.\320\304\224\234U""\330!4\004\212\315D\230\275\314d@\n`fP\034 \231\002ZB\265\227\032\207\022v\366\002\365\001RP\340\006C\007@@\277\231\031\r\032\302@\201\021M\203\003[\207\2163\030P\036\240\0167\0006\253c\006(4\353\t\231\320\324\246\033>\324A\202\333\2506S\233\001\223B\230\331\000\3720\001\250k\201\241\020`\264t\263\t(\010-/\030^\272\031\032M\032\223E\004\226\234\240\034\332)\225\241\275\322\004\265\037\032\201\0255\027\264\001\264\233\364\200\210\332\323\034\320jV\320\\\214\202\276\226\200\006\001\026d!HEk\221\"\260\251\203\324\300\014\206r@10\267PMF\332\245 \352\002\010\201\016\030X-\004\004\233EI\240\004\005v\212\341\201\255\002zC\007\215\0316\025\266\231,)B\2640E\221f\230\205\264\214\320\0062\267\0312l2b\330b\244\260\205\262\240\"\330`\250\005\224\201\314\355%\310T\033i(h\031\322P\032\316\034\314$\310\334F@\007\n\334F3\001\263\010\004l\004`n/)lF`v\2032@C0\267\231\224\317J\263\014h\000t\001\314\255\013:\325>\000\260\361\035\213\305\366\373\360?\261\365\331\\\344\272\270\006\356\261\376\375e{\3472\316\371\207\341\311C~\356\0279\331o\214\213LplI\210l\347\036`\375m~]\336\237\203 ~N\206\333\276\217\345\034\314\347\3461\275\363>;\317\332\3340\020\204\231\262\202\237\250\362\302\026\204\314!!\032\221$)H\206\0032 \024\032J\3234\326t>\262\022\231w\250HF\nJ\n\352Ug\237\003\270\rx\344\375\231\265,H\3347\233\373]\356<G8\023\320\220\346\225\264LoR}\213E\355Y6\006\333\210\t\320<v\342\333\317\220I2M\270[\311\222\234\364s%\205\\\221h\272Y\350`\314\003\243\025S\222z[T\306\241\351\227(\360B&\313\236\355\314L\346P>8&4\20185V{\212#`\030\002Uz&t\242\267\341\356\302\336\252rQT/\021L\242M`dK&8t\\\2012J\342\243\002\217\27563\271b\306\261?j^=\210\200L\240\265\251\013\360\363\242\253T{E\221\363\331\300k\240FA\2016\244\323=xN\363\253S3\275\246\003\370\032\243K\3544\361\034)|\301R~1\306\264o\035\017\245\345\354\347\3166e\271W\322\353\007\3722(\244G\3435\000\255\312\354\221\362\201\365j\001\0246\253V\257P\376\304H}k\332!x\372\337\370\316\2265\324f\274\227\247\237*X9 J5\315\271\332\033\302\234\242\203\223\014""\342\246\236\t\031\243\370\331\201\260\214\3206\233l\262!I\300\363f\211w\334\352\214\020\017\026\374I)\340\251kY\013\314\030\302;\324\014$t\023\026\035\332*$=4k9\200J\325\256\026\334Q\214\236\010d\212\314k\230\365q\336e\254\311\223\354eaj<!\220\347:0\367D\307D\350\361\320\274_H\026\255nU5\364\224\255\373n;I\246\003\214\377V\250\3349+\360\036\247\276\214\001\233\032\307\352\367\240\366v\227\010\037K\334\230\270\252\3745\312\346'\252@\266\342a\241\005\014+\316|p@T\342'\205.g\300\236\310\241$rXan\2127% K\310\342\344\3004\372&\312\341\273\210\216\330\202\023\345\336\031\377A\264\021\203P\204\0213OT\275\005\220:b%ZF\252R\200\372YD\323\037\201\237@ \341muG\360\363F#\350(F\261\305^\r\247G\337\177\245\\Z\253A\030\265\220$\025T\267\224\2050$g\313\020\247s\275\351\274\237\211\013w'\230\0356\036\001*\354\004+s\000h\302\016+\204iH6P_\252\331C\3106\333\030\264p\213\317\312\203T&\371\303x\253\271x\341*\264\037\211%d\325$\003\326\271\314\237\3318\270J\361\246\024\2728\324a\235\213\244\247\017r\240\237o\226\305\201Y\036]j\310\304\335\263\262aU\004J\340\\:\234\30733vK\262\355I_0\027\372BL\315\374\003\277\360\335\022\376\016\226\256Y\007_\235\236\336\275\224\253\343$\220b]\370\021-7?\330d\230\353\345\214\\Q%\371\3159\333\010}\272}\000\217W\211[\335\"2\345\236f8\247\034\201\325\217\225~|\274\330C\246\306\346\325\231q\014\n?\020\215\251\265\024\310\377\233\215\353\221D\316\271\034ku\001L\021\223\360\353\2218>\320\016N@\027\310\000\357\241?\323\251oA\302\033\347\010o\010\317\375\027\030_\274\262\334\226\0009\307\010\313}\212Ui\3729l={;U\221\215\024Q\353\326\371\231B&N6\353\377\360\370\322\275\222U\277\023:\232Zg\001\010\302\311K\023\030sM\356\021R\201\025\250A\255@B\210\260x\221\020UG(\315hA\345\211Ze\230SJ\026\220=\276K\006\0315\354\367\333\250>C.NL\004TV\003\360\260\317\210\250\314B\013\t\314C\330X\326\227\n\021=\t\217\216\335e\352\261}{\373/\263F0\207\240\346SZ\3459VS\211\313\225\345\205\251?\205G\037\341\216\315\345D\005\332\355\364f\245\023hw\334~=\347x\037\007\311x\036a\250\216""\337\021+\021\374\350 \372\373\243\327\177P=\205L\350\024\237yQ\357\266\353\255q\336\261 \365\356[S\216\243?\230c\314r\207\233\350\021/\021\345\224*0\364\370>#&\353\005\037=\344\373,R\313 ,\357\307C\362\227\006\207l \376\216uY'\217\354\333s\277\277\306\033\373\016u\253\022\220XmB\r\n\361\203\037f\302\326t[Of\223\200\335g\272J\217\243\207_\322\3530\335\000\331\254}?P<\2317\273\334kn\026Y\3433\326\351\303\255\307\357\246\250c,\013\236\322\234\222[@\200\016\025\206A\223\375\346\026Y#N\tcp\220\342\301\222\277 \035\372\370'{\005\200\266qW\302\010v\325\352y\372\033\0211\"/0[\033\332{}\005|\rQMz\236u\347\353'u\261;\003\236\325f\257 \344$\275yHv9\255\17751\366u\304~wI#\320\365Qt\036\230\217\341\252\256\257\236\345\276\017@\316q\326\363\346\2303\311\207\023\226\017+\244{h\356\272\nW\306\365\026\236Sp\225'[q:\223\304V\365\235\342\342x\307\212\026\"\374\263@\256@\n;\006\227\362\001\017I\243\310\255\200\335K\361\324\022AU\317+\203'\264\311\373b\364\325\343\330\037\350[!\367\241iz9q\340je\250\330f\356\007G\334[\363[\316\326\000\002[\334\006\024\235n9\353\016\001";
+    PyObject *data = __Pyx_DecompressString(cstring, 3121, 3);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (2573 bytes) */
-const char* const cstring = "x\332\355W\315o\033\307\025\217Z\005\226\025\307\211\022\270v\221\313\010\211#\331\365\322\246m\331\251\320\244\240\245\225\304T_&\251\332\251\343.\206\273Cr\243\345\356rfW\024\223\026\360Q-Zd\323\244\rQ\240\360\266@\001\036\331\236\004\264(|\364\221G\035\205\374\003\365\237\320\337\233\245$\032\010\320\366R\364\020p9\037;o\336\274y\357\367>6\227\317\347\330\203J\261\262j\226\0372\306\314\335Hr;b\233\274.X\305\215<\241\256_\007\305Za\223\226G(\270\347\261\242\037\t\351s\217\255\272\376\266\272q\003\204K\033\2455\315\351\230p)\220MV\260#7\360\325\315\233 )\256\025\226\237?M\363j\322\221[\245U57\007\242E\323\034\236X\216\270\214XI\330\261T\356\216`\013\222\267=6\273(\302\250\301\362\227n\335\002uy\353\316Z\261B\364K.xq\337a\345\270\332t#\266(\"aG\302\321b\334\276\r\332\302\326bF\2125\021\202\275\214\355(\226\270E!v\334h2\023\225\315\346\215\333\227\346\331\302\312Fq\301,c\020xq\323W\363\214\315.\004R`\360\354\361\027\277f$'+WJ[\013\225\255Ra\225i\356\213<\342U\256\004\363\203\210\325\202\330w\210\3727\177\303\211j;\nB\346\014\245\312\341\314(0\2020r\233\356\307\256_g\355@n\013\251X\024\350-\377\200\216\302@\322\005H[Z\333K\334\3650\217\002\346\372*\004\037\246\334H\314\263\223\367Rp\2079C!\346\265\026\227\\\3419$=LD\006y\366\370\323/\377\271\377)\323z\241\367\223\317\036\377\352\257l\305,,\026\327\227\331J\321,\025J\013+\037\260J\3114\347\261\370\371\037Xq}s\253R\306\225+\346B\305\\\234\317l\2464\n`F2\316Z\340\210\023X\374\214t\364e\206\016\034\361\354\361\357\376\256\317\\\023\216\313\365\213\317\377\202-U\310\375\037\252d\375ja=`\244_tt\303L\275ti\241\025\225\303\373\032]\351\230!\255)\r\206\351\365\300\027\353\001A\022{0\020,j\360\210-t\242\006,\356\322\036\317\255\3422\221\360:LE\322\005\003ID>\33347\215\233\357\334\324\330\222\342#\260V\304\326\366\270RB\261\240\306\252\261\353E\256\317\242N(T\216\025k\254\023\304\314\027\231\010!\350F7D\r\3413%\"\032\260\031\356\003*\234\200ga;n=\303\034W\212L\251\330\275\304=%r\223\233\000\236b\246\257\245\n\200\010 \\\2436""\227\313\225\202X_H\006q\275\301*\201\204v\377\314\312\013\245\302\246\271\310Jfyk\025\306[*m\2541\355.\345rqc}\276l\256\302\230,\226\336\025\255\317+\014z\027*\342\3150\243\305\211\261\027) \340\213\317X\331\334`o\263\215Ms\235-\203\357\n[3+\205\305B\2450\217\303\376\310\312\305\212\t\224T\314\325\325\342\262\271\276`\016\235\244lC62%\341\350\227\254R\270\263jB\262\025s\2550\n'\366\325\243?\261\n\257\002\roV\270\254C9\210\007\200\354\217\271\027\0132+\233\371\352\367)A\350\036\227>\030\316\263\025\027\227\265\003\037\321A\n\337\356\260\331\237\010\277lK\036\nfz\360\013f\260M\031\324\2407(\027\230\274'\252\032\240\236\347\326\261AL~\365\333\344\233\347\177\360\260Y\004]\343=v\205\315\260YD\326O~\236\031<\213O\331\370\301\017\2771\307\177\361<{\374\331/\330\377\247h\223o^BL\342\216c!\260\tdp\327\366D.\224\201\203lk\205\201\303\0327\030\242\r7\214\021\357\245I\260\355\n\205\201\322\315\216aPX\272z\322\330A3\207\370\327\214w\261$<\336\241\216j\201\243\200\357\270\212b\210\360\251\255\333\215\353Wp\026\3055T3\206\321@nD61\214a\362tUF\3500\004\213&e\031f\030\037\251\3007\214\246@^p\014\303\017\014\233\333\r\021\324\347\035\241l\351\206\024\2501s)\377\241\327\254/1\344\220f\226\314\232\274\303l\036\243\002@$R\r\312\017\222\341\344\235\016\253\362\010\322w\230#\271\353\347\014\003\2211\214#\303\010\271\344M\210\005\025\325\300\242\205J\305\274\217BE\005\366\266\232k\314_\275\232\277~;w\r\277\374\374\367\257\315]3\214(\220\206\201\300\375\261\360\225\016x9\333s\217'W1\311\205\235\221\305\300\257\271\365\223\271\360\353\256/N\346C}\004\362\344U\023\331\334S\307sk\230\013rN\365\204Fa\007\264P\220\365\270)\374h\223K%dAu|\273\234\305\\J\017\313fe\345\372\312\215\315\215r\005%\204emvv\361_Dz\265\326\305nT\022\265Jq\315,W\nk\233\210\370\210\340\272\310\023\022\243\243Z\nCSK\274\240\357\201i\361H`\214K\242\025#kQ\354\247B\321\215:\031\031\347\272\232\313Z+\024\222j\003\341\020.\371Pb\032\313l\273eqA\271\325\262h\204\344\252\007Yj\026\026\355\010\351z\350\025\247\033\272\301\260""\203r\245NqB\301\274\322\255\"\025+lhs\342\241\301st\206\262\271g\307\0361\3245\016\367\254\021\007\300\242W\345\366\266\335\010\\[d\255\262\221\323\233\"\237\277\006VT=X\310\214\004V\232\302\255p\252\345\242n@\r&\364^/P\302\316\312\325Q\326Z!h}\372CqCWCn\366#;\214!\006\354\233\r\350Mf\001\270!\036\253\346J\025\301\033\301\014\362\326jn\356\370:(\313\003I\236\351T\235\252\025\362\250\341\210\032\007N\264sj\327\034\361\0328\251.S\255\210\234N9q3\244\277\022\302\203\367\211&-j3[\326\320\024\302\207\231\250$\023RB\302]\330\027\343]\027gcQ\033\211\332\254\374\263\206\035\311#\206\365\262\310\2762\204S\253\211\310n@\3035*\206u\243\310\327|\336\024\350=\222\310\322\325[\315\365\237\267\013\301\206\376<\322\305e-\366<\213Ta\325b\337\266\310 x,\0257\233\\v\032\303\030C\035\212\024\364^\330\220\242\326\210\242\220\376\312u\035\267Yw\233\300#\002\r\256\206!\244\346~d5I?\320\222\0170\325\002\327G-\030\022\260\320(\362\320\243\250u\204}\227\010\263{\272\nXud\340:\026\206\307\210\324a\215\002\332\266\350\340A5\355(`f\233\376\312\0138fA\275.$\332X\306^\320&\245\303\016~\3266\371\256\245\215\330\244\242\235\304\243?\3517\013\217Y\214\000-\";\324g\2212\217[\321\316\366b@0\365a\n?\310\374!\010\205?t\200@eA0\013\201\332\305\310\327\262\221\244\302\231\204&d\205\274C\022\207\036\240\336\010<(9\014\3020P\231\301C\322\206n,R\3710\222\242\333\005\314\251\353\264,\253\025s/\223\016\226m\001\361xB|\232\n)\360\025\350\313\240\255d\354\343\261\216u\254\024\3379\016~\360~\273\241\200VB\224\245\321 |\307\262P\312\017o\215\321\320\0030\212C\325\2422\364\206\242\317X+\013\232\243\343\334\017\274\000^\257\336\313\035\371\276^Um7j\014c+u\000\246$\177\203\033\251\341\027\253\310\276jTl#F\250!\366TGE\021\257\243\276\265\254H\2074xFD_\005m*\354\351\017e\353\204\005\256\004v\300\030\317G\300\032:|\376\344\264\332\221\273,\020\240\223\243~\260\303\275\035*\306u\243\332\355\254\014o#\340\n\231\265A\373\250W\317%\246\301\0137\373+\373\205\203\361W\223o%\227\273\013]\225N\037\214O%\257%s\335S\335V:v0~jp""\352B\367\333\335\374\301\304K{\371\2033\337\355\236\353\332\351Tz\271w\247W\353/\356\217\035\234y-\271\230\264\006\027\212O\247\006\357?\030<\370p\360\341\303\2033\257'\371C\020Ou/\247wR\2737uL\366\376\323\351\301\217\210f\360\360\247\232\014G<\372$yk\360\235\231T\202n\342\354^#\341\203\363\267\373-0\037\307\241\217\320\275\274w?\261\322B\372a\177\352`|r\317HZ\335\323\351\271\224\037M^N\357\365\326\367/\356\267NV\317\367\316\366\305~\376\204\342~\357\356p2\270p\251w\256'\372\357\234,\277\224\316\365^\354\335\357\337\035}q\252\267\333?\346x6\255\0373\350\236IWz\313\264\177\177\371\311;O\217\271L\246\263\275\351Q\232\302\327\035\377\374d\354k\351'\323\231\336\324\350e\306\016\241\213[\311\033\335\302\341\370\371\244u\010\255E0\310\304\033\231in\356}\334=\237\216CE\017\373\323\375\374\301\331sI\005\332\277\222\362\364\204\026\332N\026\301mJo\373w\257\317\356mw\247\366\246\037\361\301\0130\344\201~}}o+\231\001\337iZ\256%\205\301\271\357\365\362\220z\3424\231\352v2\333\235\206<0W%9O7{qh\317\244u0\361\312\336N\362A\227\023\341\273X;bp\255?\006\243N\234>\2348\263\267\224L\217\034?\334w\372p\374\225\275Nw\254{\001\270\233&9\332{v2E\014%\235\002q\336\3526R\247\3676q\302\355\347\366'\236\214=\231z\362\326\023\347\351\305\247\255\203\227\247\222)\240{%-\034\234y5y1\271\233\324\000\365v\312\017\207+fz\241w\276\017(\237K\312C\334\003\256\227\272\371n\241{O[\005\323\313\230h\243\315&\323\311\273\351X\372zZ\030\\\274\325\347\377\002b`n\374";
-    PyObject *data = __Pyx_DecompressString(cstring, 2573, 1);
+    #elif (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (3273 bytes) */
+const char* const cstring = "BZh91AY&SYn\326\254\373\000\001\177\177\377\376\377\373\350o\377\377\367\277\377\377\377\277\377\377\376Rv\377\336\362PtM@@@@P\000\300\000`\013\337o;\322N\211\332\355\273w:\235d\211IR\010\005DE]\036<=\241\251\241\2452b\032S\332OF\211\264\032M54\331$\363T\366\251\351\006\324\306\246\2064\215\036\240\321\265\000?Thz\2334\243M\352\233Q\240\001\352h\032?T\321\240\323H\0014OI\223BhJ{S\3242\237\244\324\366\2110\2156\240\000\0006\240\320\000\001\220\006\232\000\000\000\000\001\252y$\3612\230\224~\251\372SO\321O\325\006\215\006 d\323\020\321\243A\240\003!\243@\030 d\304\000b\032\r\017D\323@\323L\r2\020\232A\244\311\251\231M\244j\236\220\362\236)\220\017)\351\003\023@\000h4\000\r\000\000\320\000\000\32044\000A\246#F#L\232d\302`\230\232bb\030\01014\304`&&\002\000h\300\010\301\032\031\014\230F@\323F\200$\224S\324\020\304\304\323M\0314\320a110\231\031\030\2324\320db12`\000\215\244z\004\364\206L4\203\023\002h\300\215\363\236\217P\304\023Sd\336u\326\335\200\343\216\275\265\r\242\312\025\216\016\0242Hf\006a\234\203\237j\220\004C\026(\"P$\334\203$\210\372=\270\204\001\301~O\252\277g{\352F\200\246\0038\003A\207gx\016\002\200\313J\0208G8|\203\201\254l\333\376\341\356M(\026\000=\302\021\264.\255\242\2621\260\231\023-\302\"\333\315\332\333\0303xd3|\177\230JA\002\010\334$\243%M\356\251\240\365\233\tRQ\365\221\022\007eH\257c\323\344\270\277\010\332\335\177\250y(s\336\215\343\314\302.\317S\312\373}\020\317\220^\343\024\013\246\205\357\212E\334\271\232l\332\013\375\320m`\205`\263\224\264\000\367ft\rMcS\322\227\267r\342\374\332\363\"{\271\233Rr\352\344\201p\317\226\257\337\340^VK\267\273:\354-u'C\217p\353Jv\210\313\305\230\303\375s\212\241\357\323\235u\343\230\354\226\273t\027J\3617\303\376Kz; (\220\033\323\367\233\t\360k\375\377\003\2050\355\031\025-\270\231=v\014y)\242H~kf\320\231P\352\217\352\2042\310\222\035\325)\217\244%\217Lt\332\020\207C\2578\020\027\314\200EO>C,\263\335\222\010\021\007\362\354\270\234\221\312\265\344\022\317\247-[+\347\220\363[`l\204\362?]\305 \007\226\255zP\342""\370\275\374mb\374\222\005\0071L\271Wy7\245\036}\307\307\t'\210\223\222\337\036\301\343\317\303I\261\241\256\002\010\022\006j\000\0178\035\016E\277\303\006\r\276w\235\253;\205\263\251\332\255\002\375\233\316-\201\013\353\212l\212\247\262?\264\021\332\207k\355\365\235\336\006\364\247(v \222\013\252\006\323\211\255p[\321\276\253\351\013A\204i\244\037\"\305'\272\r\030\220\3276\324\213\270\326\3346LL\274\037\271\234\337]\313\224,\2367\337\317tj\333\177\364:*\035\365\235 \256\201\003\331\317WEz\307\177M\252f\265\264g*\315\246\221\263\301+KB+1\207\274=q\304&\307))W\332\256\327\035a\204Y\201j\374b\036m\024i\301@\362H\351\035\201\254\037\014w\n\226\356\037\2405\274_\233\204\325\2341n\346\220$@`\371\373q\263|b;\246\302)f\267F*\032\"\212\252\325\376$\332\224\314v1\343\024\362\001\341\253\270\"\014\266\200=b\021\316!\351?\016,\365U\335\216\234\303\253\\\370\275\231m\250\330C\r\204\210oB\353\322\214h\2227\211\n$\\6D\026\230\354A\016\253\005\022*\251\t$M\262\005O\263\334\247\303\025\032\337u\302\034:es\t\217\332\205\000\346,=\217\264<\250\334~\241\307\321\236r~\372\001\322\327\010D(\351Ts\032\030\2448jI \215\206\2418\025R\253\252}\314\025\332\311\262@\032\344\252A\305\032 \r\021L}\244\253\227R\255\226\215\222\260\351PP\273\277\010W\032\336d\204\207g\224tx\312T\343H\227\250\204\301\372C\222\256iF\327\346\327P^F\321Yn\241n\202:\304\216\010Nd%\337z\206\245\304\021\373\227\240\246\333g\251\261Z\232\261\0340X{\247\273\010t\214Rt;2\346IE\002\331\345\020\274\371\206\304\331\200`S\321%\324[p\020q(\261\305H\257\243\230\030\224WtP\237\006\rK\003~\234\340\016\r\266A\230\177\303,\023\343\004\r\265\013B\351\014\032\221$\356\252\034Q\r#\242#2\265\361\227\251\216\367\236\216\314\331\274c\351Mm\215\014L8\361(\205\020\301x\344\320i\361P\250\247\301\010=n\341xQ\233E&\202%1\361T\307\274\255&\240R\220D \010.P.$\264\255\354\177}\350 O\214S\312<\3457Jr-\263tL\000b\007zu\302\003\017!X\211\264qv\343\276\346\300\222\343\274\n!\322#s\364\364\001\007#\340\030\344\030H\335\025x\257;M\202Sq\024\021\235\006""\014\303\313\204\002!\344\032\367\260E\204~\315oL\212=\036r\033\222n\336\207N,w\240\360\001$\tk\244\247\260\272\201\\n\243\303QlQ\204\361x\342\215\324\371#\201\320\353\3021\235\221)\323)u\030\320QWE\\\320l\204.k\002\030\205\033(\007\374\206\223%\027;\002S\244's\211\331N}\316O\201\214\267:c\312\202`g\300W\3231q\025\203M_l\235\201\0330\325M3\\\256\301\305p[%\321`\326t*x\223\352\003\001\226\304\314\356\207u\302E\020\320:I\207\234\322\031bPoM\277|0\2146\276\020\020\016F\227m\357\241\005i\026\032\014U\271P\261we\261\211*\365]3\026\213\333\272\202Z\212\tp\366\322\223\366P\n\260\215sn\275\241\021\273\247|\355\224\353F)\251%\261\r\352i\355\361\216\272C\2128\257\030\302:\354\235\tp\365\000\"\034\364L\344\225\256\236\324\001\342\223\215\260\212\033\036\345\t\002\005W\235\320#\301\250&\370\213\001r\341\314\020?\217@\026\267\201gc\200\336P\005\362q\341\254\321+\261A\207\030\321n\365\202\312\270QTpls\274k\010!\006\346?\200\002(\355$\021\274\224w6\317\340\210%\250r\307\002\005\365.}R\231D\005\275\271\024m\223\204\337\006\260\366Z\264\357\337g\030\337\000\003g\177\\*\016X\370\220\022\215\347k\356\032\206\221Zn\203\030\036\252v\031-\315\347\361\3038\307e\363k\226\270\005\013\022i#1B\363\020\004\313\035\032\024V\t3CF_\020\272\366\355\032\271\326^\255\321\276\032\006w|_\007\324\325\027M\233Z\314nt\302a\021\005\324\333\001\246\276\206;\025\021\021o\242\035:\3500 \n\242\210\234\320\235\344_[\256\016-\311l\261d$#\201\017H]\233\342\017\036\241\343\360x`{\374\262\3256\210z\016a\033`\010\025B]\002\017+\364\233\320n\215\301\0167\343\026\216\244\307\034S\272y\307g\255x\002\235\235a\200\360\357\301F\022&\n\216^\231 \261\034z+\306\350\250uK\224\251\033\210\345\354\r\311\361][v\201\277%\255\301s\276\236\316\336\234\021a\324\016 \261\004\003\330yl\2566x\374\005\372\257\3225n\\c2\\\213\221TG\013Bx\000\376\2108x\245S\220R\001\205$\344\233\201\251\321\331$\006\033\364\n\032Aw}\206\"`\202e\025Z\025\r\032I9\036!\245\353\321-\304\206\241jD\231c\264\273\201\230\032\301\302\370\032\247u]\035\022<.\365""\006P3h(\007\305k\277\357\320\251\2050qa\204*\207w\227 ;j\024BS9]\252\025\305&\007H*m\337L\000\216\272\030\214\tV<\245\350wr2\025\002\361\325\302\323@m\242\022 \244s\002C\312)\026e.\213\203$\207\"\203\224\311\236\260#m\245\014\2403\206\270\226W\205\016\344Kg@a\263U\242\241\2130\332\300\2427\205q@@\232c\233!p\210\272)*\303-`\311\0201\371\220H\014\006\253\000\333\303\002\243\224\241%\344TvJ\022H\025!\304.A\235\273\231\264\277\217'\274f\314Y\222\245n3\017\r\346\237sP\243\371\324l\215\203\253f $<!\306(\302Z@h\241Q\216\r\322\333E\205\344V(\222\024\352*\026U\220cGY\"\001!\301\267\000\010\034\313\231\000\221ax\004\317\201\272b\224\035\267\005\325\2065pM\254\323\200\2061\3442\345;)\246\375\367\362\240I\000/\316\016P\343\304){4\2278\272e\225jSZ\220\305C\275o\272\353\354\375r\2452\215\234\202\200(\314b\354I\272\002g\022\007h\000<!\322\251\356\025G\227\333\\\020@\224$\002\t \033\202*\215\266\314Y\021\034\030\376q\0235\000Q\216\373n\313\217|\300hk\021\262\226r\260\331\327\360C\336\243\010\262\316\033\272l88\255\203\371\322\210\036\n\006\020\024 P\220\014\204\210\307\034CV#|\230j\010\260\320Cu\335\233\026b\034\233k\204\304\020\014\024\354t\264\337\\TT\224;\\\212\324\030p\325\200\231Q\250C\307\010\230FOk?~\251\032z1\255&,sU,\3035\206i\221\326\300bf\370\020\342\304kL\300\241\020\260\307\211\034\216\021E\026,\262\316\330\027:5Z\211o\"|.x\303Q\271\255\266\247vd\373\222\027\031By\036\357C\311\306\027\331\000\220\310\360\"\334`\311T0\014\374-1s\222\244{\\]u4x\226K\261\2127\265\027I\005M\313]x\207=\335K\t\345\305\340F\367\233\250M\230\346\006\202\245\233\010q\350\303\257\246\262\2106\252p\250\"b\001\016E\330\rN\250u8ej\252r\367%\264\004\205i\215\304g\234\261\317k\351p\341\350\302n\315\024:1Viv\033H\310\030jW'6\276\321\264:Y\212\0208\3460\265EEg\215\306X\214\306\332n\3521@\221PD\374:E\241\362\001\367\234 \020P\021m\335\023\220\226h\301s\032\3117\002\241\324AX#i\215V\301F\207A\305\357\032\346\231fT\235\302SC]\301I\254\033\035F\207\311\t\216B\303\3018\014Jud8\322\250\204\021\223\207\357""\220y\r\024\356b\263\343\204\346\206QL\200\300\240\225-\303!\010\013Q\221\0068\"\210\330\324F5\n\331\306\260\003]\023\225\003\037|,\250\314\201PO5\260\236\256V\356\002\365v0\r=f\206u)\006#VY\207\343\256)S\305\325\344\225\327<\365\301B@(\t \200B\372M6\247Z\027\325\314p\336X\030\\$\314S\027\240\352\2645\375\021\214\267\354\272\021\266qo\r[\340D\255\241\376=\357s\367@\037\361\007\364\340\325\263\020~d\220\314\301\243\006\341\272\320E\250\257\262\342x\177\247}'?F\361\030K7J\265\363\326\3369=\202\361\363\206'$\331\007ei\316\241\260\374\232\366\370\025]R\001\371J?\346\244\200GD\223f\000\233\020\201\014\344\007\273MY\374\370\\\371.G\222^k\367\333r\354]\273/\323\014\211W\373\213v\312Sh\207HpI\374\362G8F#\000\260w\220\002\025\233LV\255\251\334\024\211\036]/\037\226\023\312\033]}Ov\236\300\352\226\300\025G\005_\033\345\325\346\340\321\356\306?\3206ErB\253j\002\225\261\035\353\027\366\362\304/\225B\251\342m\020\361b\247z\037\303\034\032\037\031b\273\204d\351\341\351?\321\267\317\333\265\335\346\341\346\\\353|\342lv9\335\344#\267\377\026X\251\322\346nv\264&\273\203\330\316\326\r\2571\nv\307\321 \221\363:*\332\013\r\266af\304\313#6)\233\0147\245Mm\"%v\341\031L\205%\025\377qy\241\261\010=\352b\371\376S{o\266\314\004\0160\"\265\201$\303$\002\355\273\227\267\376\332\017\224<,;^|a\013g*\336 <\243Gm\307\2716\237\376.\344\212p\241 \335\255Y\366";
+    PyObject *data = __Pyx_DecompressString(cstring, 3273, 2);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #else /* compression: none (5039 bytes) */
-const char* const bytes = ".11. [TITLES]   Extract Page Titles22. [MAP]      Extract all Internal Links33. [FORMS]    Extract Form Actions44. [IMAGES]   Extract all Image URLs55. [DEEP]     Start Recursive Crawl (Depth 1)66. [SUBMIT]   Fill and Submit Detected Form77. [AUDIT]    Deep Structural Audit\nAction (1-7): CHOICES: Columns:  (Cores: \360\237\224\215 DEEP STRUCTURAL AUDITDatabase not found: \360\237\222\273 Desktop detected. Auto-optimizing workers to: \360\237\222\276 Exported  ExternalFailed to inspect site: Failed to read database:     Fields:   [Form \360\237\217\227\357\270\217  Forms:  \n\360\237\214\262 HEADING HIERARCHY TREE:\n\360\237\223\235 INPUTS DETECTED: ImagesInteractive Mode Internal | \360\237\224\227 Links:  \360\237\226\274\357\270\217  Media:  \360\237\223\261 Mobile detected. Auto-optimizing workers to: N/ANo DataNo data found to export.No forms detected to submit!NoneNot FoundNote that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False.\nPress Enter to Exit Audit...Route through Tor\360\237\223\245 SCRAPED RESULTS FROM SUBMISSION:SELECT url, data, timestamp FROM results\n\360\237\224\221 SEO & OPEN GRAPH METADATA:\360\237\223\241 SITE INTELLIGENCE: \360\237\224\215 Scouting \n\360\237\223\212 TABLE SCHEMAS DETECTED:  \342\200\242 Table #Target URL   Value for '\342\232\240\357\270\217 Warning: High concurrency (ZenScrape Elite - Professional Web Intelligence\n\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342""\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220 (]  -> , ' (): {}  \342\200\242 :       \342\200\242 [?\n\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220""\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\360\237\221\211 \342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\n#)...add_notearticle.product_pod h3 a, a--concurrency--cookies--css--csv--data/data/data/com.termux--delay--depth detecteddisableenablegch2, h3, title--headers--inspectisenabled items to --json--method--no-cacheog:descriptionog:imageog:title) on mobile may cause crashes or heavy battery drain.--output--params--profileq. [EXIT]socks5h://127.0.0.1:9050--tor--urlzenscrape.clizenscrape/cli.pyzenscrape.configzenscrape.enginezenscrape.inspectorzenscrape.modelszenscrape_results.dbzenscrape.storageArgumentParserAsyncSessionDATAGETH2H3POSTPUT__Pyx_PyDict_NextRefTIMESTAMPURLZenCrawlerZenDatabaseZenEngineConfigZenInspectorZenRequestZenSecurityConfigaactionaction_performedadd_argumentadd_request__aenter____aexit____annotate__argparseargsasyncioasyncio.coroutinesattributes__await__cache_requestscalculate_optimal_concurrencycallbackchoicechoiceschrome110__class_getitem__clicline_in_tracebackclosecolumnsconcurrencyconfigconnconnectcookiescountcpu_corescpu_countcrawlercsscss_firstcsvcurl_cffi.requestscursordatadbdb_pathdefaultdelaydepthdescriptiondetailed_tablesdumpdumpseelemsemailengine__enter__enumerateerrorexecuteexists__exit__exitexport_export_dataexternalextractedffetch""allfieldfieldsfilenamefillable_typesfinal_concurrencyformformatformsfull_url__func__getget_summaryhheadersheadingshelphrefhttphttpsiidimgimpersonateimportant_metaindentinfoinpinputinputsinspinspectinspectorintinternalis_android_is_coroutineitemsjsonkeykeywordslinklinksloadsloggerlogurulower__main__mainmax_depthmediametametadatamethodmodels__module__name__name__new_depthnewlinenextno_cacheopenoptimalosoutputparamsparse_argsparserpasswordpathpayloadplaceholderpoppost_dataprintprint_helpprofileproxiesproxyq__qualname__rreqresresponsereturnrowsrunrun_inspectorssave_resultsearchselected_formsend__set_name__setdefaultsetupsqlite3start_scrapestart_scrape.<locals>.callbackstartswithstoragestore_truestripstructuresubmitsuccesssummarysysttagtel__test__textthrowtimetimeouttitletortypeurlurljoinurllib.parseuse_toruser_concurrencyvalvaluevalueswwarningwriterwriterowwriterowszenscrape.cli\320\0004\260H\270A\330\004\020\220\002\220*\230C\230s\240!\330\004\021\220\022\2205\230\007\230q\240\001\330\004\007\320\007\030\230\003\2301\330\010\013\2101\330\014\031\230\025\230c\240\021\240*\250B\250f\260D\270\001\330\014\022\220%\220q\320\030I\310\021\320J[\320[\\\320\\]\330\014\023\2201\340\014\031\230\021\230*\240B\240c\250\021\330\014\022\220%\220q\320\030J\310!\320K\\\320\\]\320]^\330\014\023\2201\330\004\007\200{\220$\320\026'\240r\250\021\330\010\016\210h\220a\320\0277\260q\270\001\330\004\013\2101\200\001\330\004\r\210X\220_\240A\240\\\260\021\330\004\n\210-\220q\230\t\240\025\240a\330\004\n\210-\220q\230\r\240W\250N\270%\270q\330\004\n\210-\220q\230\t\240\027\250\016\260e\2701\330\004\n\210-\220q\230\r\240X\250Q\330\004\n\210-\220q\320\030)\250\025\250e\2608\2701\330\004\n\210-\220q\230\013\2405\250\005\250X\260Q\330\004\n\210-\220q\230\013\2405\250\007\250x\260q\330\004\n\210-\220q\230\016\240g\250Q\330\004\n\210-\220q\230\014\240H\250G\2608\2701\270G\3008\3101\330\004\n\210-\220q\230\n\240(\250!\330\004\n\210-\220q\230\014\240H\250A\330\004\n\210-\220q\230\r\240X\250Q\330\004""\n\210-\220q\230\r\240X\250Q\330\004\n\210-\220q\230\001\330\004\n\210-\220q\230\014\240H\250A\330\004\n\210-\220q\230\n\240'\250\021\330\004\n\210-\220q\230\t\240\027\250\001\340\004\013\2106\220\033\230A\340\004\027\220q\340\004\007\200t\2101\330\010\033\2301\330\010\013\2104\210z\230\027\240\004\240A\240]\260!\2601\330\016\025\220T\230\021\230,\240a\240q\340\004\007\200t\2101\330\010\023\2201\220D\230\t\240\021\330\010\033\2301\340\004\007\200t\2101\330\010\023\2201\220D\230\t\240\021\330\010\033\2301\340\004\007\200t\2101\330\010\016\210k\230\021\210!\200a\320\000\031\230\021\330\004\007\200t\2102\210U\220'\230\021\230!\330\010\016\210f\220A\320\025+\2501\250A\330\010\t\330\004\013\2107\220(\230!\2301\330\004\r\210T\220\027\230\001\330\004\005\330\010\016\210h\220a\220q\330\010\017\210v\220Y\230a\330\004\013\210=\230\001\330\010\016\210f\220A\320\0250\260\001\260\021\330\010\t\340\010\014\210F\220!\340\004\007\200t\2101\330\010\016\210h\220a\220q\330\010\t\340\004\017\210y\230\001\230\030\240\021\240!\330\004\007\200w\210c\220\021\330\010\017\210r\220\027\230\001\230\021\230$\230h\240d\250&\260\001\260\021\260!\2605\270\010\300\001\300\021\300$\300d\310%\310q\330\r\021\220\021\220*\230H\240A\330\014\020\220\005\220Q\220f\230C\230w\240a\340\r\021\220\021\220*\230E\240\030\250\027\260\001\330\014\025\220S\230\007\230q\240\001\330\014\022\220)\2301\230A\230W\240H\250A\330\014\022\220*\230A\230Q\330\004\n\210(\220!\220=\240\001\240\023\240A\320%6\260a";
+    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (3137 bytes) */
+const char* const cstring = "x\332\355X\315o\033\307\025\217[\005\226\025\307\211\022\270v\221\313\010\211k\3115i\313\337\025\232\0244\271\222\230\350\203&)\333\251\343.F\273Cr\243\345\356jfW\024\223\0260\n\024P\213\026a\342\264!\322\026f\002\024 zR\213\036\004\264(|\364QG\035\r\377\003\365\237\320\337\233YJ4\020\240\355\245h\201\330\313\331\231\3317of\336\373\275/e\247\247\263\354N\265X]\260*w\031c\326f,\271\023\263\022\257\013V\365b_\250\013\027@\261\230+\321\347!\n\356\373\254\030\304B\006\334g\013^\260\246.^\004\341\354ryQs\332'\234\re\223\345\234\330\013\003u\351\022H\212\213\271\271gw\323\274\232\264\345JyA]\276\014\242\202e\245;Vb.cV\026N\"\225\267!X^\362\226\317&\013\"\212\033lz\352\312\025PWV\256/\026\253D?\353\201\027\017\\VIV\233^\314\n\"\026N,\\}\214\253WA\233[)\030R|\023\021\330\313\304\211\023\211[\344\022\327\213\257]#~V\336\006\335]:b\024*,\317\207A\315\253\203\214\356\301\276\303\346\005w\205d\025\207\007c\346rlr:suj\206=}\360\333/\376\261\363\221\341\346\005u6_\255\226X\205\316\357\305\355t\241\312f\263\371\371\345b\336\252\314<}p\377\247,\277\2744[\234[)\347\252\305\345%f\335.-WV\312\026\253\344sKlr\301\312\275\303\nV\325\312\323\327)\306\362^\324\020r\206\245\377\362\241\2374\003\205\361d>\224B\321!>\375\025#\031\262J\265\274\222\257\202\361\002\3237\307n_\260\302R\205\341\216+\345b\365]V\266\362\313\345B\245\300c\276\312\225`A\030\263Z\230\004.\261\371\344\257\020\223Z\213\303\210\271\251(\263\270Z\034f\302(\366\232\336\007t\303V(\327p'\026\2073\354\311\347\177dV\271\274\\\236\301\261\022\337\325\354\2340\010\260\026\004\244u)CI\212\341\236Og&\031{\372\324\372\037\366\374\273\026\273$\265\261T\005\211\0243\0320\032p\263X\212\217`\347\005*\"\316\312\213Ap0/!f\346\246W2\234g=\341\273z\227;\032\223O\037|\364\031)JC\203\346\307\236>\370\345\237\331\274\225+\024\227\346\330|\321*\347\312\371\371wY\265lY\320\322\247\237\244\252\034\010\216(\2552\344WZ.W\261\370\376\357Yq\251\264R\255\244\272\262\n3\006\326j\200\211\2429-\311\254RY8W]\250\260\274\220\261W\363\034\036\013H]\032""\233\202Q\020\324\027CW\034\030\331\217q\362\242R\311\201\342q\246\317\214\355\315\320\3407\177\323\327Y\024\256\307\365\304\375?\201\305*D\362o\352n\351\\n)d\004\004\274Hx\006\007$O\241\025\222\305|\215\244\265\317\220\276)mj\023Ka X\346-\266\004\205\017\314fRK\214ff\211\023:\202\305\r\036\263|;n\300f<\342\344{\253\270r,\3746S\261\364\300V\022Q\300JV)s\351\332%m\317R\274\217\r\025m\346\370\\)\241XXc\253\211\347C\234,nGBeY\261\306\332a\302\002a\016\026\201nxA\334\020\001S\"\246\016;\315\003@S\333\263\215\345\220\305i\346\002\207F\364X=\313}%\262c%@S1+\320\247\nq3x\025m\3330\341\257\372\266o\351\003\"(\nt\033\236hi\275\225d\030\207N\350\017\224XJ$\311\352\300q\334\200\206\333\244\032\262R\370\275P\272JC\203\245\243\031V\016\023-H\031&\365\006\253\206\022\272\376\003\234E9W\262\n\000dee\001(\234-//2\355\032+\025\370\r@\370\301\227\006\275\326\014\336\013\200(K\244\177V\253\372,\003$\204\212y32\013q\265\304\217\025p\375\351\307\240^\206\323[.YKl\016\233\314\263E\253\232+\344\252\271\031\355O*\305\252\005\354W\255\205\205\342\234\265\224\267\264\007\372\370\000\344V\271Z\234-\346s K\275\220\271+\371\317\200\356J\367\033\200&\3476\275\300\003\0248\251\342\234q\275\344\331\005\271M\355\332*\016$@\353\020\037DL=x\236{_R\260\210\223\201'!\203\276\377\013V\315]_ O:o-\346\206MS/\250\362U\230\307\353U.\353\300\005\302\317\223\337\375\214\335\314-\024\013\330\347/\354\346\312\302\022\334\000\030\020\317\233\334\367\\R\355\202\250\305z\023\314$\306nO\263\311\233\236\214\023\030*\200\343\257rgm\352\311\347=\272\344-.\003}\302y\017\332\202/\004@\244\010\2346\233\374\241\010*\216\344\221`\226\017\017\3062\004\217\032@\005T\202\323-\261\252\355\337\367\275:\026\210\261'\277\356|\375\374\027\0366\211\330\017_v\226\364\212\240\376\341O\014\\\006\310\242\376\035j\000\310\377K\245\214\375\340k,\375\007\317\323\007\037\377\234\375\217j\362\365)\200\220\273\256\215p&\220+{\216/\262\221\014]\344\265v\024\272\254q\221\301\275s\266\352\305j*\223\031r@4\010\327<\241\320Q\272\331\310d(\032""\234;h\234\260\231E|k&\233\210\023m\020!`\3636\275(\001\037\344\001\256\247\310\223\212\200\332\272\323\270p\026\333RLA\t\221\3114L\322\233\311\244\351\232\247\014\241\313\340\364\232\224|\260L\346}\025\006\231LS 1p3\231 \3148\334i\210\260>\343\n\345H/\242H\215\221G\031\025\336\232\365\024C\022\32149N\223\267\231\303\023d\260\360\250\252A\t\202d\330y\243\315Vy\214+\264\231+\271\027d3\031\004\217(\2113\231\210K\336\304\261 \255\032X\254#\365\267n\243:P\241\263\246.7f\316\235\233\276p5{\036\377\247g\276w\376\362\371L&\016e&\203\240\371\201\010\224v\334YNa>\224\007\023\216\357\355\017\316a\220\215\332C\037u0;\030\213\240\356\005\342`\234\nh\230_\023Y\240\257\366\307v\032\230\263\356\352\001\r\222\232$\262E\26014\005&\220TN\326\223\246\010\342\022\227J\310\234j\007N\305\304\027\n\337sVu\376\302\374ET\033U$\256\266]jo\342W@\016f/\211\315\270,j\325\342\242U\251\346\026K\210\215\210V\272\372\022\022\275A\275\200\256\245/a\3424\206\305\301\035\320/\213\365\004Y\005\305\2714/\312\031y\r\315\230\205\234\3532\312\264v$$%\232\302%`\363\364\016\324\227\206\241msAi\227mS\017y\227\356\230\214N\330\264\"\242\013\343\2558\335\331\013\323\0274 u\356 \024@!\275UdRJ\353\320v\003\005\366:\3372\023r\360E\245'\265S \017fM\234\326\203Xg\020\351\227\330WvZ\363\014\010B\034\225\2678\035\224\354Pc{p\031\214|'\361\351\344:3\347\276=d\244N\232N8\215\320s\204i\225\203\334\257)\246\247\317;\272\024\264m\235\343\3328\002Y\024\r\341\006pI\333Cv\213zBh\016>\362+\307\024\213\303\033h\371\323y\3233\247N\0019V\020;Q\202\303@\022\246C3\006\002p\030x\354\232'U\014\277\001f8u\255\346e\367/\205\202\035\262\004L\310o\330>r&w\325]\265#\0367\\Q\343\000\261v%\332\221\220\215\017\331\271\253\253C\323\n\027\302\205\263Pf\250\214\232\250\034q\303&\354\331M\232\021\375\224\020>\234\211h\322\032\215H\330\002\352F\233d\017\323\260\355\0241\"\000\232\250\340\020T\211\212M(\027\375Md\234\n\0375\226\250\025\246,5\225\217\235\276\350:\"\255B\205\371\363\205pk5\021;\r\250\251F%\246n\024\371\223\2007\005\336>\235\336\326%""J\315\013\236U.\201\234~<\326uU-\361}\233$i\327\222\300\261I\237xl\203*\021\270Q\350\005\261\242)\2254\233\\\266\033\r\233vIq\231\276R\361\320\010y'f\375\250!E\255\021\307\021\375\224\207,\266Y\367\23202\370\\\010\002]\320\363 \266\233$c\210?\200\205\324\260\031\352\242\210\254\005\215\"\3374p\340\003\023\367\210\320\210\303S0@W\206\236k{\004\377\324\314\320\3370\211\261\247\213W\355\361\311\327\257\2116\236\026\231\033\220\272F?\345\207\034\243\260^\027\022m\"\023?l\221\312H\317\246m\362M[#\246Ie.\035\227~\244\026\0239\214\267\004-\342\037\244\256\245\263\337\212\330\017\235@\264\014\007t\310D\002\3501\010m\023m\"\021\244&\030*\023%L\214\320\336\204\334\212\351\271\244$\335\223Td\322%\010\326\021o\323\r\"\037\006\327\010\201_\224v\021\212\032\203\233\210\244\245\033\233T\222\006\035\2746al\364jG\246\026\\\267\355u\310\313\034Z\032\227dZ\215\"\030\030p\211'\n\003\034\000\256_\0062l)\231\004x\354}\335(\3057\366\303\005\\\241\323P\260\020\002\254\255\301\006<\331pbq*\035\364R\263\324\321d?\244(\257\016\214\300\220\366;P\004\360\256\326\251d\271\250\350\357s\266\t:\303\375\354\367!k\224\320oe\007\016L\177U-/n(]\246\231\026H\201\341\233`E/X\212$\377\001O\240\322\277\315\t\363\027\006\2258\360|*E\276j\2538\346u\343wQ\"\331v\254\343\002\3546\246\312\270E\365,\375\240F\235+\220S6\206\201]H\216P!\236\367\201r\274|o5\253\025:P,\022\t\362\034x\311a\203\335\340\376\006\025}\272Q\033\260 \270\253\024\340\255\226\251\364Z\004ri\332\2605x\253gR\204\335\347.m\317\357\344\366F^\356|\243s\246\233\357\252\336\304\336\310x\347\225\316\345\356\341\356z\357\320\336\310\341\335\303'\273\337\354N\357\215\276\2605\275w\364\333\335\343]\2477\336;\323\277\336\257m\027v\016\355\035}\245s\252\263\276{\262\370h|\367\355;\273w\336\333}\357\356\336\321W;\323\217A<\336=\323\273\336s\372\343\373do?\232\330}\207hv\357\376H\223a\213{\037v\336\330\375\326\351\236\004\335\350\261\255F\207\357\236\270\272\275\016\346#\330\364\036^/n\335\356\330\275\\\357\275\355\361\275\221\261\255Lg\275{\244w\274\307""\007\203\027{\267\372K;\247v\326\017\276\236\350\037\333\026;\323\007\024\267\3737\322\301\356\311\251\376\361\276\330\276v\360\371\205\336\345\376\363\375\333\3337\206'\016\3677\267\3679\036\353\325\367\031t\217\366\346\373s\264~g\356\341\265G\373\\\306z\223\375\211a\232\334Wm\377\354\340\320W\322\217\365N\367\307\207/s\3501dq\245\363Z7\367x\344Dg\3751\244\026C!\243\257\031\325\\\332\372\240{\2427\002\021\335\335\236\330\236\336;v\274S\205\364\317\366x\357\200\026\322\356\024\300m\\/\373W\323\307\266\326\272\343[\023\367\370\356sP\344\236\236\276\260\265\3229\r\276\023\364\271\326\311\355\036\377n\177\032\247\036=B\252\272\332\231\354N\340<PW\265s\202n\366|\252\317\316\372\336\350K[\033\235w\273\234\010\337\304\267\001\203\363\333\207\240\324\321#\217G\217n\315v&\206\266O\327\035y<\362\322V\273{\250{\022\270\233\240s\264\266\234\31681\224\264\013\216\363F\267\321s\373\337!N\270\375\345\235\321\207\207\036\216?|\343\241\373\350\324\243\365\275\027\307;\343@\367|/\267w\364\345\316\363\235\033\235\032\240\336\352\361\307\351\027\253w\262\177b\033P>\336\251\244\270\007\\\247\272\323\335\\\367\226\326\n\206g0\320J\233\354Lt\336\354\035\352\275\332\313\355\236\272\262\315\377\t\002&\206\214";
+    PyObject *data = __Pyx_DecompressString(cstring, 3137, 1);
+    if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
+    const char* const bytes = __Pyx_PyBytes_AsString(data);
+    #if !CYTHON_ASSUME_SAFE_MACROS
+    if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
+    #endif
+    #else /* compression: none (6335 bytes) */
+const char* const bytes = ".11. [TITLES]   Extract Page Titles22. [MAP]      Extract all Internal Links33. [FORMS]    Extract Form Actions44. [IMAGES]   Extract all Image URLs55. [DEEP]     Start Recursive Crawl (Depth 1)66. [SUBMIT]   Fill and Submit Detected Form77. [AUDIT]    Deep Structural Audit88. [SEC_AUD]  Exposed Configuration & Header Scan\nAction (1-7): \360\237\233\241\357\270\217 Auditing HTTP Security Headers...CHOICES:\360\237\223\202 CONFIGURATION EXPOSURE SCAN (LEAK DETECTION)  Cipher:        Columns:  (Cores: \360\237\224\215 DEEP STRUCTURAL AUDIT\360\237\223\241 DNS SECURITY RECORDSDatabase not found: \360\237\222\273 Desktop detected. Auto-optimizing workers to: \342\232\252 ERROR: Could not connect to   Error Details:   Expires:      \360\237\222\276 Exported    Exposure:  ExternalFailed to inspect site: Failed to read database:     Fields:   [Form \360\237\217\227\357\270\217  Forms:  \n\360\237\214\262 HEADING HIERARCHY TREE:\360\237\224\222 HTTP SECURITY HEADER REPORT\n\360\237\223\235 INPUTS DETECTED: Images\360\237\233\241\357\270\217 Inspecting SSL/TLS Certificate for Interactive Mode Internal |   Issuer:       \360\237\224\227 Links:  \360\237\226\274\357\270\217  Media:  \360\237\223\261 Mobile detected. Auto-optimizing workers to: N/ANo DataNo data found to export.No forms detected to submit!None -> Not Exposed (HTTP Not FoundNote that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False.\nPress Enter to Exit Audit...Press Enter to Exit Security Audit...   Preview:    Protocol:       Purpose: \360\237\233\241\357\270\217 Querying DNS Records for   Record: Route through Tor\360\237\223\245 SCRAPED RESULTS FROM SUBMISSION:\360\237\237\242 SECURE: SELECT url, data, timestamp FROM results\n\360\237\224\221 SEO & OPEN GRAPH METADATA:\360\237\223\241 SITE INTELLIGENCE: \360\237\224\221 SSL/TLS CERTIFICATE AUDIT\360\237\233\241\357\270\217 Scanning for Exp""osed Administrative/Config Files...\360\237\224\215 Scouting   Setting: \342\200\242 Status:       \n\360\237\223\212 TABLE SCHEMAS DETECTED:  \342\200\242 Table #Target URL\342\234\205 VALID\360\237\224\264 VULNERABLE:   Validity Left:    Value for ' (Virtual Fallback)\342\232\240\357\270\217 Warning: High concurrency (ZenScrape Elite - Professional Web Intelligence\n\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220 (]  -> , ' (): {}  \342\200\242 :       \342\200\242 [\342\200\242 ...\n\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342""\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\n?\n\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\360\237\221\211 \342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220""\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\n#)...add_notearticle.product_pod h3 a, a bits)--concurrency--cookies--css--csv--data/data/data/com.termux days--delay--depth detecteddisableenablegch2, h3, title--headers--inspectisenabled items to --json--method--no-cacheog:descriptionog:imageog:title) on mobile may cause crashes or heavy battery drain.--output--params--profileq. [EXIT]socks5h://127.0.0.1:9050--tor--urlzenscrape.auditorzenscrape.clizenscrape/cli.pyzenscrape.configzenscrape.enginezenscrape.inspectorzenscrape.modelszenscrape_results.dbzenscrape.setup_envzenscrape.storageArgumentParserAsyncSessionDATAGETH2H3POSTPUT__Pyx_PyDict_NextRefTIMESTAMPURLZenCrawlerZenDatabaseZenEngineConfigZenInspectorZenRequestZenSecurityAuditorZenSecurityConfigaactionaction_performedadd_argumentadd_request__aenter____aexit____annotate__argparseargsasyncioasyncio.coroutinesattributesaudit_dns_recordsaudit_resaudit_security_headersaudit_sessionaudit_targetsaudit_tls_connectionauditor__await__bitscache_requestscalculate_optimal_concurrencycallbackchoicechoiceschrome110cipher__class_getitem__clicline_in_tracebackclosecolumnsconcurrencyconfigconnconnectcookiescountcpu_corescpu_countcrawlercsscss_firstcsvcurl_cffi.requestscursordatadays_leftdbdb_pathdefaultdelaydepthdescdescriptiondetaildetailed_tablesdetailsdns_reportdomaindumpdumpseelemsemailengineensure_tor_env__enter__enumerateerrorexecuteexists__exit__exitexpiresexport_export_dataexternalextractedffetchallfieldfieldsfilenamefillable_typesfinal_concurrencyformformatformsfull_url__func__getget_audit_endpointsget_summaryhh_nameheadersheaders_reportheadi""ngshelphrefhttphttpsiidimgimpersonateimportant_metaindentinfoinpinputinputsinspinspectinspectorintinternalis_android_is_coroutineis_virtualissueritemsjsonkeykeywordslinklinksloadsloggerlogurulower__main__mainmax_depthmediametametadatamethodmodels__module__name__name__netlocnew_depthnewlinenextno_cacheopenoptimalosoutputparamsparse_argsparsed_urlparserpasswordpathpayloadplaceholderpoppost_dataprintprint_helpprofileproxiesproxypurposeq__qualname__rrecordrecord_typereqresresponsereturnrowsrunrun_inspectorssave_resultsearchselected_formsend__set_name__setdefaultsetupsetup_envsignaturesignature_matchsqlite3start_scrapestart_scrape.<locals>.callbackstartswithstatusstatus_codestoragestore_truestripstructuresubmitsuccesssummarysysttagtargettel__test__textthrowtimetimeouttitletls_reporttortypeurlurljoinurllib.parseurlparseuse_toruser_concurrencyvalvaluevaluesversionvirtualwwarningwriterwriterowwriterowszenscrape.cli\320\0004\260H\270A\330\004\020\220\002\220*\230C\230s\240!\330\004\021\220\022\2205\230\007\230q\240\001\330\004\007\320\007\030\230\003\2301\330\010\013\2101\330\014\031\230\025\230c\240\021\240*\250B\250f\260D\270\001\330\014\022\220%\220q\320\030I\310\021\320J[\320[\\\320\\]\330\014\023\2201\340\014\031\230\021\230*\240B\240c\250\021\330\014\022\220%\220q\320\030J\310!\320K\\\320\\]\320]^\330\014\023\2201\330\004\007\200{\220$\320\026'\240r\250\021\330\010\016\210h\220a\320\0277\260q\270\001\330\004\013\2101\200\001\330\004\r\210X\220_\240A\240\\\260\021\330\004\n\210-\220q\230\t\240\025\240a\330\004\n\210-\220q\230\r\240W\250N\270%\270q\330\004\n\210-\220q\230\t\240\027\250\016\260e\2701\330\004\n\210-\220q\230\r\240X\250Q\330\004\n\210-\220q\320\030)\250\025\250e\2608\2701\330\004\n\210-\220q\230\013\2405\250\005\250X\260Q\330\004\n\210-\220q\230\013\2405\250\007\250x\260q\330\004\n\210-\220q\230\016\240g\250Q\330\004\n\210-\220q\230\014\240H\250G\2608\2701\270G\3008\3101\330\004\n\210-\220q\230\n\240(\250!\330\004\n\210-\220q\230\014\240H\250A\330\004\n""\210-\220q\230\r\240X\250Q\330\004\n\210-\220q\230\r\240X\250Q\330\004\n\210-\220q\230\001\330\004\n\210-\220q\230\014\240H\250A\330\004\n\210-\220q\230\n\240'\250\021\330\004\n\210-\220q\230\t\240\027\250\001\340\004\013\2106\220\033\230A\340\004\027\220q\340\004\007\200t\2101\330\010\033\2301\330\010\013\2104\210z\230\027\240\004\240A\240]\260!\2601\330\016\025\220T\230\021\230,\240a\240q\340\004\007\200t\2101\330\010\023\2201\220D\230\t\240\021\330\010\033\2301\340\004\007\200t\2101\330\010\023\2201\220D\230\t\240\021\330\010\033\2301\340\004\007\200t\2101\330\010\016\210k\230\021\210!\200a\320\000\031\230\021\330\004\007\200t\2102\210U\220'\230\021\230!\330\010\016\210f\220A\320\025+\2501\250A\330\010\t\330\004\013\2107\220(\230!\2301\330\004\r\210T\220\027\230\001\330\004\005\330\010\016\210h\220a\220q\330\010\017\210v\220Y\230a\330\004\013\210=\230\001\330\010\016\210f\220A\320\0250\260\001\260\021\330\010\t\340\010\014\210F\220!\340\004\007\200t\2101\330\010\016\210h\220a\220q\330\010\t\340\004\017\210y\230\001\230\030\240\021\240!\330\004\007\200w\210c\220\021\330\010\017\210r\220\027\230\001\230\021\230$\230h\240d\250&\260\001\260\021\260!\2605\270\010\300\001\300\021\300$\300d\310%\310q\330\r\021\220\021\220*\230H\240A\330\014\020\220\005\220Q\220f\230C\230w\240a\340\r\021\220\021\220*\230E\240\030\250\027\260\001\330\014\025\220S\230\007\230q\240\001\330\014\022\220)\2301\230A\230W\240H\250A\330\014\022\220*\230A\230Q\330\004\n\210(\220!\220=\240\001\240\023\240A\320%6\260a";
     PyObject *data = NULL;
     CYTHON_UNUSED_VAR(__Pyx_DecompressString);
     #endif
     PyObject **stringtab = __pyx_mstate->__pyx_string_tab;
     Py_ssize_t pos = 0;
-    for (int i = 0; i < 338; i++) {
+    for (int i = 0; i < 412; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyUnicode_DecodeUTF8(bytes + pos, bytes_length, NULL);
-      if (likely(string) && i >= 121) PyUnicode_InternInPlace(&string);
+      if (likely(string) && i >= 157) PyUnicode_InternInPlace(&string);
       if (unlikely(!string)) {
         Py_XDECREF(data);
         __PYX_ERR(0, 1, __pyx_L1_error)
@@ -12796,7 +15213,7 @@ const char* const bytes = ".11. [TITLES]   Extract Page Titles22. [MAP]      Ext
       stringtab[i] = string;
       pos += bytes_length;
     }
-    for (int i = 338; i < 343; i++) {
+    for (int i = 412; i < 417; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyBytes_FromStringAndSize(bytes + pos, bytes_length);
       stringtab[i] = string;
@@ -12807,14 +15224,14 @@ const char* const bytes = ".11. [TITLES]   Extract Page Titles22. [MAP]      Ext
       }
     }
     Py_XDECREF(data);
-    for (Py_ssize_t i = 0; i < 343; i++) {
+    for (Py_ssize_t i = 0; i < 417; i++) {
       if (unlikely(PyObject_Hash(stringtab[i]) == -1)) {
         __PYX_ERR(0, 1, __pyx_L1_error)
       }
     }
     #if CYTHON_IMMORTAL_CONSTANTS
     {
-      PyObject **table = stringtab + 338;
+      PyObject **table = stringtab + 412;
       for (Py_ssize_t i=0; i<5; ++i) {
         #if PY_VERSION_HEX >= 0x030F0000
         PyUnstable_SetImmortal(table[i]);
@@ -12847,15 +15264,16 @@ const char* const bytes = ".11. [TITLES]   Extract Page Titles22. [MAP]      Ext
   {
     PyObject **numbertab = __pyx_mstate->__pyx_number_tab + 1;
     int8_t const cint_constants_1[] = {0,1,2,4,5,10,20,50,80,100};
-    for (int i = 0; i < 10; i++) {
-      numbertab[i] = PyLong_FromLong(cint_constants_1[i - 0]);
+    int16_t const cint_constants_2[] = {200};
+    for (int i = 0; i < 11; i++) {
+      numbertab[i] = PyLong_FromLong((i < 10 ? cint_constants_1[i - 0] : cint_constants_2[i - 10]));
       if (unlikely(!numbertab[i])) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #if CYTHON_IMMORTAL_CONSTANTS
   {
     PyObject **table = __pyx_mstate->__pyx_number_tab;
-    for (Py_ssize_t i=0; i<11; ++i) {
+    for (Py_ssize_t i=0; i<12; ++i) {
       #if PY_VERSION_HEX >= 0x030F0000
       PyUnstable_SetImmortal(table[i]);
       #elif CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
@@ -12884,9 +15302,9 @@ typedef struct {
     unsigned int argcount : 2;
     unsigned int num_posonly_args : 1;
     unsigned int num_kwonly_args : 1;
-    unsigned int nlocals : 5;
+    unsigned int nlocals : 6;
     unsigned int flags : 10;
-    unsigned int first_line : 8;
+    unsigned int first_line : 9;
 } __Pyx_PyCode_New_function_description;
 /* NewCodeObj.proto */
 static PyObject* __Pyx_PyCode_New(
@@ -12910,11 +15328,11 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 10, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS|CO_COROUTINE), 68};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_response, __pyx_mstate->__pyx_n_u_data, __pyx_mstate->__pyx_n_u_elems, __pyx_mstate->__pyx_n_u_title, __pyx_mstate->__pyx_n_u_val, __pyx_mstate->__pyx_n_u_link, __pyx_mstate->__pyx_n_u_href, __pyx_mstate->__pyx_n_u_full_url, __pyx_mstate->__pyx_n_u_new_depth, __pyx_mstate->__pyx_n_u_e};
-    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_zenscrape_cli_py, __pyx_mstate->__pyx_n_u_callback, __pyx_mstate->__pyx_kp_b_iso88591__25, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_zenscrape_cli_py, __pyx_mstate->__pyx_n_u_callback, __pyx_mstate->__pyx_kp_b_iso88591__28, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 23, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS|CO_COROUTINE), 137};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_args, __pyx_mstate->__pyx_n_u_AsyncSession, __pyx_mstate->__pyx_n_u_proxy, __pyx_mstate->__pyx_n_u_s, __pyx_mstate->__pyx_n_u_res, __pyx_mstate->__pyx_n_u_insp, __pyx_mstate->__pyx_n_u_summary, __pyx_mstate->__pyx_n_u_e, __pyx_mstate->__pyx_n_u_i, __pyx_mstate->__pyx_n_u_f, __pyx_mstate->__pyx_n_u_fields, __pyx_mstate->__pyx_n_u_choice, __pyx_mstate->__pyx_n_u_selected_form, __pyx_mstate->__pyx_n_u_payload, __pyx_mstate->__pyx_n_u_fillable_types, __pyx_mstate->__pyx_n_u_field, __pyx_mstate->__pyx_n_u_val, __pyx_mstate->__pyx_n_u_important_meta, __pyx_mstate->__pyx_n_u_key, __pyx_mstate->__pyx_n_u_h, __pyx_mstate->__pyx_n_u_indent, __pyx_mstate->__pyx_n_u_t, __pyx_mstate->__pyx_n_u_inp};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 41, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS|CO_COROUTINE), 137};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_args, __pyx_mstate->__pyx_n_u_ensure_tor_env, __pyx_mstate->__pyx_n_u_AsyncSession, __pyx_mstate->__pyx_n_u_proxy, __pyx_mstate->__pyx_n_u_s, __pyx_mstate->__pyx_n_u_res, __pyx_mstate->__pyx_n_u_insp, __pyx_mstate->__pyx_n_u_summary, __pyx_mstate->__pyx_n_u_e, __pyx_mstate->__pyx_n_u_i, __pyx_mstate->__pyx_n_u_f, __pyx_mstate->__pyx_n_u_fields, __pyx_mstate->__pyx_n_u_is_virtual, __pyx_mstate->__pyx_n_u_choice, __pyx_mstate->__pyx_n_u_selected_form, __pyx_mstate->__pyx_n_u_payload, __pyx_mstate->__pyx_n_u_fillable_types, __pyx_mstate->__pyx_n_u_field, __pyx_mstate->__pyx_n_u_val, __pyx_mstate->__pyx_n_u_important_meta, __pyx_mstate->__pyx_n_u_key, __pyx_mstate->__pyx_n_u_h, __pyx_mstate->__pyx_n_u_indent, __pyx_mstate->__pyx_n_u_t, __pyx_mstate->__pyx_n_u_ZenSecurityAuditor, __pyx_mstate->__pyx_n_u_urlparse, __pyx_mstate->__pyx_n_u_parsed_url, __pyx_mstate->__pyx_n_u_domain, __pyx_mstate->__pyx_n_u_headers_report, __pyx_mstate->__pyx_n_u_h_name, __pyx_mstate->__pyx_n_u_detail, __pyx_mstate->__pyx_n_u_tls_report, __pyx_mstate->__pyx_n_u_dns_report, __pyx_mstate->__pyx_n_u_record_type, __pyx_mstate->__pyx_n_u_details, __pyx_mstate->__pyx_n_u_audit_targets, __pyx_mstate->__pyx_n_u_audit_session, __pyx_mstate->__pyx_n_u_target, __pyx_mstate->__pyx_n_u_audit_res, __pyx_mstate->__pyx_n_u_signature_match, __pyx_mstate->__pyx_n_u_inp};
     __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_zenscrape_cli_py, __pyx_mstate->__pyx_n_u_run_inspector, __pyx_mstate->__pyx_kp_b_iso88591_a_2, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
   }
   {
@@ -12928,7 +15346,7 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate_global->__pyx_codeobj_tab[4] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_zenscrape_cli_py, __pyx_mstate->__pyx_n_u_calculate_optimal_concurrency, __pyx_mstate->__pyx_kp_b_iso88591_4HA_Cs_5_q_1_1_c_BfD_q_I_J_1_Bc, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[4])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {0, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 232};
+    const __Pyx_PyCode_New_function_description descr = {0, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 320};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_parser, __pyx_mstate->__pyx_n_u_args, __pyx_mstate->__pyx_n_u_action_performed};
     __pyx_mstate_global->__pyx_codeobj_tab[5] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_zenscrape_cli_py, __pyx_mstate->__pyx_n_u_main_2, __pyx_mstate->__pyx_kp_b_iso88591_X_A_q_a_q_WN_q_q_e1_q_XQ_q_e81, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[5])) goto bad;
   }
@@ -19064,6 +21482,13 @@ bad:
   }
   #endif
   
+/* PyUnicode_Unicode */
+  static CYTHON_INLINE PyObject* __Pyx_PyUnicode_Unicode(PyObject *obj) {
+      if (unlikely(obj == Py_None))
+          obj = __pyx_mstate_global->__pyx_kp_u_None;
+      return __Pyx_NewRef(obj);
+  }
+  
 /* PyObjectSetAttrStr */
   #if CYTHON_USE_TYPE_SLOTS
   static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value) {
@@ -19124,11 +21549,314 @@ bad:
   }
   #endif
   
-/* PyUnicode_Unicode */
-  static CYTHON_INLINE PyObject* __Pyx_PyUnicode_Unicode(PyObject *obj) {
-      if (unlikely(obj == Py_None))
-          obj = __pyx_mstate_global->__pyx_kp_u_None;
-      return __Pyx_NewRef(obj);
+/* IterFinish (used by dict_iter) */
+  static CYTHON_INLINE int __Pyx_IterFinish(void) {
+      PyObject* exc_type;
+      __Pyx_PyThreadState_declare
+      __Pyx_PyThreadState_assign
+      exc_type = __Pyx_PyErr_CurrentExceptionType();
+      if (unlikely(exc_type)) {
+          if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration)))
+              return -1;
+          __Pyx_PyErr_Clear();
+          return 0;
+      }
+      return 0;
+  }
+  
+/* PyObjectCallMethod0 (used by dict_iter) */
+  static PyObject* __Pyx_PyObject_CallMethod0(PyObject* obj, PyObject* method_name) {
+  #if CYTHON_VECTORCALL && (__PYX_LIMITED_VERSION_HEX >= 0x030C0000 || (!CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX >= 0x03090000))
+      PyObject *args[1] = {obj};
+      (void) __Pyx_PyObject_CallOneArg;
+      (void) __Pyx_PyObject_CallNoArg;
+      return PyObject_VectorcallMethod(method_name, args, 1 | PY_VECTORCALL_ARGUMENTS_OFFSET, NULL);
+  #else
+      PyObject *method = NULL, *result = NULL;
+      int is_method = __Pyx_PyObject_GetMethod(obj, method_name, &method);
+      if (likely(is_method)) {
+          result = __Pyx_PyObject_CallOneArg(method, obj);
+          Py_DECREF(method);
+          return result;
+      }
+      if (unlikely(!method)) goto bad;
+      result = __Pyx_PyObject_CallNoArg(method);
+      Py_DECREF(method);
+  bad:
+      return result;
+  #endif
+  }
+  
+/* RaiseNeedMoreValuesToUnpack (used by UnpackTuple2) */
+  static CYTHON_INLINE void __Pyx_RaiseNeedMoreValuesError(Py_ssize_t index) {
+      PyErr_Format(PyExc_ValueError,
+                   "need more than %" CYTHON_FORMAT_SSIZE_T "d value%.1s to unpack",
+                   index, (index == 1) ? "" : "s");
+  }
+  
+/* RaiseTooManyValuesToUnpack (used by UnpackItemEndCheck) */
+  static CYTHON_INLINE void __Pyx_RaiseTooManyValuesError(Py_ssize_t expected) {
+      PyErr_Format(PyExc_ValueError,
+                   "too many values to unpack (expected %" CYTHON_FORMAT_SSIZE_T "d)", expected);
+  }
+  
+/* UnpackItemEndCheck (used by UnpackTuple2) */
+  static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected) {
+      if (unlikely(retval)) {
+          Py_DECREF(retval);
+          __Pyx_RaiseTooManyValuesError(expected);
+          return -1;
+      }
+      return __Pyx_IterFinish();
+  }
+  
+/* RaiseNoneIterError (used by UnpackTupleError) */
+  static CYTHON_INLINE void __Pyx_RaiseNoneNotIterableError(void) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+  }
+  
+/* UnpackTupleError (used by UnpackTuple2) */
+  static void __Pyx_UnpackTupleError(PyObject *t, Py_ssize_t index) {
+      if (t == Py_None) {
+        __Pyx_RaiseNoneNotIterableError();
+      } else {
+        Py_ssize_t size = __Pyx_PyTuple_GET_SIZE(t);
+   #if !CYTHON_ASSUME_SAFE_SIZE
+        if (unlikely(size < 0)) return;
+   #endif
+        if (size < index) {
+          __Pyx_RaiseNeedMoreValuesError(size);
+        } else {
+          __Pyx_RaiseTooManyValuesError(index);
+        }
+      }
+  }
+  
+/* UnpackTuple2 (used by dict_iter) */
+  static CYTHON_INLINE int __Pyx_unpack_tuple2(
+          PyObject* tuple, PyObject** value1, PyObject** value2, int is_tuple, int has_known_size, int decref_tuple) {
+      if (likely(is_tuple || PyTuple_Check(tuple))) {
+          Py_ssize_t size;
+          if (has_known_size) {
+              return __Pyx_unpack_tuple2_exact(tuple, value1, value2, decref_tuple);
+          }
+          size = __Pyx_PyTuple_GET_SIZE(tuple);
+          if (likely(size == 2)) {
+              return __Pyx_unpack_tuple2_exact(tuple, value1, value2, decref_tuple);
+          }
+          if (size >= 0) {
+              __Pyx_UnpackTupleError(tuple, 2);
+          }
+          return -1;
+      } else {
+          return __Pyx_unpack_tuple2_generic(tuple, value1, value2, has_known_size, decref_tuple);
+      }
+  }
+  static CYTHON_INLINE int __Pyx_unpack_tuple2_exact(
+          PyObject* tuple, PyObject** pvalue1, PyObject** pvalue2, int decref_tuple) {
+      PyObject *value1 = NULL, *value2 = NULL;
+  #if CYTHON_AVOID_BORROWED_REFS || !CYTHON_ASSUME_SAFE_MACROS
+      value1 = __Pyx_PySequence_ITEM(tuple, 0);  if (unlikely(!value1)) goto bad;
+      value2 = __Pyx_PySequence_ITEM(tuple, 1);  if (unlikely(!value2)) goto bad;
+  #else
+      value1 = PyTuple_GET_ITEM(tuple, 0);  Py_INCREF(value1);
+      value2 = PyTuple_GET_ITEM(tuple, 1);  Py_INCREF(value2);
+  #endif
+      if (decref_tuple) {
+          Py_DECREF(tuple);
+      }
+      *pvalue1 = value1;
+      *pvalue2 = value2;
+      return 0;
+  #if CYTHON_AVOID_BORROWED_REFS || !CYTHON_ASSUME_SAFE_MACROS
+  bad:
+      Py_XDECREF(value1);
+      Py_XDECREF(value2);
+      if (decref_tuple) { Py_XDECREF(tuple); }
+      return -1;
+  #endif
+  }
+  static int __Pyx_unpack_tuple2_generic(PyObject* tuple, PyObject** pvalue1, PyObject** pvalue2,
+                                         int has_known_size, int decref_tuple) {
+      Py_ssize_t index;
+      PyObject *value1 = NULL, *value2 = NULL, *iter = NULL;
+      iternextfunc iternext;
+      iter = PyObject_GetIter(tuple);
+      if (unlikely(!iter)) goto bad;
+      if (decref_tuple) { Py_DECREF(tuple); tuple = NULL; }
+      iternext = __Pyx_PyObject_GetIterNextFunc(iter);
+      value1 = iternext(iter); if (unlikely(!value1)) { index = 0; goto unpacking_failed; }
+      value2 = iternext(iter); if (unlikely(!value2)) { index = 1; goto unpacking_failed; }
+      if (!has_known_size && unlikely(__Pyx_IternextUnpackEndCheck(iternext(iter), 2))) goto bad;
+      Py_DECREF(iter);
+      *pvalue1 = value1;
+      *pvalue2 = value2;
+      return 0;
+  unpacking_failed:
+      if (!has_known_size && __Pyx_IterFinish() == 0)
+          __Pyx_RaiseNeedMoreValuesError(index);
+  bad:
+      Py_XDECREF(iter);
+      Py_XDECREF(value1);
+      Py_XDECREF(value2);
+      if (decref_tuple) { Py_XDECREF(tuple); }
+      return -1;
+  }
+  
+/* dict_iter */
+  #if CYTHON_AVOID_BORROWED_REFS
+  #include <string.h>
+  #endif
+  static CYTHON_INLINE PyObject* __Pyx_dict_iterator(PyObject* iterable, int is_dict, PyObject* method_name,
+                                                     Py_ssize_t* p_orig_length, int* p_source_is_dict) {
+      is_dict = is_dict || likely(PyDict_CheckExact(iterable));
+      *p_source_is_dict = is_dict;
+      if (is_dict) {
+  #if !CYTHON_AVOID_BORROWED_REFS
+          *p_orig_length = PyDict_Size(iterable);
+          Py_INCREF(iterable);
+          return iterable;
+  #else
+          static PyObject *py_items = NULL, *py_keys = NULL, *py_values = NULL;
+          PyObject **pp = NULL;
+          if (method_name) {
+              const char *name = PyUnicode_AsUTF8(method_name);
+              if (strcmp(name, "iteritems") == 0) pp = &py_items;
+              else if (strcmp(name, "iterkeys") == 0) pp = &py_keys;
+              else if (strcmp(name, "itervalues") == 0) pp = &py_values;
+              if (pp) {
+                  if (!*pp) {
+                      *pp = PyUnicode_FromString(name + 4);
+                      if (!*pp)
+                          return NULL;
+                  }
+                  method_name = *pp;
+              }
+          }
+  #endif
+      }
+      *p_orig_length = 0;
+      if (method_name) {
+          PyObject* iter;
+          iterable = __Pyx_PyObject_CallMethod0(iterable, method_name);
+          if (!iterable)
+              return NULL;
+  #if !CYTHON_AVOID_BORROWED_REFS
+          if (PyTuple_CheckExact(iterable) || PyList_CheckExact(iterable))
+              return iterable;
+  #endif
+          iter = PyObject_GetIter(iterable);
+          Py_DECREF(iterable);
+          return iter;
+      }
+      return PyObject_GetIter(iterable);
+  }
+  #if !CYTHON_AVOID_BORROWED_REFS
+  static CYTHON_INLINE int __Pyx_dict_iter_next_source_is_dict(
+          PyObject* iter_obj, CYTHON_NCP_UNUSED Py_ssize_t orig_length, CYTHON_NCP_UNUSED Py_ssize_t* ppos,
+          PyObject** pkey, PyObject** pvalue, PyObject** pitem) {
+      PyObject *key, *value;
+      if (unlikely(orig_length != PyDict_Size(iter_obj))) {
+          PyErr_SetString(PyExc_RuntimeError, "dictionary changed size during iteration");
+          return -1;
+      }
+      if (unlikely(!PyDict_Next(iter_obj, ppos, &key, &value))) {
+          return 0;
+      }
+      if (pitem) {
+          PyObject* tuple = PyTuple_New(2);
+          if (unlikely(!tuple)) {
+              return -1;
+          }
+          Py_INCREF(key);
+          Py_INCREF(value);
+          #if CYTHON_ASSUME_SAFE_MACROS
+          PyTuple_SET_ITEM(tuple, 0, key);
+          PyTuple_SET_ITEM(tuple, 1, value);
+          #else
+          if (unlikely(PyTuple_SetItem(tuple, 0, key) < 0)) {
+              Py_DECREF(value);
+              Py_DECREF(tuple);
+              return -1;
+          }
+          if (unlikely(PyTuple_SetItem(tuple, 1, value) < 0)) {
+              Py_DECREF(tuple);
+              return -1;
+          }
+          #endif
+          *pitem = tuple;
+      } else {
+          if (pkey) {
+              Py_INCREF(key);
+              *pkey = key;
+          }
+          if (pvalue) {
+              Py_INCREF(value);
+              *pvalue = value;
+          }
+      }
+      return 1;
+  }
+  #endif
+  static CYTHON_INLINE int __Pyx_dict_iter_next(
+          PyObject* iter_obj, CYTHON_NCP_UNUSED Py_ssize_t orig_length, CYTHON_NCP_UNUSED Py_ssize_t* ppos,
+          PyObject** pkey, PyObject** pvalue, PyObject** pitem, int source_is_dict) {
+      PyObject* next_item;
+  #if !CYTHON_AVOID_BORROWED_REFS
+      if (source_is_dict) {
+          int result;
+  #if PY_VERSION_HEX >= 0x030d0000 && !CYTHON_COMPILING_IN_LIMITED_API
+          Py_BEGIN_CRITICAL_SECTION(iter_obj);
+  #endif
+          result = __Pyx_dict_iter_next_source_is_dict(iter_obj, orig_length, ppos, pkey, pvalue, pitem);
+  #if PY_VERSION_HEX >= 0x030d0000 && !CYTHON_COMPILING_IN_LIMITED_API
+          Py_END_CRITICAL_SECTION();
+  #endif
+          return result;
+      } else if (PyTuple_CheckExact(iter_obj)) {
+          Py_ssize_t pos = *ppos;
+          Py_ssize_t tuple_size = __Pyx_PyTuple_GET_SIZE(iter_obj);
+          #if !CYTHON_ASSUME_SAFE_SIZE
+          if (unlikely(tuple_size < 0)) return -1;
+          #endif
+          if (unlikely(pos >= tuple_size)) return 0;
+          *ppos = pos + 1;
+          #if CYTHON_ASSUME_SAFE_MACROS
+          next_item = PyTuple_GET_ITEM(iter_obj, pos);
+          #else
+          next_item = PyTuple_GetItem(iter_obj, pos);
+          if (unlikely(!next_item)) return -1;
+          #endif
+          Py_INCREF(next_item);
+      } else if (PyList_CheckExact(iter_obj)) {
+          Py_ssize_t pos = *ppos;
+          Py_ssize_t list_size = __Pyx_PyList_GET_SIZE(iter_obj);
+          #if !CYTHON_ASSUME_SAFE_SIZE
+          if (unlikely(list_size < 0)) return -1;
+          #endif
+          if (unlikely(pos >= list_size)) return 0;
+          *ppos = pos + 1;
+          next_item = __Pyx_PyList_GetItemRef(iter_obj, pos);
+          if (unlikely(!next_item)) return -1;
+      } else
+  #endif
+      {
+          next_item = PyIter_Next(iter_obj);
+          if (unlikely(!next_item)) {
+              return __Pyx_IterFinish();
+          }
+      }
+      if (pitem) {
+          *pitem = next_item;
+      } else if (pkey && pvalue) {
+          if (__Pyx_unpack_tuple2(next_item, pkey, pvalue, source_is_dict, source_is_dict, 1))
+              return -1;
+      } else if (pkey) {
+          *pkey = next_item;
+      } else {
+          *pvalue = next_item;
+      }
+      return 1;
   }
   
 /* AllocateExtensionType */
@@ -19151,29 +21879,6 @@ bad:
       #endif
           return tp_new(t, __pyx_mstate_global->__pyx_empty_tuple, 0);
       }
-  }
-  
-/* PyObjectCallMethod0 (used by PyType_Ready) */
-  static PyObject* __Pyx_PyObject_CallMethod0(PyObject* obj, PyObject* method_name) {
-  #if CYTHON_VECTORCALL && (__PYX_LIMITED_VERSION_HEX >= 0x030C0000 || (!CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX >= 0x03090000))
-      PyObject *args[1] = {obj};
-      (void) __Pyx_PyObject_CallOneArg;
-      (void) __Pyx_PyObject_CallNoArg;
-      return PyObject_VectorcallMethod(method_name, args, 1 | PY_VECTORCALL_ARGUMENTS_OFFSET, NULL);
-  #else
-      PyObject *method = NULL, *result = NULL;
-      int is_method = __Pyx_PyObject_GetMethod(obj, method_name, &method);
-      if (likely(is_method)) {
-          result = __Pyx_PyObject_CallOneArg(method, obj);
-          Py_DECREF(method);
-          return result;
-      }
-      if (unlikely(!method)) goto bad;
-      result = __Pyx_PyObject_CallNoArg(method);
-      Py_DECREF(method);
-  bad:
-      return result;
-  #endif
   }
   
 /* ValidateBasesTuple (used by PyType_Ready) */
@@ -19742,7 +22447,7 @@ bad:
           result = name;
           name = NULL;
       } else {
-          result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__24);
+          result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__27);
       }
       goto done;
   }

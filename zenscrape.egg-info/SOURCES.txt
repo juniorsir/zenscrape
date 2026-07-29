@@ -4,6 +4,7 @@ setup.py
 tests/test_core.py
 zenscrape/__init__.py
 zenscrape/ai_helper.py
+zenscrape/auditor.py
 zenscrape/automator.py
 zenscrape/cli.c
 zenscrape/cli.py
